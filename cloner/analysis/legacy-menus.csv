@@ -1,0 +1,37 @@
+﻿id,menu,order,parent_menu_id,object_id,label,target,status
+75,Main,1,0,26,Diving,https://dragoman-turkey.com/diving/,legacy_menu_reference_not_new_layout_approval
+76,Main,2,0,28,Sea Kayak,https://dragoman-turkey.com/sea-kayak/,legacy_menu_reference_not_new_layout_approval
+77,Main,3,0,30,Outdoor Activities,https://dragoman-turkey.com/outdoor-activities/,legacy_menu_reference_not_new_layout_approval
+78,Main,4,0,32,Transportation and Accomodation,https://dragoman-turkey.com/transportation-and-accomodation/,legacy_menu_reference_not_new_layout_approval
+82,,3,0,23,Hesabım,https://dragoman-turkey.com/tr/hesabim/,legacy_menu_reference_not_new_layout_approval
+83,Account,1,0,34,Dragoman,https://dragoman-turkey.com/dragoman/,legacy_menu_reference_not_new_layout_approval
+84,Account,3,0,36,Reservation and Contact,https://dragoman-turkey.com/contact/,legacy_menu_reference_not_new_layout_approval
+91,Main,7,0,0,Shop,,legacy_menu_reference_not_new_layout_approval
+422,Main - Turkish,2,0,326,Deniz Kanosu,https://dragoman-turkey.com/tr/deniz-kanosu/,legacy_menu_reference_not_new_layout_approval
+423,Main - Turkish,3,0,325,Doğa Etkinlikleri,https://dragoman-turkey.com/tr/doga-etkinlikleri/,legacy_menu_reference_not_new_layout_approval
+424,Main - Turkish,4,0,417,Ulaşım ve Konaklama,https://dragoman-turkey.com/tr/ulasim-konaklama/,legacy_menu_reference_not_new_layout_approval
+425,Main - Turkish,6,0,0,Dükkan,,legacy_menu_reference_not_new_layout_approval
+427,Account - Turkish,1,,377,Dragoman,https://dragoman-turkey.com/tr/dragoman/,legacy_menu_reference_not_new_layout_approval
+428,Account - Turkish,3,,380,Rezervasyon ve İletişim,https://dragoman-turkey.com/tr/rezervasyon-ve-iletisim/,legacy_menu_reference_not_new_layout_approval
+429,,1,,335,,https://dragoman-turkey.com/tr/sample-page/,legacy_menu_reference_not_new_layout_approval
+430,,2,,377,Dragoman,https://dragoman-turkey.com/tr/dragoman/,legacy_menu_reference_not_new_layout_approval
+431,,3,,380,Rezervasyon ve İletişim,https://dragoman-turkey.com/tr/rezervasyon-ve-iletisim/,legacy_menu_reference_not_new_layout_approval
+454,Account,2,0,450,Blog,https://dragoman-turkey.com/blog/,legacy_menu_reference_not_new_layout_approval
+684,Account - Turkish,2,,683,Blog,https://dragoman-turkey.com/tr/blog/,legacy_menu_reference_not_new_layout_approval
+952,Main - French,1,0,327,Plongée,https://dragoman-turkey.com/fr/plongee/,legacy_menu_reference_not_new_layout_approval
+953,Main - French,2,0,939,Kayak de mer,https://dragoman-turkey.com/fr/kayak-de-mer/,legacy_menu_reference_not_new_layout_approval
+880,Main - Turkish,5,0,865,Cankurtarma,https://dragoman-turkey.com/tr/cankurtarma-merkezi/,legacy_menu_reference_not_new_layout_approval
+956,Account - French,2,,954,Blog,https://dragoman-turkey.com/fr/blog/,legacy_menu_reference_not_new_layout_approval
+981,Main - French,3,0,961,Activités pleine nature,https://dragoman-turkey.com/fr/activites-pleine-nature/,legacy_menu_reference_not_new_layout_approval
+982,Main - French,4,0,963,Transport et hébergement,https://dragoman-turkey.com/fr/transport-et-hebergement/,legacy_menu_reference_not_new_layout_approval
+983,Account - French,1,,959,Dragoman,https://dragoman-turkey.com/fr/dragoman/,legacy_menu_reference_not_new_layout_approval
+984,Account - French,3,,957,Réservations et contact,https://dragoman-turkey.com/fr/contact/,legacy_menu_reference_not_new_layout_approval
+985,Main - Turkish,1,0,905,Dalış,https://dragoman-turkey.com/tr/diving/,legacy_menu_reference_not_new_layout_approval
+986,Main - French,5,0,16,Boutique,https://dragoman-turkey.com/fr/boutique/,legacy_menu_reference_not_new_layout_approval
+2071,Mobil - EN,1,0,36,Reservation and Contact,https://dragoman-turkey.com/contact/,legacy_menu_reference_not_new_layout_approval
+2072,Mobil - EN,2,0,34,Dragoman,https://dragoman-turkey.com/dragoman/,legacy_menu_reference_not_new_layout_approval
+2073,Mobil - EN,3,0,32,Transportation and Accomodation,https://dragoman-turkey.com/transportation-and-accomodation/,legacy_menu_reference_not_new_layout_approval
+2074,Mobil - EN,4,0,30,Outdoor Activities,https://dragoman-turkey.com/outdoor-activities/,legacy_menu_reference_not_new_layout_approval
+2075,Mobil - EN,5,0,28,Sea Kayak,https://dragoman-turkey.com/sea-kayak/,legacy_menu_reference_not_new_layout_approval
+2076,Mobil - EN,6,0,26,Diving,https://dragoman-turkey.com/diving/,legacy_menu_reference_not_new_layout_approval
+2077,Mobil - EN,7,0,8,Shop,https://dragoman-turkey.com/shop/,legacy_menu_reference_not_new_layout_approval

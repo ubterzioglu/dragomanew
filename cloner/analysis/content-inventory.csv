@@ -1,0 +1,89 @@
+﻿id,type,url_language,title,url,slug,status,date,text_characters,heading_count,inline_image_count,link_count,flags,import_status
+2,page,en,,https://dragoman-turkey.com/,sample-page,publish,2025-05-20 17:10:10,464,8,8,8,missing_title_home_candidate,draft_only
+3,page,en,Privacy Policy,https://dragoman-turkey.com/privacy-policy/,privacy-policy,publish,2025-05-20 17:10:10,3481,9,0,0,,draft_only
+8,page,en,Shop,https://dragoman-turkey.com/shop/,shop,publish,2025-05-20 18:04:54,0,0,0,0,no_body_text_check_dynamic_content,draft_only
+9,page,en,Cart,https://dragoman-turkey.com/cart/,cart,publish,2025-05-20 18:04:54,68,3,0,0,,draft_only
+10,page,en,Checkout,https://dragoman-turkey.com/checkout/,checkout,publish,2025-05-20 18:04:54,0,0,0,0,no_body_text_check_dynamic_content,draft_only
+11,page,en,My account,https://dragoman-turkey.com/my-account/,my-account,publish,2025-05-20 18:04:54,24,0,0,0,woocommerce_shortcode,draft_only
+12,page,en,Terms and Conditions,https://dragoman-turkey.com/refund_returns/,refund_returns,publish,2025-05-21 18:34:05,2689,5,0,3,,draft_only
+16,page,fr,Boutique,https://dragoman-turkey.com/fr/boutique/,boutique,publish,2025-05-20 18:04:54,0,0,0,0,no_body_text_check_dynamic_content,draft_only
+17,page,fr,Chariot,https://dragoman-turkey.com/fr/panier/,panier,publish,2025-05-20 18:04:54,91,3,0,0,,draft_only
+18,page,fr,Paiement,https://dragoman-turkey.com/fr/paiement/,paiement,publish,2025-05-20 18:04:54,0,0,0,0,no_body_text_check_dynamic_content,draft_only
+19,page,fr,Mon compte,https://dragoman-turkey.com/fr/mon-compte/,mon-compte,publish,2025-05-20 18:04:54,24,0,0,0,woocommerce_shortcode,draft_only
+20,page,tr,Dükkan,https://dragoman-turkey.com/tr/dukkan/,dukkan,publish,2025-05-20 18:04:54,0,0,0,0,no_body_text_check_dynamic_content,draft_only
+21,page,tr,Sepet,https://dragoman-turkey.com/tr/sepet/,sepet,publish,2025-05-20 18:04:54,58,3,0,0,,draft_only
+22,page,tr,Ödeme,https://dragoman-turkey.com/tr/odeme/,odeme,publish,2025-05-20 18:04:54,0,0,0,0,no_body_text_check_dynamic_content,draft_only
+23,page,tr,Hesabım,https://dragoman-turkey.com/tr/hesabim/,hesabim,publish,2025-05-20 18:04:54,24,0,0,0,woocommerce_shortcode,draft_only
+26,page,en,Diving,https://dragoman-turkey.com/diving/,diving,publish,2025-05-20 18:45:11,23499,35,31,6,legacy_host_reference;long_content_split_candidate,draft_only
+28,page,en,Sea Kayak,https://dragoman-turkey.com/sea-kayak/,sea-kayak,publish,2025-05-20 18:47:24,9390,9,12,10,long_content_split_candidate,draft_only
+30,page,en,Outdoor Activities,https://dragoman-turkey.com/outdoor-activities/,outdoor-activities,publish,2025-05-20 18:52:20,14954,29,6,4,long_content_split_candidate,draft_only
+32,page,en,Transportation and Accomodation,https://dragoman-turkey.com/transportation-and-accomodation/,transportation-and-accomodation,publish,2025-05-20 18:53:11,2025,6,2,1,,draft_only
+34,page,en,Dragoman,https://dragoman-turkey.com/dragoman/,dragoman,publish,2025-05-20 18:56:38,8670,7,107,0,,draft_only
+36,page,en,Reservation and Contact,https://dragoman-turkey.com/contact/,contact,publish,2025-05-20 19:00:53,185,0,1,2,,draft_only
+325,page,tr,Doğa Etkinlikleri,https://dragoman-turkey.com/tr/doga-etkinlikleri/,doga-etkinlikleri,publish,2025-05-20 18:52:20,16378,30,6,4,long_content_split_candidate,draft_only
+326,page,tr,Deniz Kanosu,https://dragoman-turkey.com/tr/deniz-kanosu/,deniz-kanosu,publish,2025-05-20 18:47:24,9802,9,12,7,long_content_split_candidate,draft_only
+327,page,fr,Plongée,https://dragoman-turkey.com/fr/plongee/,plongee,publish,2025-05-20 18:45:11,27084,36,30,4,long_content_split_candidate,draft_only
+335,page,tr,,https://dragoman-turkey.com/tr/sample-page/,sample-page,publish,2025-05-20 17:10:10,415,7,7,7,missing_title_home_candidate,draft_only
+377,page,tr,Dragoman,https://dragoman-turkey.com/tr/dragoman/,dragoman,publish,2025-05-20 18:56:38,8754,7,107,1,,draft_only
+380,page,tr,Rezervasyon ve İletişim,https://dragoman-turkey.com/tr/rezervasyon-ve-iletisim/,rezervasyon-ve-iletisim,publish,2025-05-20 19:00:53,179,0,1,2,,draft_only
+417,page,tr,Ulaşım ve Konaklama,https://dragoman-turkey.com/tr/ulasim-konaklama/,ulasim-konaklama,publish,2025-05-20 18:53:11,2068,6,2,1,,draft_only
+450,page,en,Blog,https://dragoman-turkey.com/blog/,blog,publish,2025-05-28 08:20:07,0,0,0,0,no_body_text_check_dynamic_content,draft_only
+683,page,tr,Blog,https://dragoman-turkey.com/tr/blog/,blog,publish,2025-05-28 08:20:07,0,0,0,0,no_body_text_check_dynamic_content,draft_only
+905,page,tr,Dalış,https://dragoman-turkey.com/tr/diving/,diving,publish,2025-05-20 18:45:11,22091,35,30,5,legacy_host_reference;long_content_split_candidate,draft_only
+936,page,fr,,https://dragoman-turkey.com/fr/sample-page/,sample-page,publish,2025-05-20 17:10:10,409,5,5,5,missing_title_home_candidate,draft_only
+939,page,fr,Kayak de mer,https://dragoman-turkey.com/fr/kayak-de-mer/,kayak-de-mer,publish,2025-05-20 18:47:24,11254,9,12,5,long_content_split_candidate,draft_only
+954,page,fr,Blog,https://dragoman-turkey.com/fr/blog/,blog,publish,2025-05-28 08:20:07,0,0,0,0,no_body_text_check_dynamic_content,draft_only
+957,page,fr,Réservations et contact,https://dragoman-turkey.com/fr/contact/,contact,publish,2025-05-20 19:00:53,247,0,1,2,,draft_only
+959,page,fr,Dragoman,https://dragoman-turkey.com/fr/dragoman/,dragoman,publish,2025-05-20 18:56:38,10309,7,107,1,long_content_split_candidate,draft_only
+961,page,fr,Activités pleine nature,https://dragoman-turkey.com/fr/activites-pleine-nature/,activites-pleine-nature,publish,2025-05-20 18:52:20,17559,30,6,3,long_content_split_candidate,draft_only
+963,page,fr,Transport et hébergement,https://dragoman-turkey.com/fr/transport-et-hebergement/,transport-et-hebergement,publish,2025-05-20 18:53:11,2297,6,2,0,,draft_only
+965,page,fr,Sites de plongée à Kaş,https://dragoman-turkey.com/fr/sites-de-plongee-a-kas/,sites-de-plongee-a-kas,publish,2025-05-30 11:58:44,15665,0,23,0,long_content_split_candidate,draft_only
+971,page,tr,Gizlilik Politikası,https://dragoman-turkey.com/tr/gizlilik-politikasi/,gizlilik-politikasi,publish,2025-05-20 17:10:10,3694,9,0,0,,draft_only
+973,page,fr,Politique de confidentialité,https://dragoman-turkey.com/fr/politique-de-confidentialite/,politique-de-confidentialite,publish,2025-05-20 17:10:10,4514,9,0,0,,draft_only
+975,page,tr,Şartlar ve Koşullar,https://dragoman-turkey.com/tr/sartlar-ve-kosullar/,sartlar-ve-kosullar,publish,2025-05-21 18:34:05,2700,5,0,3,,draft_only
+977,page,fr,Conditions générales d'utilisation,https://dragoman-turkey.com/fr/conditions-generales-dutilisation/,conditions-generales-dutilisation,publish,2025-05-21 18:34:05,3268,5,0,3,,draft_only
+1033,page,en,I want to join,https://dragoman-turkey.com/i-want-to-join/,i-want-to-join,publish,2025-07-26 21:42:27,188,0,3,0,contact_form_shortcode,draft_only
+1052,page,tr,Katılmak istiyorum,https://dragoman-turkey.com/tr/katilmak-istiyorum/,katilmak-istiyorum,publish,2025-07-26 21:42:27,211,0,3,0,contact_form_shortcode,draft_only
+1,post,en,Hello world!,https://dragoman-turkey.com/dragoman-blog/hello-world/,hello-world,publish,2025-05-20 17:10:10,85,0,0,0,hello_world_sample_exclude_candidate,draft_only
+455,post,en,Raja Ampat,https://dragoman-turkey.com/dragoman-blog/raja-ampat/,raja-ampat,publish,2025-05-28 08:26:04,1140,0,0,2,,draft_only
+458,post,tr,Raja Ampat,https://dragoman-turkey.com/tr/dragoman-blog-tr/raja-ampat/,raja-ampat,publish,2025-05-28 08:26:04,996,0,0,2,,draft_only
+508,post,en,Sea Kayak Kekova West Tour,https://dragoman-turkey.com/dragoman-blog/sea-kayak-kekova-west-tour/,sea-kayak-kekova-west-tour,publish,2025-05-30 11:14:54,4032,0,9,0,,draft_only
+544,post,en,Sea Kayak Kekova East Tour,https://dragoman-turkey.com/dragoman-blog/sea-kayak-kekova-east-tour/,sea-kayak-kekova-east-tour,publish,2025-05-30 11:15:25,3794,0,7,0,,draft_only
+567,post,en,Sea Kayak Kekova Classic Tour,https://dragoman-turkey.com/dragoman-blog/sea-kayak-kekova-classic-tour/,sea-kayak-kekova-classic-tour,publish,2025-05-30 11:15:39,4194,0,7,0,,draft_only
+590,post,en,Lycian Kayak & Comfort Escape Tour,https://dragoman-turkey.com/dragoman-blog/lycian-kayak-comfort-escape-tour/,lycian-kayak-comfort-escape-tour,publish,2025-05-30 11:24:59,10870,0,8,0,long_content_split_candidate,draft_only
+595,page,en,Kaş Dive Sites,https://dragoman-turkey.com/kas-dive-sites/,kas-dive-sites,publish,2025-05-30 11:58:44,13051,0,23,0,long_content_split_candidate,draft_only
+667,post,en,Dragoman Maldives Diving Trip 2026,https://dragoman-turkey.com/dragoman-blog/dragoman-maldives-diving-trip-2026/,dragoman-maldives-diving-trip-2026,publish,2025-05-31 08:14:27,9252,0,20,0,long_content_split_candidate,draft_only
+720,page,tr,Kaş Dalış Noktaları,https://dragoman-turkey.com/tr/kas-dalis-noktalari/,kas-dalis-noktalari,publish,2025-05-30 11:58:44,11962,0,23,0,long_content_split_candidate,draft_only
+848,post,tr,Dragoman Maldivler Dalış Turu 2026,https://dragoman-turkey.com/tr/dragoman-blog-tr/dragoman-maldives-diving-trip-2026/,dragoman-maldives-diving-trip-2026,publish,2025-05-31 08:14:27,10954,0,19,0,long_content_split_candidate,draft_only
+865,page,tr,Cankurtarma,https://dragoman-turkey.com/tr/cankurtarma-merkezi/,cankurtarma-merkezi,publish,2025-06-14 08:32:14,6432,4,3,1,legacy_host_reference,draft_only
+922,post,fr,Voyage de Plongée Dragoman aux Maldives 2026,https://dragoman-turkey.com/fr/non-categorise/dragoman-maldives-diving-trip-2026/,dragoman-maldives-diving-trip-2026,publish,2025-05-31 08:14:27,10994,0,20,0,long_content_split_candidate,draft_only
+1056,page,fr,Je veux participer,https://dragoman-turkey.com/fr/je-veux-participer/,je-veux-participer,publish,2025-07-26 21:42:27,213,0,3,0,contact_form_shortcode,draft_only
+1658,post,fr,Tour Kayak Lycien et Évasion Confort,https://dragoman-turkey.com/fr/non-categorise/lycian-kayak-comfort-escape-tour/,lycian-kayak-comfort-escape-tour,publish,2025-05-30 11:24:59,12568,0,8,0,long_content_split_candidate,draft_only
+1659,post,tr,Likya Kayak ve Konfor Kaçamağı Turu,https://dragoman-turkey.com/tr/dragoman-blog-tr/lycian-kayak-comfort-escape-tour/,lycian-kayak-comfort-escape-tour,publish,2025-05-30 11:24:59,11412,0,8,0,long_content_split_candidate,draft_only
+1670,post,fr,Tour Classique en Kayak de Mer à Kekova,https://dragoman-turkey.com/fr/non-categorise/sea-kayak-kekova-classic-tour/,sea-kayak-kekova-classic-tour,publish,2025-05-30 11:15:39,4986,0,7,0,,draft_only
+1792,post,en,The replay of the webinar “And if you came (back) to Kaş this summer ?” is now online!,https://dragoman-turkey.com/dragoman-blog/the-replay-of-the-webinar-and-if-you-came-back-to-kas-this-summer-is-now-online/,the-replay-of-the-webinar-and-if-you-came-back-to-kas-this-summer-is-now-online,publish,2026-01-13 15:53:04,781,0,1,2,,draft_only
+1798,post,fr,Le Replay du Webinar “Et si vous (re)veniez à Kaş cet été ?” est en ligne,https://dragoman-turkey.com/fr/non-categorise/the-replay-of-the-webinar-and-if-you-came-back-to-kas-this-summer-is-now-online/,the-replay-of-the-webinar-and-if-you-came-back-to-kas-this-summer-is-now-online,publish,2026-01-13 15:53:04,832,0,1,1,,draft_only
+1799,post,tr,“‘Bu yaz Kaş’a (yeniden) gelmeye ne dersiniz?’ başlıklı web seminerinin kaydı artık çevrim içi!”,https://dragoman-turkey.com/tr/dragoman-blog-tr/the-replay-of-the-webinar-and-if-you-came-back-to-kas-this-summer-is-now-online/,the-replay-of-the-webinar-and-if-you-came-back-to-kas-this-summer-is-now-online,publish,2026-01-13 15:53:04,808,0,1,2,,draft_only
+15,product,en,The Diving Guide – Kaş,https://dragoman-turkey.com/product/the-diving-guide-kas/,the-diving-guide-kas,publish,2025-05-20 18:12:51,2941,3,3,0,,draft_only
+41,product,en,Tropical Mediterranean,https://dragoman-turkey.com/product/tropical-mediterranean-english/,tropical-mediterranean-english,publish,2025-05-21 09:20:20,1576,0,1,0,,draft_only
+126,product,en,Tropikal Akdeniz,https://dragoman-turkey.com/product/tropical-mediterranean-turkish/,tropical-mediterranean-turkish,publish,2025-05-21 18:37:06,1576,0,1,0,,draft_only
+158,product,en,Méditerranée tropicale,https://dragoman-turkey.com/product/tropical-mediterranean-french/,tropical-mediterranean-french,publish,2025-05-21 18:54:53,1576,0,1,0,,draft_only
+162,product,tr,Tropical Mediterranean,https://dragoman-turkey.com/tr/urun/tropikal-akdeniz-ingilizce/,tropikal-akdeniz-ingilizce,publish,2025-05-21 09:20:20,1447,0,1,0,,draft_only
+164,product,tr,Méditerranée tropicale,https://dragoman-turkey.com/tr/urun/tropikal-akdeniz-fransizca/,tropikal-akdeniz-fransizca,publish,2025-05-21 18:54:53,1447,0,1,0,,draft_only
+165,product,tr,Dalış Rehberi - Kaş,https://dragoman-turkey.com/tr/urun/dalis-rehberi-kas/,dalis-rehberi-kas,publish,2025-05-20 18:12:51,5857,3,3,0,,draft_only
+166,product,tr,Tropikal Akdeniz,https://dragoman-turkey.com/tr/urun/tropikal-akdeniz-turkce/,tropikal-akdeniz-turkce,publish,2025-05-21 18:37:06,1447,0,1,0,,draft_only
+993,product,fr,Méditerranée tropicale,https://dragoman-turkey.com/fr/produit/mediterranee-tropicale/,mediterranee-tropicale,publish,2025-05-21 18:54:53,1623,0,1,0,,draft_only
+994,product,fr,Tropikal Akdeniz,https://dragoman-turkey.com/fr/produit/tropikal-akdeniz/,tropikal-akdeniz,publish,2025-05-21 18:37:06,1623,0,1,0,,draft_only
+995,product,fr,Tropical Mediterranean,https://dragoman-turkey.com/fr/produit/tropical-mediterranean/,tropical-mediterranean,publish,2025-05-21 09:20:20,1623,0,1,0,,draft_only
+1671,post,tr,Deniz Kayağı Kekova Klasik Turu,https://dragoman-turkey.com/tr/dragoman-blog-tr/sea-kayak-kekova-classic-tour/,sea-kayak-kekova-classic-tour,publish,2025-05-30 11:15:39,4517,0,7,0,,draft_only
+1676,post,fr,Tour en Kayak de Mer Kekova Est,https://dragoman-turkey.com/fr/non-categorise/sea-kayak-kekova-east-tour/,sea-kayak-kekova-east-tour,publish,2025-05-30 11:15:25,4727,0,7,0,,draft_only
+1677,post,tr,Deniz Kayağı Kekova Doğu Turu,https://dragoman-turkey.com/tr/dragoman-blog-tr/sea-kayak-kekova-east-tour/,sea-kayak-kekova-east-tour,publish,2025-05-30 11:15:25,4191,0,7,0,,draft_only
+1682,post,fr,Kayak de mer Kekova Tour Ouest,https://dragoman-turkey.com/fr/non-categorise/sea-kayak-kekova-west-tour/,sea-kayak-kekova-west-tour,publish,2025-05-30 11:14:54,4811,0,9,0,,draft_only
+1683,post,tr,Deniz Kanosu Kekova Batı Turu,https://dragoman-turkey.com/tr/dragoman-blog-tr/sea-kayak-kekova-west-tour/,sea-kayak-kekova-west-tour,publish,2025-05-30 11:14:54,4223,0,9,0,,draft_only
+1884,post,tr,Dünyanın sayılı dalış cennetlerinden Raja Ampat’a 2027 Noel tarihlerinde (18-27 Aralık) tekrar gidiyoruz:,https://dragoman-turkey.com/tr/dragoman-blog-tr/raja-ampat-2027/,raja-ampat-2027,publish,2026-03-07 11:28:11,3616,0,20,5,,draft_only
+1987,post,tr,DRAGOMAN SHARM EL SHEİKH DALIŞ TURU 2026,https://dragoman-turkey.com/tr/dragoman-blog/dragoman-sharm-el-sheikh-dalis-turu-2026/,dragoman-sharm-el-sheikh-dalis-turu-2026,publish,2026-06-13 08:45:09,1909,0,7,0,,draft_only
+2217,post,en,"We are heading back to Raja Ampat, one of the world’s most spectacular diving destinations, 18 - 27 December 2027.",https://dragoman-turkey.com/dragoman-blog/we-are-heading-back-to-raja-ampat-one-of-the-worlds-most-spectacular-diving-destinations-for-christmas-2027-from-18-to-27-december/,we-are-heading-back-to-raja-ampat-one-of-the-worlds-most-spectacular-diving-destinations-for-christmas-2027-from-18-to-27-december,publish,2026-03-07 11:28:11,4335,0,20,5,,draft_only
+2233,post,fr,"Nous retournons à Raja Ampat, l'une des destinations de plongée les plus spectaculaires au monde, du 18 au 27 décembre 2027.",https://dragoman-turkey.com/fr/non-categorise/nous-retournons-a-raja-ampat-lune-des-destinations-de-plongee-les-plus-spectaculaires-au-monde-pour-noel-2027-du-18-au-27-decembre/,nous-retournons-a-raja-ampat-lune-des-destinations-de-plongee-les-plus-spectaculaires-au-monde-pour-noel-2027-du-18-au-27-decembre,publish,2026-03-07 11:28:11,5152,0,20,5,,draft_only
+98,wp_block,en,Footer with menus (Copy),https://dragoman-turkey.com/dragoman-blog/footer-with-menus-copy/,footer-with-menus-copy,publish,2025-05-21 09:57:26,37,0,0,2,,draft_only
+100,wp_block,en,Featured Category Cover Image (Copy),https://dragoman-turkey.com/dragoman-blog/featured-category-cover-image-copy/,featured-category-cover-image-copy,publish,2025-05-21 09:59:03,97,1,1,1,,draft_only
+1207,wp_block,en,Product Card,https://dragoman-turkey.com/dragoman-blog/product-card/,product-card,publish,2025-11-13 22:39:55,430,3,3,3,,draft_only

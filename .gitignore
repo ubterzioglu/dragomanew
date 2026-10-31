@@ -1,0 +1,13 @@
+# Local WordPress source material: retain locally, outside public repository history.
+/cloner/source/
+/cloner/archive/
+/cloner/extracted/
+/cloner/*.xml
+
+# Local credentials and generated caches.
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.DS_Store

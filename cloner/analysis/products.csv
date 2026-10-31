@@ -1,0 +1,12 @@
+﻿id,url_language,title,url,historical_price,currency,stock_management,historical_stock_status,stock_quantity,thumbnail_id,gallery_ids,migration_status
+15,en,The Diving Guide – Kaş,https://dragoman-turkey.com/product/the-diving-guide-kas/,30,not_exported_as_site_option,no,instock,,44,"47,53,50",customer_price_stock_approval_required
+41,en,Tropical Mediterranean,https://dragoman-turkey.com/product/tropical-mediterranean-english/,39,not_exported_as_site_option,no,instock,,66,"152,149,146,143",customer_price_stock_approval_required
+126,en,Tropikal Akdeniz,https://dragoman-turkey.com/product/tropical-mediterranean-turkish/,39,not_exported_as_site_option,no,instock,,155,"152,149,146,143",customer_price_stock_approval_required
+158,en,Méditerranée tropicale,https://dragoman-turkey.com/product/tropical-mediterranean-french/,39,not_exported_as_site_option,no,instock,,159,"152,149,146,143",customer_price_stock_approval_required
+162,tr,Tropical Mediterranean,https://dragoman-turkey.com/tr/urun/tropikal-akdeniz-ingilizce/,39,not_exported_as_site_option,no,instock,,68,"154,151,148,145",customer_price_stock_approval_required
+164,tr,Méditerranée tropicale,https://dragoman-turkey.com/tr/urun/tropikal-akdeniz-fransizca/,39,not_exported_as_site_option,no,instock,,161,"154,151,148,145",customer_price_stock_approval_required
+165,tr,Dalış Rehberi - Kaş,https://dragoman-turkey.com/tr/urun/dalis-rehberi-kas/,30,not_exported_as_site_option,no,instock,,46,"49,55,52",customer_price_stock_approval_required
+166,tr,Tropikal Akdeniz,https://dragoman-turkey.com/tr/urun/tropikal-akdeniz-turkce/,39,not_exported_as_site_option,no,instock,,157,"154,151,148,145",customer_price_stock_approval_required
+993,fr,Méditerranée tropicale,https://dragoman-turkey.com/fr/produit/mediterranee-tropicale/,39,not_exported_as_site_option,no,instock,,160,"153,150,147,144",customer_price_stock_approval_required
+994,fr,Tropikal Akdeniz,https://dragoman-turkey.com/fr/produit/tropikal-akdeniz/,39,not_exported_as_site_option,no,instock,,156,,customer_price_stock_approval_required
+995,fr,Tropical Mediterranean,https://dragoman-turkey.com/fr/produit/tropical-mediterranean/,39,not_exported_as_site_option,no,instock,,67,"153,150,147,144",customer_price_stock_approval_required
