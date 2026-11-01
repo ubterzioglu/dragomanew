@@ -66,7 +66,7 @@ export function EventRequestForm({ event }: { event: DragomanEvent }) {
   return (
     <form method="post" noValidate onSubmit={handleSubmit(submit, focusDistribution)}>
       <DemoFormFields ready={ready} className="space-y-5">
-        <p className="rounded-lg bg-sand px-4 py-3">
+        <p className="rounded-lg border border-line bg-sand px-4 py-3">
           <span className="text-sm text-ink-muted">{ui.forms.activity}{ui.typography.labelSeparator}</span>
           <span className="font-semibold">{pick(event.title, locale).value}</span>
         </p>

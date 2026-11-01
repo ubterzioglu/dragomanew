@@ -59,7 +59,7 @@ export function ProductPage({ product }: { product: Product }) {
                 </div>
               ))}
             </dl>
-            <div className="mt-6 rounded-card bg-sand p-5">
+            <div className="mt-6 rounded-card border border-line bg-sand p-5">
               <p className="font-semibold">{ui.pages.howToOrder}</p>
               <p className="mt-1 text-ink-muted">{ui.pages.howToOrderText}</p>
               <div className="mt-4 flex flex-wrap gap-3">

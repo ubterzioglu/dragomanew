@@ -27,7 +27,7 @@ function TeamSection() {
         </h2>
         <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {team.map((member) => (
-            <li key={member.id} className="rounded-card bg-white p-5 shadow-sm">
+            <li key={member.id} className="rounded-card border border-line bg-white p-5 shadow-sm">
               <div className="aspect-square overflow-hidden rounded-lg bg-brand-green-soft">
                 {member.photo ? (
                   <Picture

@@ -52,7 +52,8 @@
 
   --color-ink: #14221d;
   --color-ink-muted: #4a5a54;
-  --color-sand: #f7f4ee;
+  /* Section and panel background. White on UBT's request (01.11.2026); one place to bring a tint back. */
+  --color-sand: #fff;
   --color-line: #e2ded5;
   /* Form field borders need 3:1 against white (WCAG 1.4.11); ~3.6:1. */
   --color-line-strong: #7d8a84;

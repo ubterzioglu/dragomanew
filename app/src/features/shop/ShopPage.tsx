@@ -34,7 +34,7 @@ export function ShopPage() {
             </li>
           ))}
         </ul>
-        <p className="mt-10 max-w-2xl rounded-card bg-sand p-5 text-ink-muted">
+        <p className="mt-10 max-w-2xl rounded-card border border-line bg-sand p-5 text-ink-muted">
           <strong className="text-ink">{ui.pages.howToOrder}</strong> {ui.pages.howToOrderText}
         </p>
       </div>

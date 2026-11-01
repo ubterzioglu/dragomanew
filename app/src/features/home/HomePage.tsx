@@ -99,7 +99,7 @@ export function HomePage() {
         </Badge>
         <ul className="grid gap-6 md:grid-cols-3">
           {content.testimonials().map((review) => (
-            <li key={review.id} className="rounded-card bg-white p-6 shadow-sm">
+            <li key={review.id} className="rounded-card border border-line bg-white p-6 shadow-sm">
               <p role="img" className="flex gap-0.5 text-brand-orange" aria-label={`${review.rating}/5`}>
                 {Array.from({ length: review.rating }, (_, i) => (
                   <Star key={i} aria-hidden="true" className="size-4 fill-current" />
