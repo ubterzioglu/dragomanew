@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.vite-react-ssg-temp/
+coverage/
+test-results/
+playwright-report/
+*.local
+.env
+.env.*
+!.env.example
+*.tsbuildinfo
+scripts/.media-cache.json
+# ~78 MiB of generated image copies; rebuild with `npm run media` from the local source archive.
+public/media/

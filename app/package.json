@@ -1,0 +1,55 @@
+{
+  "name": "dragoman-site",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vitest run tests/unit/content.test.ts && vite-react-ssg build",
+    "preview": "vite preview --port 4173 --strictPort",
+    "demo": "npm run build && npm run preview",
+    "postinstall": "npm install --prefix tools/lint --no-audit --no-fund",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "node tools/lint/node_modules/eslint/bin/eslint.js -c tools/lint/eslint.config.js --max-warnings 0 .",
+    "check:dist": "node scripts/check-dist.mjs",
+    "content-report": "node scripts/content-report.mjs",
+    "brand": "node scripts/brand-assets.mjs",
+    "media": "node scripts/images-optimize.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "e2e": "playwright test",
+    "screenshots": "playwright test tests/e2e/screenshots.spec.ts --project=desktop",
+    "verify": "npm run typecheck && npm run lint && npm test && npm run build && npm run check:dist && npm run e2e",
+    "fonts": "node scripts/fonts-subset.mjs"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^7.0.0",
+    "lucide-react": "^1.66.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-hook-form": "^7.91.0",
+    "react-router-dom": "^6.30.6",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.64.1",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "@vitest/coverage-v8": "^5.0.5",
+    "sharp": "^0.35.5",
+    "subset-font": "^2.9.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vite-react-ssg": "^0.9.2",
+    "vitest": "^5.0.5"
+  }
+}

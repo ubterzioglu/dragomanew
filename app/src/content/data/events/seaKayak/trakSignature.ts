@@ -1,0 +1,93 @@
+import type { DragomanEvent } from '../../../schema'
+
+/** One-to-one session, not a tour. The guide's name on the source page is left out on purpose. */
+export const trakSignature: DragomanEvent = {
+  id: "trak-signature",
+  category: "seaKayak",
+  subgroup: "kano-ozel-deneyim",
+  order: 1,
+  slug: { tr: "trak-signature-deneyimi", en: "trak-signature-experience", fr: "experience-trak-signature", de: "trak-signature-erlebnis" },
+  title: { tr: "TRAK Signature Deneyimi", en: "TRAK Signature Experience", fr: "Expérience TRAK Signature", de: "TRAK Signature Erlebnis" },
+  summary: {
+    tr: "Birebir özel seans: TRAK katlanır kayağı derinlemesine öğrenin.",
+    en: "A private one-to-one session to get to know the TRAK folding kayak in depth.",
+    fr: "Une séance privée en tête-à-tête pour découvrir en profondeur le kayak pliant TRAK.",
+    de: "Eine private Einzelsitzung, um das TRAK-Faltkajak genau kennenzulernen.",
+  },
+  body: {
+    tr: [
+      { type: "p", text: "Rehberimiz eşliğinde TRAK kayaklarıyla birebir bir pilotaj seansı. Bu bir tur değil: skin-on-frame (deri-iskelet) kayak sistemini derinlemesine anlamanız için tasarlanmış, taşınabilir kayakla yapılan özel bir deneyim. Kürek tekniğinizi geliştirir, sakin kıyı sularını keşfeder ve kayağın nasıl çalıştığını, nasıl seyahat ettiğini öğrenirsiniz." },
+      { type: "h2", text: "Bu deneyimi farklı kılan ne?" },
+      { type: "ul", items: ["Ekspedisyon seviyesinde katlanabilir bir TRAK kayağını adım adım kendiniz monte edersiniz.", "TRAK 2.0 kayağı için performans ayarlarının nasıl çalıştığını öğrenirsiniz.", "Kürek çekerken bölgenin tarihi mirasını görürsünüz.", "Simena kale köyünde öğle yemeği.", "Kayağın bir bavula nasıl sığdığını ve nasıl seyahat ettiğini görürsünüz.", "Birebir koçlukla suda özgüven kazanırsınız."] },
+      { type: "h2", text: "Her seviyeye uygun" },
+      { type: "p", text: "Yeni başlayanlarla güvenlik, denge ve özgüvene odaklanıyoruz. Deneyimli kürekçilerle kürek vuruşu, trim ayarı ve verimlilik üzerinde çalışıyor, isterseniz roll (kendini toparlama) tekniğini de pratik ediyoruz." },
+      { type: "h2", text: "Sizi neler bekliyor" },
+      { type: "ul", items: ["Karşılama ve taşınabilir kayak felsefesi üzerine sohbet", "Uygulamalı montaj: iskelet, deri kaplama, gerginlik ayarı ve kokpit", "Korunaklı koylar ve Kekova batık şehri geçişiyle keşif küreği", "Sahiplenme ve seyahat üzerine soru-cevap", "Kayağı toplama; günün fotoğraf ve videolarının paylaşımı"] },
+    ],
+    en: [
+      { type: "p", text: "A one-to-one piloting session with TRAK kayaks, accompanied by our guide. This is not a tour: it is a private experience with a portable kayak, designed to help you understand the skin-on-frame kayak system in depth. You improve your paddling technique, explore calm coastal waters and learn how the kayak works and how it travels." },
+      { type: "h2", text: "What makes it different?" },
+      { type: "ul", items: ["You assemble an expedition-grade TRAK folding kayak yourself, step by step.", "You learn how the performance adjustments of the TRAK 2.0 work.", "You see the historical heritage of the area while paddling.", "Lunch in the castle village of Simena.", "You see how the kayak fits into a suitcase and how it travels.", "One-to-one coaching builds real confidence on the water."] },
+      { type: "h2", text: "For every level" },
+      { type: "p", text: "With beginners we focus on safety, balance and confidence. With experienced paddlers we work on stroke, trim and efficiency, and you can even practise rolling if you wish." },
+      { type: "h2", text: "What to expect" },
+      { type: "ul", items: ["Welcome and a talk about the portable kayak philosophy", "Hands-on assembly: frame, skin, tensioning and cockpit", "An exploration paddle through sheltered coves and past the Kekova sunken city", "Questions and answers on owning and travelling with the kayak", "Packing up the kayak; photos and videos of the day are shared with you"] },
+    ],
+    fr: [
+      { type: "p", text: "Une séance de pilotage en tête-à-tête avec les kayaks TRAK, accompagnée par notre guide. Ce n'est pas une excursion : c'est une expérience privée avec un kayak portable, pensée pour comprendre en profondeur le système skin-on-frame (peau sur armature). Vous améliorez votre technique de pagaie, explorez des eaux côtières calmes et apprenez comment le kayak fonctionne et voyage." },
+      { type: "h2", text: "Ce qui la rend différente" },
+      { type: "ul", items: ["Vous montez vous-même, étape par étape, un kayak pliant TRAK de niveau expédition.", "Vous apprenez le fonctionnement des réglages de performance du TRAK 2.0.", "Vous découvrez le patrimoine historique de la région en pagayant.", "Déjeuner dans le village fortifié de Simena.", "Vous voyez comment le kayak tient dans une valise et comment il voyage.", "Le coaching individuel vous donne une vraie confiance sur l'eau."] },
+      { type: "h2", text: "Pour tous les niveaux" },
+      { type: "p", text: "Avec les débutants, nous travaillons la sécurité, l'équilibre et la confiance. Avec les pagayeurs expérimentés, nous travaillons le coup de pagaie, l'assiette et l'efficacité, et vous pouvez même vous exercer à l'esquimautage si vous le souhaitez." },
+      { type: "h2", text: "Au programme" },
+      { type: "ul", items: ["Accueil et échange sur la philosophie du kayak portable", "Montage pratique : armature, peau, mise en tension et hiloire", "Balade de découverte dans des criques abritées et le long de la cité engloutie de Kekova", "Questions-réponses sur l'achat et le voyage avec le kayak", "Démontage du kayak ; partage des photos et vidéos de la journée"] },
+    ],
+    de: [
+      { type: "p", text: "Eine Einzelsitzung im Steuern von TRAK-Kajaks, begleitet von unserem Guide. Dies ist keine Tour, sondern ein privates Erlebnis mit einem transportablen Kajak, das Ihnen das Skin-on-Frame-System gründlich näherbringt. Sie verbessern Ihre Paddeltechnik, erkunden ruhige Küstengewässer und lernen, wie das Kajak funktioniert und wie es reist." },
+      { type: "h2", text: "Was es besonders macht" },
+      { type: "ul", items: ["Sie bauen ein expeditionstaugliches TRAK-Faltkajak Schritt für Schritt selbst auf.", "Sie lernen, wie die Leistungseinstellungen des TRAK 2.0 funktionieren.", "Beim Paddeln sehen Sie das historische Erbe der Region.", "Mittagessen im Burgdorf Simena.", "Sie sehen, wie das Kajak in einen Koffer passt und wie es reist.", "Das Einzelcoaching gibt Ihnen echtes Selbstvertrauen auf dem Wasser."] },
+      { type: "h2", text: "Für jedes Niveau" },
+      { type: "p", text: "Mit Einsteigern konzentrieren wir uns auf Sicherheit, Gleichgewicht und Selbstvertrauen. Mit erfahrenen Paddlern arbeiten wir an Paddelschlag, Trimm und Effizienz, und auf Wunsch üben Sie sogar die Eskimorolle." },
+      { type: "h2", text: "Ablauf" },
+      { type: "ul", items: ["Begrüßung und Gespräch über die Idee des transportablen Kajaks", "Praktischer Aufbau: Gerüst, Haut, Spannung und Cockpit", "Entdeckungsfahrt durch geschützte Buchten und an der versunkenen Stadt Kekova vorbei", "Fragen und Antworten zu Besitz und Reisen mit dem Kajak", "Abbau des Kajaks; Fotos und Videos des Tages erhalten Sie von uns"] },
+    ],
+  },
+  duration: { tr: "1 gün", en: "1 day", fr: "1 jour", de: "1 Tag" },
+  priceDisplay: "on_request",
+  options: [],
+  cover: "kayak-trak-signature-1",
+  gallery: [],
+  includes: {
+    tr: ["TRAK kayak ve kürek", "Güvenlik ekipmanları", "Eğitim", "Fotoğraf ve kısa videolar", "Atıştırmalık ve öğle yemeği", "Ulaşım", "Koçluk (bahşiş hariç)"],
+    en: ["TRAK kayak and paddle", "Safety equipment", "Instruction", "Photos and short videos", "Snacks and lunch", "Transport", "Coaching (tips not included)"],
+    fr: ["Kayak et pagaie TRAK", "Équipement de sécurité", "Formation", "Photos et courtes vidéos", "Collations et déjeuner", "Transport", "Coaching (pourboires non compris)"],
+    de: ["TRAK-Kajak und Paddel", "Sicherheitsausrüstung", "Unterricht", "Fotos und kurze Videos", "Snacks und Mittagessen", "Transport", "Coaching (ohne Trinkgeld)"],
+  },
+  faq: [
+    {
+      question: { tr: "Bu bir grup turu mu?", en: "Is this a group tour?", fr: "S'agit-il d'une sortie en groupe ?", de: "Ist das eine Gruppentour?" },
+      answer: {
+        tr: "Hayır. TRAK Signature birebir özel bir seanstır; haftada sınırlı sayıda seans yapılır.",
+        en: "No. TRAK Signature is a private one-to-one session; only a limited number of sessions are held each week.",
+        fr: "Non. TRAK Signature est une séance privée en tête-à-tête ; le nombre de séances par semaine est limité.",
+        de: "Nein. TRAK Signature ist eine private Einzelsitzung; pro Woche gibt es nur eine begrenzte Zahl an Terminen.",
+      },
+    },
+    {
+      question: { tr: "Yeni başlayanlar katılabilir mi?", en: "Can beginners take part?", fr: "Les débutants peuvent-ils participer ?", de: "Können Einsteiger teilnehmen?" },
+      answer: {
+        tr: "Evet. Yeni başlayanlarla güvenlik, denge ve özgüvene; deneyimli kürekçilerle teknik ve verimliliğe odaklanılır.",
+        en: "Yes. With beginners the focus is on safety, balance and confidence; with experienced paddlers on technique and efficiency.",
+        fr: "Oui. Avec les débutants, l'accent est mis sur la sécurité, l'équilibre et la confiance ; avec les confirmés, sur la technique et l'efficacité.",
+        de: "Ja. Bei Einsteigern liegt der Schwerpunkt auf Sicherheit, Gleichgewicht und Selbstvertrauen, bei Erfahrenen auf Technik und Effizienz.",
+      },
+    },
+  ],
+  itinerary: [],
+  healthForm: null,
+  featured: false,
+  status: "published",
+  origin: "kayak-site",
+  translationOrigin: { en: "mockup", fr: "mockup", de: "mockup" },
+  sourceRefs: ["https://dragomanseakayak.com/tr/trak-experience/"],
+}

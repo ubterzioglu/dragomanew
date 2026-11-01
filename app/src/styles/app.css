@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+/*
+ * Self-hosted fonts (no third-party font requests): one file per weight covering TR/EN/FR/DE,
+ * built by scripts/fonts-subset.mjs from the OFL sources. Four weights in use; font-medium is not.
+ * The unicode-range matches UNICODE_RANGES in that script.
+ */
+@font-face {
+  font-family: "Barlow";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/barlow-400.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-017F, U+2010-2027, U+202F-203A, U+20AC, U+20BA, U+2122, U+2190-2193;
+}
+@font-face {
+  font-family: "Barlow";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../assets/fonts/barlow-600.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-017F, U+2010-2027, U+202F-203A, U+20AC, U+20BA, U+2122, U+2190-2193;
+}
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../assets/fonts/barlow-condensed-600.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-017F, U+2010-2027, U+202F-203A, U+20AC, U+20BA, U+2122, U+2190-2193;
+}
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/barlow-condensed-700.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-017F, U+2010-2027, U+202F-203A, U+20AC, U+20BA, U+2122, U+2190-2193;
+}
+
+@theme {
+  /* Brand colours sampled from the Dragoman logo. */
+  --color-brand-green: #006c50;
+  --color-brand-green-dark: #00523d;
+  --color-brand-green-soft: #e6f1ed;
+  --color-brand-orange: #e06c08;
+  /* Darker orange for text on light backgrounds (WCAG AA). */
+  --color-brand-orange-ink: #a34e00;
+  --color-brand-orange-soft: #fcefe3;
+  /* Lighter orange for text on the dark green footer (WCAG AA, ~4.7:1). */
+  --color-brand-orange-light: #f9a65a;
+
+  --color-ink: #14221d;
+  --color-ink-muted: #4a5a54;
+  --color-sand: #f7f4ee;
+  --color-line: #e2ded5;
+  /* Form field borders need 3:1 against white (WCAG 1.4.11); ~3.6:1. */
+  --color-line-strong: #7d8a84;
+  --color-sea: #0b4f6c;
+
+  --font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Barlow Condensed", "Barlow", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 0.75rem;
+}
+
+@layer base {
+  html {
+    color: var(--color-ink);
+    background: #fff;
+    -webkit-text-size-adjust: 100%;
+    /* Keep focused elements clear of the sticky header and mobile action bar. */
+    scroll-padding-top: 8.5rem; /* desktop sticky header is ~122px */
+    scroll-padding-bottom: 6rem;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    line-height: 1.1;
+    letter-spacing: 0.005em;
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-brand-orange);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@utility container-page {
+  width: 100%;
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+
+  @media (width >= 48rem) {
+    padding-inline: 1.5rem;
+  }
+}

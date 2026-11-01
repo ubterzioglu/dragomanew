@@ -1,0 +1,918 @@
+[
+  {
+    "id": "hero-diving",
+    "sourceFile": "dragoman-dalici-e90c75dd5dc2.jpg",
+    "topic": "Home hero tile: diving",
+    "alt": {
+      "tr": "Mavi suda bir halat boyunca inen iki dalgıç",
+      "en": "Two scuba divers descending along a rope in blue water",
+      "fr": "Deux plongeurs descendant le long d'un bout dans une eau bleue",
+      "de": "Zwei Taucher steigen an einem Seil im blauen Wasser ab"
+    }
+  },
+  {
+    "id": "hero-sea-kayak",
+    "sourceFile": "dragoman-sea-kayak-baf48f29d0e5.jpg",
+    "topic": "Home hero tile: sea kayak",
+    "alt": {
+      "tr": "Batık kalıntılar üzerindeki turkuaz suda tek bir deniz kanosu, havadan görünüm",
+      "en": "Aerial view of a single sea kayak on turquoise water over submerged ruins",
+      "fr": "Vue aérienne d'un kayak de mer sur une eau turquoise au-dessus de ruines immergées",
+      "de": "Luftaufnahme eines Seekajaks auf türkisfarbenem Wasser über versunkenen Ruinen"
+    }
+  },
+  {
+    "id": "hero-outdoor",
+    "sourceFile": "dragoman-doga-etkinlikleri-cf560658180c.jpg",
+    "topic": "Home hero tile: outdoor (coasteering)",
+    "alt": {
+      "tr": "Kasklı bir grup turkuaz denizin üzerindeki kayalık kıyıda tırmanıyor",
+      "en": "A group wearing helmets climbs along a rocky shoreline above turquoise sea",
+      "fr": "Un groupe casqué progresse sur une côte rocheuse au-dessus d'une mer turquoise",
+      "de": "Eine Gruppe mit Helmen klettert an einer Felsküste über türkisfarbenem Meer"
+    }
+  },
+  {
+    "id": "cover-diving",
+    "sourceFile": "dragoman-dalis-merkezi-mobile-6c55a16e5281.jpg",
+    "topic": "Category cover: diving",
+    "alt": {
+      "tr": "Kayalık deniz tabanı üzerinde yüzen bir deniz kaplumbağası",
+      "en": "A sea turtle swimming above a rocky seabed",
+      "fr": "Une tortue de mer nageant au-dessus d'un fond rocheux",
+      "de": "Eine Meeresschildkröte schwimmt über felsigem Meeresgrund"
+    }
+  },
+  {
+    "id": "cover-sea-kayak",
+    "sourceFile": "seakayak-klasik-kalekoy-dced579a9788.jpg",
+    "topic": "Category cover: sea kayak (Kaleköy)",
+    "alt": {
+      "tr": "Kaleköy'de kıyıdaki evlerin önünde deniz kanoları ve kanocular",
+      "en": "Sea kayaks and paddlers in front of waterfront houses in Kaleköy",
+      "fr": "Kayaks de mer et pagayeurs devant les maisons du bord de l'eau à Kaleköy",
+      "de": "Seekajaks und Paddler vor den Häusern am Ufer von Kaleköy"
+    }
+  },
+  {
+    "id": "cover-outdoor",
+    "sourceFile": "dragoman-doga-sporlari-013aba9e405c.jpg",
+    "topic": "Category cover: outdoor; hiking gallery",
+    "alt": {
+      "tr": "Sırt çantalı iki yürüyüşçü kayaya oyulmuş bir Likya mezarının önünde",
+      "en": "Two hikers with backpacks in front of a Lycian rock-cut tomb",
+      "fr": "Deux randonneurs avec sac à dos devant un tombeau lycien taillé dans la roche",
+      "de": "Zwei Wanderer mit Rucksäcken vor einem lykischen Felsengrab"
+    }
+  },
+  {
+    "id": "kas-town-view-1",
+    "sourceFile": "WhatsApp-Image-2025-04-13-at-20.06.07_80473eda-dec48b0d985e.jpg",
+    "topic": "Category cover: transport & accommodation; home quick link transport; outdoor private tour",
+    "alt": {
+      "tr": "Kaş kasabasına, marinaya ve açıktaki adalara tepeden bakış",
+      "en": "View from above over the town of Kaş, its marina and the islands offshore",
+      "fr": "Vue plongeante sur la ville de Kaş, sa marina et les îles au large",
+      "de": "Blick von oben auf Kaş, den Jachthafen und die vorgelagerten Inseln"
+    }
+  },
+  {
+    "id": "book-tropical-spread-1",
+    "sourceFile": "mediterranee-tropical-2-scaled-981ebe5c91a1.png",
+    "topic": "Category cover: shop; home quick link shop; Tropical Mediterranean gallery",
+    "alt": {
+      "tr": "Tropikal Akdeniz kitabından papağan balığı fotoğrafları ve metin içeren çift sayfa",
+      "en": "Double page from the Tropical Mediterranean book with parrotfish photos and text",
+      "fr": "Double page du livre Méditerranée tropicale avec des photos de poissons-perroquets et du texte",
+      "de": "Doppelseite aus dem Buch Tropical Mediterranean mit Papageifisch-Fotos und Text"
+    }
+  },
+  {
+    "id": "diving-try-dive-1",
+    "sourceFile": "TRY-1-5c120348deb7.jpg",
+    "topic": "Diving: try dive",
+    "alt": {
+      "tr": "Su altında kameraya el işareti yapan iki dalgıç",
+      "en": "Two divers underwater making hand signs at the camera",
+      "fr": "Deux plongeurs sous l'eau faisant des signes à l'objectif",
+      "de": "Zwei Taucher unter Wasser zeigen Handzeichen in die Kamera"
+    }
+  },
+  {
+    "id": "diving-course-training-1",
+    "sourceFile": "padi-discover-scuba-diver-2-8a3dbd9ca120.jpg",
+    "topic": "Diving: open water / SSI courses",
+    "alt": {
+      "tr": "Kumlu dipte diz çökmüş üç dalgıç ve önlerinde başka bir dalgıç",
+      "en": "Three divers kneeling on a sandy bottom, facing another diver",
+      "fr": "Trois plongeurs agenouillés sur le fond sableux face à un autre plongeur",
+      "de": "Drei Taucher knien auf sandigem Grund vor einem weiteren Taucher"
+    }
+  },
+  {
+    "id": "diving-wreck-plane-1",
+    "sourceFile": "dragoman-dalis-2-9fea9a95981b.jpg",
+    "topic": "Diving: wreck dives; Kaş dive sites page",
+    "alt": {
+      "tr": "Deniz tabanında yatan bir uçak enkazının pervanesi",
+      "en": "Propeller of an aircraft wreck resting on the seabed",
+      "fr": "Hélice d'une épave d'avion posée sur le fond",
+      "de": "Propeller eines Flugzeugwracks auf dem Meeresgrund"
+    }
+  },
+  {
+    "id": "diving-wreck-boat-1",
+    "sourceFile": "dragoman-dalis-3-20c5e24fafb1.jpg",
+    "topic": "Diving: wreck / boat dives",
+    "alt": {
+      "tr": "Batık bir teknenin üzerinde yüzen iki dalgıç",
+      "en": "Two divers swimming above a sunken boat",
+      "fr": "Deux plongeurs au-dessus d'une épave de bateau",
+      "de": "Zwei Taucher über einem gesunkenen Boot"
+    }
+  },
+  {
+    "id": "boat-dragoman-aerial-1",
+    "sourceFile": "tekne-dragoman2-md-2026-3-82189cb7d580.jpeg",
+    "topic": "Dive boat: fun dives, outdoor boat trip, about page",
+    "alt": {
+      "tr": "Koyda demirli iki katlı bir tekne, havadan görünüm",
+      "en": "Aerial view of a two-deck boat anchored in a bay",
+      "fr": "Vue aérienne d'un bateau à deux ponts au mouillage dans une baie",
+      "de": "Luftaufnahme eines Bootes mit zwei Decks, das in einer Bucht ankert"
+    }
+  },
+  {
+    "id": "boat-dragoman-1",
+    "sourceFile": "Dragoman-boat-ebc48728760a.jpg",
+    "topic": "Dive boat: boat dives, about page",
+    "alt": {
+      "tr": "Sakin denizde bekleyen iki katlı dalış teknesi",
+      "en": "Two-deck dive boat on calm water",
+      "fr": "Bateau de plongée à deux ponts sur une mer calme",
+      "de": "Tauchboot mit zwei Decks auf ruhigem Wasser"
+    }
+  },
+  {
+    "id": "diving-fun-dive-fish-1",
+    "sourceFile": "dragoman-dalis-4-46de76c42cc7.jpg",
+    "topic": "Diving: fun dives",
+    "alt": {
+      "tr": "Açık mavi suda yüzen iki büyük balık",
+      "en": "Two large fish swimming in open blue water",
+      "fr": "Deux grands poissons nageant en pleine eau",
+      "de": "Zwei große Fische im offenen blauen Wasser"
+    }
+  },
+  {
+    "id": "diving-turtle-2",
+    "sourceFile": "the-diving-guide-kas-02-b6647a8fc633.jpg",
+    "topic": "Diving: fun dives; The Diving Guide – Kaş gallery",
+    "alt": {
+      "tr": "Yakın planda bir deniz kaplumbağası",
+      "en": "Close-up of a sea turtle",
+      "fr": "Gros plan sur une tortue de mer",
+      "de": "Nahaufnahme einer Meeresschildkröte"
+    }
+  },
+  {
+    "id": "diving-seahorse-1",
+    "sourceFile": "the-diving-guide-kas-03-38829c30962f.jpg",
+    "topic": "Diving: advanced / specialty",
+    "alt": {
+      "tr": "Algler arasında sarı bir denizatı",
+      "en": "A yellow seahorse among algae",
+      "fr": "Un hippocampe jaune parmi les algues",
+      "de": "Ein gelbes Seepferdchen zwischen Algen"
+    }
+  },
+  {
+    "id": "diving-sea-urchin-1",
+    "sourceFile": "the-diving-guide-kas-04-4dadb4fd8b8e.jpg",
+    "topic": "Diving: specialty; The Diving Guide – Kaş gallery",
+    "alt": {
+      "tr": "Turuncu dikenli bir deniz kestanesinin yakın çekimi",
+      "en": "Close-up of an orange-spined sea urchin",
+      "fr": "Gros plan sur un oursin aux piquants orange",
+      "de": "Nahaufnahme eines Seeigels mit orangefarbenen Stacheln"
+    }
+  },
+  {
+    "id": "diving-nudibranch-1",
+    "sourceFile": "the-diving-guide-kas-05-d12b92534574.jpg",
+    "topic": "Diving: night dive",
+    "alt": {
+      "tr": "Koyu zemin önünde yeşil benekli deniz salyangozları",
+      "en": "Green spotted sea slugs against a dark background",
+      "fr": "Limaces de mer vertes tachetées sur fond sombre",
+      "de": "Grün gepunktete Meeresschnecken vor dunklem Hintergrund"
+    }
+  },
+  {
+    "id": "diving-cornetfish-1",
+    "sourceFile": "mediterranee-tropicale-cf6cbf61024d.png",
+    "topic": "Diving: night dive gallery",
+    "alt": {
+      "tr": "Karanlık suda ince uzun bir flüt balığı",
+      "en": "A long, slender cornetfish in dark water",
+      "fr": "Un fin poisson-flûte dans une eau sombre",
+      "de": "Ein langer, schlanker Flötenfisch im dunklen Wasser"
+    }
+  },
+  {
+    "id": "lifeguard-training-1",
+    "sourceFile": "dragoman-cankurtaran-egitimleri-1-5eb3c3d16f82.jpg",
+    "topic": "Lifeguard training page",
+    "alt": {
+      "tr": "Çakıllı plajda dizilmiş cankurtaran eğitim ekipmanları ve maketler",
+      "en": "Lifeguard training equipment and manikins laid out on a pebble beach",
+      "fr": "Matériel de formation de sauveteur et mannequins disposés sur une plage de galets",
+      "de": "Rettungsschwimmer-Ausrüstung und Übungspuppen auf einem Kiesstrand"
+    }
+  },
+  {
+    "id": "dive-sites-kas-map-1",
+    "sourceFile": "Kas-dalis-noktalari-harita-2048x1463-1-1c999102de9f.jpg",
+    "topic": "Kaş dive sites page: overview map; The Diving Guide – Kaş gallery",
+    "alt": {
+      "tr": "Kaş çevresindeki dalış noktalarını gösteren harita",
+      "en": "Map showing dive sites around Kaş",
+      "fr": "Carte des sites de plongée autour de Kaş",
+      "de": "Karte der Tauchplätze rund um Kaş"
+    }
+  },
+  {
+    "id": "dive-sites-canyon-map-1",
+    "sourceFile": "3-kanyon-draman-k-32c52b182a75.jpg",
+    "topic": "Kaş dive sites page: single site map",
+    "alt": {
+      "tr": "Derinlikleri ve dalış rotasını gösteren çizim dalış noktası haritası",
+      "en": "Illustrated dive site map with depths and dive route",
+      "fr": "Carte illustrée d'un site de plongée avec profondeurs et itinéraire",
+      "de": "Illustrierte Tauchplatzkarte mit Tiefenangaben und Tauchroute"
+    }
+  },
+  {
+    "id": "kayak-kekova-classic-1",
+    "sourceFile": "Kekova-Klasik-1d8658e7bbe5.jpeg",
+    "topic": "Sea kayak: Kekova Classic (cover)",
+    "alt": {
+      "tr": "Kekova'da antik kalıntılı kayalık kıyının önünde üç deniz kanosu",
+      "en": "Three sea kayaks in front of a rocky shore with ancient ruins in Kekova",
+      "fr": "Trois kayaks de mer devant une côte rocheuse aux ruines antiques à Kekova",
+      "de": "Drei Seekajaks vor felsiger Küste mit antiken Ruinen in Kekova"
+    }
+  },
+  {
+    "id": "kayak-kekova-classic-2",
+    "sourceFile": "dragoman-kekova-klasik-deniz-kanosu-265ebd7d0f73.jpg",
+    "topic": "Sea kayak: Kekova Classic gallery",
+    "alt": {
+      "tr": "Yüksek kaya duvarının önünde kırmızı deniz kanosuyla kürek çeken biri",
+      "en": "A paddler in a red sea kayak below a tall rock face",
+      "fr": "Un pagayeur en kayak de mer rouge au pied d'une haute paroi rocheuse",
+      "de": "Ein Paddler im roten Seekajak vor einer hohen Felswand"
+    }
+  },
+  {
+    "id": "kayak-kekova-classic-3",
+    "sourceFile": "Seakayak4-22e5e712468c.jpg",
+    "topic": "Sea kayak: Kekova Classic gallery (sunken city shore)",
+    "alt": {
+      "tr": "Antik duvar kalıntılarının önünde berrak suda iki deniz kanosu",
+      "en": "Two sea kayaks on clear water beside ancient wall remains",
+      "fr": "Deux kayaks de mer sur une eau limpide près de vestiges de murs antiques",
+      "de": "Zwei Seekajaks auf klarem Wasser neben antiken Mauerresten"
+    }
+  },
+  {
+    "id": "kayak-simena-castle-1",
+    "sourceFile": "seakayak-klasik-kalekoy-2-2018-scaled-1-c7b48c03e357.jpg",
+    "topic": "Sea kayak: Simena / Kaleköy castle (Kekova Classic, kayak & gulet)",
+    "alt": {
+      "tr": "Kaleköy (Simena) kalesinin surlarından köye ve koyda demirli teknelere bakış",
+      "en": "View from the walls of Kaleköy (Simena) castle over the village and boats anchored in the bay",
+      "fr": "Vue depuis les remparts du château de Kaleköy (Simena) sur le village et les bateaux au mouillage",
+      "de": "Blick von den Mauern der Burg von Kaleköy (Simena) auf das Dorf und ankernde Boote"
+    }
+  },
+  {
+    "id": "kayak-group-1",
+    "sourceFile": "Seakayak1-fc0af2b857a5.jpg",
+    "topic": "Sea kayak: group paddling (Kekova Classic, kayak & gulet)",
+    "alt": {
+      "tr": "Sarı deniz kanolarında yan yana el sallayan bir grup",
+      "en": "A group side by side in yellow sea kayaks, waving",
+      "fr": "Un groupe côte à côte dans des kayaks de mer jaunes, saluant",
+      "de": "Eine Gruppe in gelben Seekajaks nebeneinander, winkend"
+    }
+  },
+  {
+    "id": "kayak-kekova-west-1",
+    "sourceFile": "Kekova-west-0fe1e05d03b9.jpeg",
+    "topic": "Sea kayak: Kekova West / Aperlai (cover)",
+    "alt": {
+      "tr": "Açık denizde sarı yelkenli iki deniz kanosu",
+      "en": "Two sea kayaks with yellow sails on open water",
+      "fr": "Deux kayaks de mer avec des voiles jaunes en pleine mer",
+      "de": "Zwei Seekajaks mit gelben Segeln auf offenem Wasser"
+    }
+  },
+  {
+    "id": "kayak-kekova-west-2",
+    "sourceFile": "seakayak-west-yelken-336340e2cebc.png",
+    "topic": "Sea kayak: Kekova West gallery (kayak sailing)",
+    "alt": {
+      "tr": "Küçük bir yelkenle ilerleyen çift kişilik deniz kanosu",
+      "en": "A double sea kayak moving under a small sail",
+      "fr": "Un kayak de mer biplace avançant sous une petite voile",
+      "de": "Ein Zweier-Seekajak unter kleinem Segel"
+    }
+  },
+  {
+    "id": "kayak-aperlai-1",
+    "sourceFile": "West-1-53d8f73f413f.jpg",
+    "topic": "Sea kayak: Kekova West gallery (Aperlai sarcophagus)",
+    "alt": {
+      "tr": "Taşlı kıyıda sığ suda yarı batık bir lahit",
+      "en": "A partly submerged sarcophagus in shallow water by a stony shore",
+      "fr": "Un sarcophage à demi immergé en eau peu profonde près d'un rivage caillouteux",
+      "de": "Ein teilweise versunkener Sarkophag im flachen Wasser an steinigem Ufer"
+    }
+  },
+  {
+    "id": "kayak-aperlai-2",
+    "sourceFile": "West-3-82d1ea6eb9c0.jpg",
+    "topic": "Sea kayak: Kekova West gallery (Aperlai shore)",
+    "alt": {
+      "tr": "Kıyıda taş bir lahit, arkada koy ve küçük taş yapılar",
+      "en": "A stone sarcophagus on the shore with the bay and small stone buildings behind",
+      "fr": "Un sarcophage en pierre sur le rivage, avec la baie et de petits bâtiments en pierre",
+      "de": "Ein steinerner Sarkophag am Ufer, dahinter die Bucht und kleine Steinbauten"
+    }
+  },
+  {
+    "id": "kayak-aperlai-3",
+    "sourceFile": "West-8-3e3c795a0975.jpg",
+    "topic": "Sea kayak: Kekova West gallery (kayaks at ruins)",
+    "alt": {
+      "tr": "Sudaki antik duvar kalıntısının önünde deniz kanolarında üç kişi",
+      "en": "Three paddlers in sea kayaks in front of ancient wall ruins in the water",
+      "fr": "Trois pagayeurs en kayak devant des ruines antiques dans l'eau",
+      "de": "Drei Paddler in Seekajaks vor antiken Mauerresten im Wasser"
+    }
+  },
+  {
+    "id": "kayak-aperlai-4",
+    "sourceFile": "aperlai4-159e3371d423.jpeg",
+    "topic": "Sea kayak: Kekova West gallery (Aperlai, portrait)",
+    "alt": {
+      "tr": "Ağaçlık yamaçtaki antik kalıntıların altında kıyı boyunca ilerleyen deniz kanoları",
+      "en": "Sea kayaks along the shore below ancient ruins on a wooded hillside",
+      "fr": "Kayaks de mer longeant le rivage sous des ruines antiques à flanc de colline boisée",
+      "de": "Seekajaks entlang der Küste unterhalb antiker Ruinen am bewaldeten Hang"
+    }
+  },
+  {
+    "id": "kayak-kekova-east-1",
+    "sourceFile": "Kekova-east-a1e11a8697f6.jpeg",
+    "topic": "Sea kayak: Kekova East / Andriake (cover)",
+    "alt": {
+      "tr": "Turkuaz suyun altında uzanan batık antik duvar, arkada kayalık kıyı",
+      "en": "Submerged ancient wall under turquoise water with a rocky shore behind",
+      "fr": "Mur antique immergé sous une eau turquoise, côte rocheuse en arrière-plan",
+      "de": "Versunkene antike Mauer unter türkisfarbenem Wasser, dahinter felsige Küste"
+    }
+  },
+  {
+    "id": "kayak-kekova-east-2",
+    "sourceFile": "East-4-09b272b71edb.jpg",
+    "topic": "Sea kayak: Kekova East gallery (sea cave)",
+    "alt": {
+      "tr": "Bir deniz mağarasının ağzında sarı çift kişilik deniz kanosunda iki kişi",
+      "en": "Two people in a yellow double sea kayak at the mouth of a sea cave",
+      "fr": "Deux personnes dans un kayak biplace jaune à l'entrée d'une grotte marine",
+      "de": "Zwei Personen in einem gelben Zweier-Seekajak vor einer Meereshöhle"
+    }
+  },
+  {
+    "id": "kayak-kekova-east-3",
+    "sourceFile": "East-7-0a5a86a252f1.jpg",
+    "topic": "Sea kayak: Kekova East gallery (Andriake / Çayağzı delta)",
+    "alt": {
+      "tr": "Sazlık bir delta, kumsal ve deniz, havadan görünüm",
+      "en": "Aerial view of a reed-covered delta, beach and sea",
+      "fr": "Vue aérienne d'un delta couvert de roseaux, d'une plage et de la mer",
+      "de": "Luftaufnahme eines schilfbewachsenen Deltas mit Strand und Meer"
+    }
+  },
+  {
+    "id": "kayak-kekova-east-4",
+    "sourceFile": "East-2-54567d5e61d5.jpg",
+    "topic": "Sea kayak: Kekova East gallery",
+    "alt": {
+      "tr": "Kayalık yamacın önünde sarı deniz kanosunda iki kişi",
+      "en": "Two people in a yellow sea kayak beneath a rocky hillside",
+      "fr": "Deux personnes dans un kayak jaune au pied d'une colline rocheuse",
+      "de": "Zwei Personen in einem gelben Seekajak unter einem felsigen Hang"
+    }
+  },
+  {
+    "id": "kayak-kekova-east-5",
+    "sourceFile": "East-6-c5112f523d19.jpg",
+    "topic": "Sea kayak: Kekova East gallery (landscape)",
+    "alt": {
+      "tr": "Zeytin ağaçlı yamaçtan mavi koya ve karşıdaki adaya bakış",
+      "en": "View from an olive-covered slope over a blue bay and the island opposite",
+      "fr": "Vue depuis une pente plantée d'oliviers sur une baie bleue et l'île en face",
+      "de": "Blick von einem Hang mit Olivenbäumen auf eine blaue Bucht und die gegenüberliegende Insel"
+    }
+  },
+  {
+    "id": "kayak-kekova-bay-1",
+    "sourceFile": "Kekova-Delight-287127a10d4d.jpeg",
+    "topic": "Sea kayak: Kekova Bay 2 days (cover)",
+    "alt": {
+      "tr": "Antik taş duvar kalıntıları arasından koya bakış",
+      "en": "View of the bay between ancient stone wall remains",
+      "fr": "Vue sur la baie entre des vestiges de murs antiques",
+      "de": "Blick auf die Bucht zwischen antiken Mauerresten"
+    }
+  },
+  {
+    "id": "kayak-kekova-bay-2",
+    "sourceFile": "WhatsApp-Image-2025-04-13-at-20.05.08_cb9132d0-scaled-3d4c374c7bbd.jpg",
+    "topic": "Sea kayak: Kekova Bay 2 days gallery (portrait)",
+    "alt": {
+      "tr": "Kıyıdaki taş duvarın önünde deniz kanolarında dört kişi",
+      "en": "Four people in sea kayaks beside a stone wall on the shore",
+      "fr": "Quatre personnes en kayak de mer près d'un muret de pierre sur la rive",
+      "de": "Vier Personen in Seekajaks vor einer Steinmauer am Ufer"
+    }
+  },
+  {
+    "id": "kayak-kekova-bay-3",
+    "sourceFile": "Seakayak5-9bb3048edef2.jpg",
+    "topic": "Sea kayak: Kekova Bay 2 days gallery (camp beach)",
+    "alt": {
+      "tr": "Çakıllı kumsalda kanolar, arkada bir adacık ve antik bir kalıntı",
+      "en": "Kayaks on a pebble beach with an islet and an ancient ruin behind",
+      "fr": "Kayaks sur une plage de galets avec un îlot et une ruine antique",
+      "de": "Kajaks an einem Kiesstrand, dahinter eine kleine Insel und eine antike Ruine"
+    }
+  },
+  {
+    "id": "kayak-light-coast-1",
+    "sourceFile": "Coast-of-Light-c1251eb07f24.jpeg",
+    "topic": "Sea kayak: Işık Kıyısı / Light coast 4 days (cover)",
+    "alt": {
+      "tr": "Berrak bir koyda tek kişilik deniz kanosuyla kürek çeken biri",
+      "en": "A paddler in a single sea kayak in a clear bay",
+      "fr": "Un pagayeur en kayak solo dans une baie limpide",
+      "de": "Ein Paddler im Einer-Seekajak in einer klaren Bucht"
+    }
+  },
+  {
+    "id": "kayak-light-coast-2",
+    "sourceFile": "coast-of-light-seakayak-d77f49565984.jpeg",
+    "topic": "Sea kayak: Light coast 4 days gallery",
+    "alt": {
+      "tr": "Turkuaz suda yan yana duran yeşil deniz kanoları",
+      "en": "Green sea kayaks resting side by side on turquoise water",
+      "fr": "Kayaks de mer verts côte à côte sur une eau turquoise",
+      "de": "Grüne Seekajaks nebeneinander auf türkisfarbenem Wasser"
+    }
+  },
+  {
+    "id": "kayak-kekova-gulet-1",
+    "sourceFile": "Seakayak3-bd7c90474136.jpg",
+    "topic": "Sea kayak: Kekova kayak & gulet 7 days (cover)",
+    "alt": {
+      "tr": "Kale surlarından Kekova koyuna ve teknelere panoramik bakış",
+      "en": "Panoramic view from castle walls over Kekova bay and boats",
+      "fr": "Vue panoramique depuis les remparts sur la baie de Kekova et les bateaux",
+      "de": "Panoramablick von Burgmauern über die Bucht von Kekova und Boote"
+    }
+  },
+  {
+    "id": "kayak-lycian-comfort-1",
+    "sourceFile": "WhatsApp-Image-2025-04-13-at-20.06.10_7636baaa-scaled-891d40bc0b93.jpg",
+    "topic": "Sea kayak: Lycian kayak & comfort escape 7 days (cover); blog cover",
+    "alt": {
+      "tr": "Kale surları ve köyün üzerinden Kekova adasına ve koylara geniş bakış",
+      "en": "Wide view over castle walls and a village towards Kekova island and the bays",
+      "fr": "Vue large sur les remparts et le village vers l'île de Kekova et les baies",
+      "de": "Weiter Blick über Burgmauern und ein Dorf auf die Insel Kekova und die Buchten"
+    }
+  },
+  {
+    "id": "kayak-lycian-comfort-2",
+    "sourceFile": "WhatsApp-Image-2025-04-13-at-20.05.11_c12c9e24-scaled-8f7afa038924.jpg",
+    "topic": "Sea kayak: Lycian kayak & comfort escape gallery (portrait)",
+    "alt": {
+      "tr": "Kıyıdaki antik kalıntıların önünde suda deniz kanoları",
+      "en": "Sea kayaks on the water below ancient ruins on the shore",
+      "fr": "Kayaks de mer sur l'eau sous des ruines antiques du rivage",
+      "de": "Seekajaks auf dem Wasser unterhalb antiker Ruinen am Ufer"
+    }
+  },
+  {
+    "id": "kayak-sea-turtle-1",
+    "sourceFile": "WhatsApp-Image-2025-04-13-at-20.05.02_ef83f83a-3de101d8faad.jpg",
+    "topic": "Sea kayak: Lycian kayak & comfort escape gallery (wildlife)",
+    "alt": {
+      "tr": "Su yüzeyinin hemen altında yüzen bir deniz kaplumbağası",
+      "en": "A sea turtle swimming just below the surface",
+      "fr": "Une tortue de mer nageant juste sous la surface",
+      "de": "Eine Meeresschildkröte schwimmt dicht unter der Oberfläche"
+    }
+  },
+  {
+    "id": "kayak-caria-coast-1",
+    "sourceFile": "Karian-26c28dfb79d0.jpeg",
+    "topic": "Sea kayak: Caria coast 7 days (cover)",
+    "alt": {
+      "tr": "Ağaçların gölgelediği küçük bir koyda kumsala çekilmiş deniz kanoları ve demirli tekneler",
+      "en": "Sea kayaks pulled up on the beach of a small tree-shaded cove, with boats moored nearby",
+      "fr": "Kayaks de mer tirés sur la plage d'une petite crique ombragée, bateaux au mouillage",
+      "de": "An den Strand gezogene Seekajaks in einer kleinen, baumbeschatteten Bucht mit ankernden Booten"
+    }
+  },
+  {
+    "id": "kayak-trak-signature-1",
+    "sourceFile": "Oguzhan-scaled-f69416900cc5.jpg",
+    "topic": "Sea kayak: TRAK signature experience (cover, portrait)",
+    "alt": {
+      "tr": "Sarı deniz kanosunda kürek çeken biri ve kanodaki bir köpek",
+      "en": "A paddler in a yellow sea kayak with a dog on board",
+      "fr": "Un pagayeur dans un kayak de mer jaune avec un chien à bord",
+      "de": "Ein Paddler im gelben Seekajak mit einem Hund an Bord"
+    }
+  },
+  {
+    "id": "outdoor-multi-activity-1",
+    "sourceFile": "dragoman-sup-a2e9daa7dfd3.jpg",
+    "topic": "Outdoor: multi-activity (SUP)",
+    "alt": {
+      "tr": "Su seviyesinden çekilmiş, kumsalda duran SUP tahtaları",
+      "en": "SUP boards on a beach, photographed from water level",
+      "fr": "Planches de SUP sur une plage, vues depuis la surface de l'eau",
+      "de": "SUP-Boards am Strand, aus Wasserhöhe fotografiert"
+    }
+  },
+  {
+    "id": "outdoor-hiking-lycian-way-1",
+    "sourceFile": "dragoman-simena-seakayak-ea4aa011a165.jpg",
+    "topic": "Outdoor: hiking (Lycian Way)",
+    "alt": {
+      "tr": "Tepedeki kaleye doğru çalılık bir patikada yürüyen grup",
+      "en": "A group walking along a scrubby trail below a hilltop castle",
+      "fr": "Un groupe marchant sur un sentier de garrigue sous un château perché",
+      "de": "Eine Gruppe wandert auf einem Buschpfad unterhalb einer Burg auf dem Hügel"
+    }
+  },
+  {
+    "id": "outdoor-coasteering-1",
+    "sourceFile": "dragoman-kiyi-tirmanisi-2-028605535444.jpg",
+    "topic": "Outdoor: coasteering (cover)",
+    "alt": {
+      "tr": "Turkuaz suyun üzerindeki kayalık çıkıntıda zıplayan bir grup",
+      "en": "A group jumping on a cliff ledge above turquoise water",
+      "fr": "Un groupe sautant sur une corniche au-dessus d'une eau turquoise",
+      "de": "Eine Gruppe springt auf einem Felsvorsprung über türkisfarbenem Wasser"
+    }
+  },
+  {
+    "id": "outdoor-coasteering-2",
+    "sourceFile": "dragoman-kiyi-tirmanisi-4-a6e062640b07.jpg",
+    "topic": "Outdoor: coasteering gallery",
+    "alt": {
+      "tr": "Denizin üzerindeki turuncu kaya duvarına tırmanan biri",
+      "en": "A person climbing an orange rock wall above the sea",
+      "fr": "Une personne grimpant sur une paroi rocheuse orangée au-dessus de la mer",
+      "de": "Eine Person klettert an einer orangefarbenen Felswand über dem Meer"
+    }
+  },
+  {
+    "id": "outdoor-culture-1",
+    "sourceFile": "WhatsApp-Image-2025-04-13-at-20.05.18_0c7171a9-scaled-049bad5b649f.jpg",
+    "topic": "Outdoor: culture tour (cover)",
+    "alt": {
+      "tr": "Antik bir kentte iki yanı sütunlu, taş döşeli cadde",
+      "en": "A paved colonnaded street in an ancient city",
+      "fr": "Une rue dallée bordée de colonnes dans une cité antique",
+      "de": "Eine gepflasterte Säulenstraße in einer antiken Stadt"
+    }
+  },
+  {
+    "id": "outdoor-culture-2",
+    "sourceFile": "WhatsApp-Image-2025-04-13-at-20.05.02_de3b6139-ff5ae177a3e2.jpg",
+    "topic": "Outdoor: culture tour gallery (ancient theatre, aerial)",
+    "alt": {
+      "tr": "Antik tiyatro ve meclis binası kalıntıları, havadan görünüm",
+      "en": "Aerial view of an ancient theatre and the ruins of an assembly building",
+      "fr": "Vue aérienne d'un théâtre antique et des ruines d'un bâtiment d'assemblée",
+      "de": "Luftaufnahme eines antiken Theaters und der Ruinen eines Versammlungsgebäudes"
+    }
+  },
+  {
+    "id": "outdoor-beach-dunes-1",
+    "sourceFile": "WhatsApp-Image-2025-04-13-at-20.05.02_5f1bfabe-f09b56d7c564.jpg",
+    "topic": "Outdoor: culture / private tour gallery (sandy beach with dunes)",
+    "alt": {
+      "tr": "Kum tepeleriyle çevrili uzun bir kumsal ve turkuaz deniz",
+      "en": "A long sandy beach backed by dunes, with turquoise sea",
+      "fr": "Une longue plage de sable bordée de dunes et une mer turquoise",
+      "de": "Ein langer Sandstrand mit Dünen und türkisfarbenem Meer"
+    }
+  },
+  {
+    "id": "outdoor-cycling-placeholder",
+    "sourceFile": "generated-placeholder",
+    "topic": "Outdoor: cycling (no real cycling photo in the archive)",
+    "placeholder": true,
+    "alt": {
+      "tr": "Örnek görsel: bisiklet turu fotoğrafı henüz yok",
+      "en": "Sample image: cycling tour photo not yet available",
+      "fr": "Image d'exemple : photo de la sortie vélo pas encore disponible",
+      "de": "Beispielbild: Foto der Radtour noch nicht vorhanden"
+    }
+  },
+  {
+    "id": "transport-vehicle-placeholder",
+    "sourceFile": "generated-placeholder",
+    "topic": "Transport: transfer vehicle (no vehicle photo in the archive)",
+    "placeholder": true,
+    "alt": {
+      "tr": "Örnek görsel: transfer aracı fotoğrafı henüz yok",
+      "en": "Sample image: transfer vehicle photo not yet available",
+      "fr": "Image d'exemple : photo du véhicule de transfert pas encore disponible",
+      "de": "Beispielbild: Foto des Transferfahrzeugs noch nicht vorhanden"
+    }
+  },
+  {
+    "id": "lodging-guesthouse-room-1",
+    "sourceFile": "pansiyon-aa2f580e625c.jpg",
+    "topic": "Accommodation: guesthouse room",
+    "alt": {
+      "tr": "Çift kişilik yatağı, masası ve aynası olan sade bir pansiyon odası",
+      "en": "A simple guesthouse room with a double bed, desk and mirror",
+      "fr": "Une chambre de pension simple avec lit double, bureau et miroir",
+      "de": "Ein schlichtes Pensionszimmer mit Doppelbett, Schreibtisch und Spiegel"
+    }
+  },
+  {
+    "id": "lodging-hotel-pool-1",
+    "sourceFile": "dragoman-konaklama-3-yildiz-b30179d36879.jpg",
+    "topic": "Accommodation: hotel with pool",
+    "alt": {
+      "tr": "Gün batımında denize bakan bir otel havuzu ve terası",
+      "en": "A hotel pool and terrace overlooking the sea at sunset",
+      "fr": "Piscine et terrasse d'hôtel face à la mer au coucher du soleil",
+      "de": "Hotelpool und Terrasse mit Meerblick bei Sonnenuntergang"
+    }
+  },
+  {
+    "id": "book-diving-guide-kas",
+    "sourceFile": "diving-guide-kas-3-ce74f49ca286.jpg",
+    "topic": "Shop: book cover, The Diving Guide – Kaş",
+    "alt": {
+      "tr": "The Diving Guide – Kaş kitabının kapağı",
+      "en": "Cover of the book The Diving Guide – Kaş",
+      "fr": "Couverture du livre The Diving Guide – Kaş",
+      "de": "Cover des Buches The Diving Guide – Kaş"
+    }
+  },
+  {
+    "id": "book-tropical-mediterranean-en",
+    "sourceFile": "tropical-med-en-64982f0cf1b7.jpg",
+    "topic": "Shop: book cover, Tropical Mediterranean (English edition)",
+    "alt": {
+      "tr": "Tropical Mediterranean kitabının İngilizce baskısının kapağı",
+      "en": "Cover of the English edition of Tropical Mediterranean",
+      "fr": "Couverture de l'édition anglaise de Tropical Mediterranean",
+      "de": "Cover der englischen Ausgabe von Tropical Mediterranean"
+    }
+  },
+  {
+    "id": "book-tropical-mediterranean-tr",
+    "sourceFile": "tropical-med-tr-5c2d6952ab5f.png",
+    "topic": "Shop: book cover, Tropikal Akdeniz (Turkish edition)",
+    "alt": {
+      "tr": "Tropikal Akdeniz kitabının Türkçe baskısının kapağı",
+      "en": "Cover of the Turkish edition, Tropikal Akdeniz",
+      "fr": "Couverture de l'édition turque, Tropikal Akdeniz",
+      "de": "Cover der türkischen Ausgabe, Tropikal Akdeniz"
+    }
+  },
+  {
+    "id": "book-tropical-mediterranean-fr",
+    "sourceFile": "tropical-med-fr-bf91dac55308.png",
+    "topic": "Shop: book cover, Méditerranée tropicale (French edition)",
+    "alt": {
+      "tr": "Méditerranée tropicale kitabının Fransızca baskısının kapağı",
+      "en": "Cover of the French edition, Méditerranée tropicale",
+      "fr": "Couverture de l'édition française, Méditerranée tropicale",
+      "de": "Cover der französischen Ausgabe, Méditerranée tropicale"
+    }
+  },
+  {
+    "id": "book-tropical-spread-2",
+    "sourceFile": "mediterranee-tropicale-3-fef81c7fd676.png",
+    "topic": "Shop: Tropical Mediterranean gallery (sample page)",
+    "alt": {
+      "tr": "Tropikal Akdeniz kitabından deniz kestanesi fotoğraflarından oluşan sayfa",
+      "en": "Page of sea urchin photos from the Tropical Mediterranean book",
+      "fr": "Page de photos d'oursins du livre Méditerranée tropicale",
+      "de": "Seite mit Seeigel-Fotos aus dem Buch Tropical Mediterranean"
+    }
+  },
+  {
+    "id": "book-tropical-spread-3",
+    "sourceFile": "mediterranee-tropicale-4-scaled-52f869ac8f3e.png",
+    "topic": "Shop: Tropical Mediterranean gallery (sample page)",
+    "alt": {
+      "tr": "Tropikal Akdeniz kitabından çizgili balık fotoğrafları ve metin içeren çift sayfa",
+      "en": "Double page with striped fish photos and text from the Tropical Mediterranean book",
+      "fr": "Double page avec des photos de poissons rayés et du texte, tirée du livre Méditerranée tropicale",
+      "de": "Doppelseite mit Fotos gestreifter Fische und Text aus dem Buch Tropical Mediterranean"
+    }
+  },
+  {
+    "id": "book-tropical-spread-4",
+    "sourceFile": "mediterranee-tropicale-5-1e0e47bb47ea.png",
+    "topic": "Shop: Tropical Mediterranean gallery (sample page)",
+    "alt": {
+      "tr": "Tropikal Akdeniz kitabından aslan balığı fotoğrafları ve metin içeren çift sayfa",
+      "en": "Double page with lionfish photos and text from the Tropical Mediterranean book",
+      "fr": "Double page avec des photos de poissons-lions et du texte, tirée du livre Méditerranée tropicale",
+      "de": "Doppelseite mit Rotfeuerfisch-Fotos und Text aus dem Buch Tropical Mediterranean"
+    }
+  },
+  {
+    "id": "blog-raja-ampat",
+    "sourceFile": "Raja-Ampat-Sunger-1536x1023-1-4d088a74c07a.jpg",
+    "topic": "Blog cover: Raja Ampat",
+    "alt": {
+      "tr": "Renkli mercan ve süngerlerle kaplı bir resifin üzerinde dalgıç",
+      "en": "A diver above a reef covered in colourful corals and sponges",
+      "fr": "Un plongeur au-dessus d'un récif couvert de coraux et d'éponges colorés",
+      "de": "Ein Taucher über einem Riff mit bunten Korallen und Schwämmen"
+    }
+  },
+  {
+    "id": "blog-raja-ampat-2027",
+    "sourceFile": "Raja-Ampat-Bungalow-1536x864-1-40977ee2423d.jpg",
+    "topic": "Blog cover: Raja Ampat 2027",
+    "alt": {
+      "tr": "Ormanlık kıyının önünde su üzerine kurulmuş ahşap bungalovlar",
+      "en": "Wooden bungalows built over the water in front of a forested shore",
+      "fr": "Bungalows en bois sur pilotis devant une côte boisée",
+      "de": "Holzbungalows über dem Wasser vor bewaldeter Küste"
+    }
+  },
+  {
+    "id": "blog-raja-ampat-manta-1",
+    "sourceFile": "Raja-Ampat-Manta-1536x1023-1-8f872baaa894.jpg",
+    "topic": "Blog gallery: Raja Ampat",
+    "alt": {
+      "tr": "Mavi suda süzülen bir manta vatozu",
+      "en": "A manta ray gliding through blue water",
+      "fr": "Une raie manta glissant dans l'eau bleue",
+      "de": "Ein Mantarochen gleitet durch blaues Wasser"
+    }
+  },
+  {
+    "id": "blog-raja-ampat-clownfish-1",
+    "sourceFile": "Raja-ampat-Nemo-64c1b0024425.jpg",
+    "topic": "Blog gallery: Raja Ampat",
+    "alt": {
+      "tr": "Anemon dokunaçları arasında iki palyaço balığı",
+      "en": "Two clownfish among anemone tentacles",
+      "fr": "Deux poissons-clowns parmi les tentacules d'une anémone",
+      "de": "Zwei Clownfische zwischen Anemonententakeln"
+    }
+  },
+  {
+    "id": "blog-raja-ampat-pygmy-seahorse-1",
+    "sourceFile": "Raja-Ampat-At-1536x1023-1-6716526112b5.jpg",
+    "topic": "Blog gallery: Raja Ampat",
+    "alt": {
+      "tr": "Gorgon mercanı üzerinde pembe bir cüce denizatı",
+      "en": "A pink pygmy seahorse on a gorgonian coral",
+      "fr": "Un hippocampe pygmée rose sur une gorgone",
+      "de": "Ein rosa Zwergseepferdchen auf einer Gorgonie"
+    }
+  },
+  {
+    "id": "blog-maldives",
+    "sourceFile": "maldives-manta-222829270504.jpg",
+    "topic": "Blog cover: Maldives diving trip",
+    "alt": {
+      "tr": "Derin mavi suda yüzen bir manta vatozu",
+      "en": "A manta ray swimming in deep blue water",
+      "fr": "Une raie manta nageant dans le bleu profond",
+      "de": "Ein Mantarochen im tiefblauen Wasser"
+    }
+  },
+  {
+    "id": "blog-maldives-whale-shark-1",
+    "sourceFile": "Maldives-shark-5-cedbc9ba0d98.jpg",
+    "topic": "Blog gallery: Maldives",
+    "alt": {
+      "tr": "Yüzeye yakın yüzen benekli bir balina köpekbalığı",
+      "en": "A spotted whale shark swimming near the surface",
+      "fr": "Un requin-baleine tacheté nageant près de la surface",
+      "de": "Ein gefleckter Walhai schwimmt nahe der Oberfläche"
+    }
+  },
+  {
+    "id": "blog-sharm-el-sheikh",
+    "sourceFile": "Kizil-deniz-3-a4aed1efb52f.jpeg",
+    "topic": "Blog cover: Sharm el Sheikh diving trip",
+    "alt": {
+      "tr": "Gorgon mercanları ve resifin yanında yüzen bir dalgıç",
+      "en": "A diver swimming beside sea fans and reef",
+      "fr": "Un plongeur nageant près de gorgones et du récif",
+      "de": "Ein Taucher schwimmt neben Gorgonien und Riff"
+    }
+  },
+  {
+    "id": "blog-sharm-napoleon-1",
+    "sourceFile": "Kizil-deniz-1-997863db5b73.jpeg",
+    "topic": "Blog gallery: Sharm el Sheikh",
+    "alt": {
+      "tr": "Mercanlar arasında büyük bir napolyon balığı, arkada bir dalgıç",
+      "en": "A large humphead wrasse among corals, with a diver behind",
+      "fr": "Un grand napoléon parmi les coraux, un plongeur en arrière-plan",
+      "de": "Ein großer Napoleon-Lippfisch zwischen Korallen, dahinter ein Taucher"
+    }
+  },
+  {
+    "id": "blog-sharm-moray-1",
+    "sourceFile": "kizildeniz-4-fc2717292903.jpeg",
+    "topic": "Blog gallery: Sharm el Sheikh",
+    "alt": {
+      "tr": "Kayadaki deliklerden başını çıkaran iki açık renkli müren",
+      "en": "Two pale moray eels peering out of holes in the rock",
+      "fr": "Deux murènes claires sortant la tête de trous dans la roche",
+      "de": "Zwei helle Muränen schauen aus Felslöchern"
+    }
+  },
+  {
+    "id": "blog-sharm-resort-1",
+    "sourceFile": "Jaz-Fayrouz-Resort-3-8b71afa4c21e.jpg",
+    "topic": "Blog gallery: Sharm el Sheikh (resort)",
+    "alt": {
+      "tr": "Palmiyeler ve şemsiyelerle çevrili bir tatil köyü havuzu",
+      "en": "A resort pool lined with palms and parasols",
+      "fr": "Une piscine d'hôtel-club bordée de palmiers et de parasols",
+      "de": "Ein Resortpool mit Palmen und Sonnenschirmen"
+    }
+  },
+  {
+    "id": "blog-webinar-kas",
+    "sourceFile": "rediscover-kas-61fdc26f60cf.jpg",
+    "topic": "Blog cover: webinar replay ((Re)discover Kaş)",
+    "alt": {
+      "tr": "\"(Re)discover Kaş\" web semineri duyurusu: harita üzerinde etkinlik bilgileri",
+      "en": "Announcement graphic for the \"(Re)discover Kaş\" webinar, with event details over a map",
+      "fr": "Visuel d'annonce du webinaire « (Re)discover Kaş », avec les informations sur une carte",
+      "de": "Ankündigungsgrafik zum Webinar „(Re)discover Kaş“ mit Veranstaltungsangaben auf einer Karte"
+    }
+  },
+  {
+    "id": "about-office-1",
+    "sourceFile": "Ofis-foto-f2b2697538c3.jpeg",
+    "topic": "About / contact: Dragoman office (portrait)",
+    "alt": {
+      "tr": "Begonvillerle çevrili binanın zemin katında Dragoman dükkânının girişi",
+      "en": "Entrance of the Dragoman shop on the ground floor of a building with bougainvillea",
+      "fr": "Entrée de la boutique Dragoman au rez-de-chaussée d'un bâtiment fleuri de bougainvilliers",
+      "de": "Eingang des Dragoman-Ladens im Erdgeschoss eines Gebäudes mit Bougainvillea"
+    }
+  },
+  {
+    "id": "about-office-2",
+    "sourceFile": "dragoman-office-91b8564247bd.jpg",
+    "topic": "About / contact: Dragoman office front",
+    "alt": {
+      "tr": "Dragoman tabelalı dükkânın ön cephesi ve vitrinleri",
+      "en": "Shopfront of the Dragoman office with its sign and window displays",
+      "fr": "Devanture du bureau Dragoman avec son enseigne et ses vitrines",
+      "de": "Ladenfront des Dragoman-Büros mit Schild und Schaufenstern"
+    }
+  },
+  {
+    "id": "about-team-placeholder",
+    "sourceFile": "generated-placeholder",
+    "topic": "About: team group photo (only small individual portraits exist in the archive)",
+    "placeholder": true,
+    "alt": {
+      "tr": "Örnek görsel: ekip fotoğrafı henüz yok",
+      "en": "Sample image: team photo not yet available",
+      "fr": "Image d'exemple : photo de l'équipe pas encore disponible",
+      "de": "Beispielbild: Teamfoto noch nicht vorhanden"
+    }
+  }
+]
