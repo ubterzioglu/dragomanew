@@ -1,0 +1,13 @@
+# Only app/ goes into the image build, without local installs, builds or secrets.
+*
+!app
+app/node_modules
+app/tools/lint/node_modules
+app/dist
+app/.vite-react-ssg-temp
+app/coverage
+app/test-results
+app/playwright-report
+app/.env
+app/.env.*
+app/**/*.local

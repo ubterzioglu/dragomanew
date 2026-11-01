@@ -10,5 +10,3 @@ playwright-report/
 !.env.example
 *.tsbuildinfo
 scripts/.media-cache.json
-# ~78 MiB of generated image copies; rebuild with `npm run media` from the local source archive.
-public/media/
