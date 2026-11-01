@@ -236,43 +236,102 @@
   .dive-bubble:nth-child(19) { left: 92%; width: 0.625rem; animation-duration: 11s; animation-delay: -9s; }
   .dive-bubble:nth-child(20) { left: 96%; width: 2rem; animation-duration: 20s; animation-delay: -16s; }
 
-  .dive-fish {
+  /* Sea life by depth (UBT, 01.11.2026): small fish and a jellyfish near the surface, a turtle and
+     a barracuda in mid-water, a grouper, a stingray and a barracuda at the bottom. Each zone fades
+     with the dive; lib/diveDepth.ts (zoneOpacity) has the same ranges for browsers without scroll
+     timelines. Without either, the shallow zone stays. */
+  .dive-zone {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+
+  .dive-zone--shallow {
+    opacity: 1;
+  }
+
+  /* Longhands: the CSS minifier turns a shorthand without a name ("animation: linear both") into "none". */
+  @supports (animation-timeline: scroll()) {
+    .dive-zone {
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root block);
+    }
+
+    .dive-zone--shallow {
+      animation-name: zone-shallow;
+      animation-range: 0% 45%;
+    }
+
+    .dive-zone--mid {
+      animation-name: zone-mid;
+      animation-range: 25% 80%;
+    }
+
+    .dive-zone--deep {
+      animation-name: zone-deep;
+      animation-range: 60% 100%;
+    }
+  }
+
+  .dive-swimmer {
     position: absolute;
     left: 0;
     width: 4rem;
-    /* Faint enough that text a fish swims behind keeps 4.5:1 (ink-muted ~4.9:1 at full depth). */
-    color: rgb(11 79 108 / 0.11);
-    animation: fish-swim-left 44s linear infinite;
+    /* The whole animal at 8%, so its overlapping parts never darken. Faint enough that text an
+       animal swims behind keeps 4.5:1 at full depth (brand green ~4.6:1). */
+    color: rgb(11 79 108);
+    opacity: 0.08;
+    animation: swim-left 44s linear infinite;
   }
 
-  .dive-fish svg {
+  .dive-swimmer svg {
     display: block;
     width: 100%;
     height: auto;
-    animation: fish-wiggle 0.9s ease-in-out infinite alternate;
   }
 
-  /* Every second fish swims the other way, mirrored. */
-  .dive-fish:nth-child(even) {
-    animation-name: fish-swim-right;
+  .dive-swimmer--right {
+    animation-name: swim-right;
   }
 
-  .dive-fish:nth-child(even) svg {
+  .dive-swimmer--right svg {
     scale: -1 1;
   }
 
-  /* DiveBackground.tsx renders 6 fish: depth, size, speed and head start each. */
-  .dive-fish:nth-child(1) { top: 18%; width: 4.5rem; animation-duration: 46s; animation-delay: -10s; }
-  .dive-fish:nth-child(2) { top: 34%; width: 2.5rem; animation-duration: 32s; animation-delay: -25s; }
-  .dive-fish:nth-child(3) { top: 52%; width: 6rem; animation-duration: 60s; animation-delay: -40s; }
-  .dive-fish:nth-child(4) { top: 66%; width: 3rem; animation-duration: 38s; animation-delay: -5s; }
-  .dive-fish:nth-child(5) { top: 80%; width: 2rem; animation-duration: 28s; animation-delay: -18s; }
-  .dive-fish:nth-child(6) { top: 26%; width: 3.5rem; animation-duration: 50s; animation-delay: -33s; }
+  .dive-swimmer--fish svg {
+    animation: fish-wiggle 0.9s ease-in-out infinite alternate;
+  }
 
-  /* Phones: half the bubbles, three fish, no edge shade (the text column is the whole width). */
+  .dive-swimmer--glider svg {
+    animation: glide 5s ease-in-out infinite alternate;
+  }
+
+  .dive-swimmer--jelly {
+    animation: jelly-drift 30s ease-in-out infinite alternate;
+  }
+
+  .dive-swimmer--jelly svg {
+    animation: jelly-pulse 2.2s ease-in-out infinite alternate;
+  }
+
+  /* DiveBackground.tsx lists the animals of each zone; here each gets its depth, size, speed and head start. */
+  .dive-zone--shallow .dive-swimmer:nth-child(1) { top: 12%; width: 2.25rem; animation-duration: 30s; animation-delay: -6s; }
+  .dive-zone--shallow .dive-swimmer:nth-child(2) { top: 16%; width: 1.75rem; animation-duration: 30s; animation-delay: -8s; }
+  .dive-zone--shallow .dive-swimmer:nth-child(3) { top: 34%; width: 2rem; animation-duration: 34s; animation-delay: -20s; }
+  .dive-zone--shallow .dive-swimmer:nth-child(4) { top: 38%; width: 1.5rem; animation-duration: 34s; animation-delay: -22s; }
+  .dive-zone--shallow .dive-swimmer:nth-child(5) { top: 20%; width: 2.75rem; animation-duration: 28s; animation-delay: -10s; }
+  .dive-zone--mid .dive-swimmer:nth-child(1) { top: 40%; width: 7rem; animation-duration: 70s; animation-delay: -30s; }
+  .dive-zone--mid .dive-swimmer:nth-child(2) { top: 60%; width: 8rem; animation-duration: 40s; animation-delay: -12s; }
+  .dive-zone--mid .dive-swimmer:nth-child(3) { top: 74%; width: 2.25rem; animation-duration: 32s; animation-delay: -5s; }
+  .dive-zone--deep .dive-swimmer:nth-child(1) { top: 46%; width: 9rem; animation-duration: 80s; animation-delay: -35s; }
+  .dive-zone--deep .dive-swimmer:nth-child(2) { top: 66%; width: 8rem; animation-duration: 60s; animation-delay: -20s; }
+  .dive-zone--deep .dive-swimmer:nth-child(3) { top: 82%; width: 7rem; animation-duration: 38s; animation-delay: -28s; }
+
+  /* Phones: half the bubbles and a smaller cast per zone, no edge shade (the text column is the whole width). */
   @media (width < 48rem) {
     .dive-bubble:nth-child(even),
-    .dive-fish:nth-child(n + 4) {
+    .dive-swimmer--phone-hidden {
       display: none;
     }
   }
@@ -309,8 +368,12 @@
   }
 }
 
-/* 0.43 at 15% gives #e8f8f5 over white: the water is light early on and deepens towards the bottom. */
+/* 0.43 at 15% gives #e8f8f5 over white: the water is light early on and deepens towards the bottom.
+   The first keyframe is written out: Chrome eased the implicit one, which script (Firefox) cannot follow. */
 @keyframes dive-deeper {
+  0% {
+    opacity: 0;
+  }
   15% {
     opacity: 0.43;
   }
@@ -320,6 +383,9 @@
 }
 
 @keyframes dive-shade {
+  from {
+    opacity: 0;
+  }
   to {
     opacity: 1;
   }
@@ -363,21 +429,81 @@
   }
 }
 
-@keyframes fish-swim-left {
+/* Off screen at both ends: the widest animal (the grouper) is 9rem. */
+@keyframes swim-left {
   from {
     transform: translate3d(calc(100vw + 2rem), 0, 0);
   }
   to {
-    transform: translate3d(-8rem, 1.5rem, 0);
+    transform: translate3d(-10rem, 1.5rem, 0);
   }
 }
 
-@keyframes fish-swim-right {
+@keyframes swim-right {
   from {
-    transform: translate3d(-8rem, 0, 0);
+    transform: translate3d(-10rem, 0, 0);
   }
   to {
     transform: translate3d(calc(100vw + 2rem), -1.5rem, 0);
+  }
+}
+
+@keyframes glide {
+  from {
+    transform: rotate(-3deg) translateY(0.4rem);
+  }
+  to {
+    transform: rotate(3deg) translateY(-0.4rem);
+  }
+}
+
+@keyframes jelly-drift {
+  from {
+    transform: translate3d(70vw, 8vh, 0);
+  }
+  to {
+    transform: translate3d(20vw, -6vh, 0);
+  }
+}
+
+@keyframes jelly-pulse {
+  from {
+    transform: scale(1, 1);
+  }
+  to {
+    transform: scale(0.9, 1.08);
+  }
+}
+
+/* Zone fades over each zone's animation range; lib/diveDepth.ts (ZONE_FADES) mirrors them. */
+@keyframes zone-shallow {
+  0%,
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes zone-mid {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  25%,
+  75% {
+    opacity: 1;
+  }
+}
+
+@keyframes zone-deep {
+  0% {
+    opacity: 0;
+  }
+  40%,
+  100% {
+    opacity: 1;
   }
 }
 

@@ -1,6 +1,18 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 import { localePath } from '../../src/i18n/pages'
 import { gotoHydrated } from './helpers'
+
+const LAYERS = ['.dive-water', '.dive-zone--shallow', '.dive-zone--mid', '.dive-zone--deep'] as const
+
+/** Scrolls to a share of the page (0 top, 1 bottom). */
+async function scrollToProgress(page: Page, progress: number): Promise<void> {
+  await page.evaluate((share) => {
+    const root = document.documentElement
+    window.scrollTo(0, share * (root.scrollHeight - root.clientHeight))
+  }, progress)
+}
+
+const opacity = (page: Page, selector: string) => page.locator(selector).evaluate((el) => getComputedStyle(el).opacity)
 
 // The decorative dive background (UBT, 01.11.2026). Every other spec runs with reduced motion
 // (playwright.config.ts), so the moving parts are checked here.
@@ -15,15 +27,54 @@ test.describe('dive background with motion', () => {
     await expect(water).toHaveCSS('opacity', '0')
     await expect(gauge).toHaveText('0 m')
 
-    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight))
+    await scrollToProgress(page, 1)
     await expect(water).toHaveCSS('opacity', '1')
     await expect(gauge).toHaveText('30 m')
+  })
+
+  test('each depth has its own sea life', async ({ page }) => {
+    await gotoHydrated(page, localePath('tr', 'home'))
+    await expect.poll(() => opacity(page, '.dive-zone--shallow')).toBe('1')
+    await expect.poll(() => opacity(page, '.dive-zone--deep')).toBe('0')
+    await scrollToProgress(page, 0.5)
+    await expect.poll(() => opacity(page, '.dive-zone--mid')).toBe('1')
+    await expect.poll(() => opacity(page, '.dive-zone--shallow')).toBe('0')
+    await scrollToProgress(page, 1)
+    await expect.poll(() => opacity(page, '.dive-zone--deep')).toBe('1')
+    await expect.poll(() => opacity(page, '.dive-zone--mid')).toBe('0')
+  })
+
+  test('without scroll timelines (Firefox) script gives the water and the zones the same opacity', async ({ page }) => {
+    // Chromium has scroll timelines, so pretend it has not: the CSS animation still runs and wins on
+    // screen, while the script writes its own value into each element's style. Both must agree.
+    await page.addInitScript(() => {
+      const supports = CSS.supports.bind(CSS) as (condition: string, value?: string) => boolean
+      Object.defineProperty(CSS, 'supports', {
+        value: (condition: string, value?: string) =>
+          !condition.includes('animation-timeline') && (value === undefined ? supports(condition) : supports(condition, value)),
+      })
+    })
+    await gotoHydrated(page, localePath('tr', 'home'))
+    for (const progress of [0, 0.1, 0.35, 0.5, 0.7, 0.9, 1]) {
+      await scrollToProgress(page, progress)
+      for (const selector of LAYERS) {
+        await expect
+          .poll(() =>
+            page.locator(selector).evaluate((el) => {
+              const fromScript = Number((el as HTMLElement).style.opacity)
+              const fromCss = Number(getComputedStyle(el).opacity)
+              return Math.abs(fromScript - fromCss) < 0.03
+            }),
+          { message: `${selector} at ${progress}` })
+          .toBe(true)
+      }
+    }
   })
 
   test('the gauge follows the page height, and steps aside for a keyboard focus', async ({ page }) => {
     await gotoHydrated(page, localePath('tr', 'home'))
     const gauge = page.locator('.dive-gauge')
-    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight))
+    await scrollToProgress(page, 1)
     await expect(gauge).toHaveText('30 m')
     // Doubling the page height without a scroll: the same position is now halfway down.
     await page.evaluate(() => {
@@ -39,20 +90,20 @@ test.describe('dive background with motion', () => {
     await expect(gauge).toBeHidden()
   })
 
-  test('bubbles and fish move behind the content and never take clicks', async ({ page }) => {
+  test('bubbles and animals move behind the content and never take clicks', async ({ page }) => {
     await gotoHydrated(page, localePath('tr', 'home'))
     await expect(page.locator('.dive-bubble').first()).toBeVisible()
-    await expect(page.locator('.dive-fish').first()).toBeVisible()
+    await expect(page.locator('.dive-swimmer').first()).toBeVisible()
     await expect(page.locator('.dive-bg')).toHaveCSS('pointer-events', 'none')
     await expect(page.locator('.dive-gauge')).toHaveCSS('pointer-events', 'none')
     expect(await page.evaluate(() => document.getAnimations().length)).toBeGreaterThan(10)
   })
 })
 
-test('reduced motion: no bubbles or fish, the gauge still reads the depth', async ({ page }) => {
+test('reduced motion: no bubbles or animals, the gauge still reads the depth', async ({ page }) => {
   await gotoHydrated(page, localePath('tr', 'home'))
   await expect(page.locator('.dive-bubble').first()).toBeHidden()
-  await expect(page.locator('.dive-fish').first()).toBeHidden()
-  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight))
+  await expect(page.locator('.dive-swimmer').first()).toBeHidden()
+  await scrollToProgress(page, 1)
   await expect(page.locator('.dive-gauge')).toHaveText('30 m')
 })

@@ -1,6 +1,7 @@
 import { Gauge } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { diveDepth } from '../../lib/diveDepth'
+import { useDiveScroll } from './useDiveScroll'
 
 /**
  * Decorative dive-computer readout for the dive background (UBT, 01.11.2026): 0 m at the top of the
@@ -9,31 +10,7 @@ import { diveDepth } from '../../lib/diveDepth'
  */
 export function DepthGauge() {
   const [depth, setDepth] = useState(0)
-
-  useEffect(() => {
-    const root = document.documentElement
-    let frame = 0
-    // clientHeight, like the CSS scroll() range the water colour follows (innerHeight changes with mobile URL bars).
-    const update = () => {
-      frame = 0
-      setDepth(diveDepth(window.scrollY, root.scrollHeight - root.clientHeight))
-    }
-    const schedule = () => {
-      if (!frame) frame = requestAnimationFrame(update)
-    }
-    // The page also grows or shrinks without a scroll: an opened FAQ, late images, another route.
-    const resizes = new ResizeObserver(schedule)
-    update()
-    resizes.observe(document.body)
-    window.addEventListener('scroll', schedule, { passive: true })
-    window.addEventListener('resize', schedule)
-    return () => {
-      resizes.disconnect()
-      window.removeEventListener('scroll', schedule)
-      window.removeEventListener('resize', schedule)
-      cancelAnimationFrame(frame)
-    }
-  }, [])
+  useDiveScroll((progress) => setDepth(diveDepth(progress)))
 
   return (
     <div

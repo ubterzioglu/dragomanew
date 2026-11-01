@@ -10,7 +10,7 @@ export function NotFoundPage() {
     <>
       <PageHead title={ui.notFound.title} description={ui.notFound.body} alternates={pageAlternates('home')} alwaysNoindex />
       <div className="container-page py-20 text-center">
-        <p className="font-display text-7xl font-bold text-brand-orange">404</p>
+        <p className="font-display text-7xl font-bold text-brand-orange-ink">404</p>
         <h1 className="mt-4 text-4xl font-bold">{ui.notFound.title}</h1>
         <p className="mt-3 text-ink-muted">{ui.notFound.body}</p>
         <Link
