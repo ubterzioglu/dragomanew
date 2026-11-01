@@ -28,6 +28,18 @@ test.describe('first HTML without JavaScript', () => {
     await expect(page.locator(`a[href="${localePath('tr', event.category)}"]`).first()).toBeAttached()
   })
 
+  // Lighthouse counts every request that finished before the LCP paint, except low-priority images, toward LCP. On
+  // phones the next hero tile peeks into view, so without the hint Chrome may raise it to high priority (session 8).
+  // The app loader waits for the page's first img[fetchpriority=high], which must be the LCP tile.
+  test('home hero: only the first tile is a high-priority image, the others stay low', async ({ page }) => {
+    await page.goto(localePath('tr', 'home'))
+    const tiles = page.locator('section[aria-labelledby="hero-title"] ul img')
+    expect(await tiles.evaluateAll((images) => images.map((image) => image.getAttribute('fetchpriority')))).toEqual(['high', 'low', 'low'])
+    await expect(page.locator('img[fetchpriority="high"]')).toHaveCount(1)
+    // The loader waits for this image's Element Timing entry.
+    await expect(page.locator('img[fetchpriority="high"]')).toHaveAttribute('elementtiming', 'lcp-image')
+  })
+
   test('category page lists its activity cards', async ({ page }) => {
     await page.goto(localePath('en', 'seaKayak'))
     await expect(page.locator('main article')).not.toHaveCount(0)

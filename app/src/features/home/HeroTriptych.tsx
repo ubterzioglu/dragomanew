@@ -38,6 +38,7 @@ export function HeroTriptych({ hero }: { hero: HomeContent['hero'] }) {
                 // Phone tile is 4:5. The md+ tile is 3:4, but 33vw overstates its width enough to make up for that.
                 boxAspect={4 / 5}
                 priority={index === 0}
+                lowPriority={index > 0}
                 className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 via-60% to-transparent" />

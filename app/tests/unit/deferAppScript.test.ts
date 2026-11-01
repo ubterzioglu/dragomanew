@@ -15,10 +15,20 @@ interface FakeBrowser {
   observeThrows?: boolean
   /** The paint already happened before the loader ran: it is in the performance timeline. */
   paintedBefore?: boolean
+  /** The page has a fetchpriority="high" image whose decode() settles when the test says so. */
+  priorityImage?: boolean
+  /** Top of that 300 px tall image in the 800 px tall viewport. */
+  imageTop?: number
+  /** The engine has HTMLImageElement.decode() (Safari 11.1+, every current browser). */
+  decodeSupported?: boolean
+  /** The image carries elementtiming and the engine reports Element Timing entries (Chromium). */
+  elementTiming?: boolean
 }
 
 type Callback = () => void
-type PaintCallback = (list: { getEntriesByName: (name: string) => unknown[] }) => void
+type EntryList = { getEntriesByName: (name: string) => unknown[]; getEntries: () => unknown[] }
+type PaintCallback = (list: EntryList) => void
+type ObserverRecord = { onPaint: PaintCallback; options?: { type?: string; buffered?: boolean }; disconnected: boolean }
 
 /**
  * Runs the generated inline loader against a fake browser and records when the bundle is appended.
@@ -31,6 +41,10 @@ function runLoader({
   supportedEntryTypes = ['paint'],
   observeThrows = false,
   paintedBefore = false,
+  priorityImage = false,
+  imageTop = 120,
+  decodeSupported = true,
+  elementTiming = false,
 }: FakeBrowser = {}) {
   const loader = /<script>([\s\S]*?)<\/script>/.exec(deferAppScript(page(APP)))?.[1]
   if (!loader) throw new Error('no inline loader in the output')
@@ -38,23 +52,36 @@ function runLoader({
   const listeners = new Map<string, Callback[]>()
   const timers: Array<{ run: Callback; ms: number }> = []
   const frames: Callback[] = []
-  const observers: Array<{ onPaint: PaintCallback; options?: unknown; disconnected: boolean }> = []
+  const observers: ObserverRecord[] = []
+  let resolveDecode = (): void => undefined
+  let rejectDecode = (_error: Error): void => undefined
+  const decoding = new Promise<void>((resolve, reject) => {
+    resolveDecode = resolve
+    rejectDecode = reject
+  })
+  let top = imageTop
+  const image = {
+    decode: decodeSupported ? () => decoding : undefined,
+    getBoundingClientRect: () => ({ top, bottom: top + 300 }),
+    hasAttribute: (name: string) => elementTiming && name === 'elementtiming',
+  }
   const fakeDocument = {
     readyState,
     visibilityState: hidden ? 'hidden' : 'visible',
     head: { appendChild: (element: { type?: string; src?: string }) => appended.push(element) },
     createElement: () => ({}),
     addEventListener: (type: string, listener: Callback) => listeners.set(type, [...(listeners.get(type) ?? []), listener]),
+    querySelector: (selector: string) => (priorityImage && selector === 'img[fetchpriority=high]' ? image : null),
   }
   const fakePerformance = { getEntriesByName: (name: string) => (paintedBefore && name === FCP ? [{ name }] : []) }
   class FakeObserver {
-    static supportedEntryTypes = supportedEntryTypes
-    private readonly entry: { onPaint: PaintCallback; options?: unknown; disconnected: boolean }
+    static supportedEntryTypes = elementTiming ? [...supportedEntryTypes, 'element'] : supportedEntryTypes
+    private readonly entry: ObserverRecord
     constructor(onPaint: PaintCallback) {
       this.entry = { onPaint, disconnected: false }
       observers.push(this.entry)
     }
-    observe(options: unknown) {
+    observe(options: ObserverRecord['options']) {
       if (observeThrows) throw new TypeError('unsupported observe() options')
       this.entry.options = options
     }
@@ -62,7 +89,7 @@ function runLoader({
       this.entry.disconnected = true
     }
   }
-  const fakeWindow = { PerformanceObserver: paintTiming ? FakeObserver : undefined }
+  const fakeWindow = { PerformanceObserver: paintTiming ? FakeObserver : undefined, innerHeight: 800 }
   // The loader only touches these five globals, so they can be swapped for fakes.
   const run = new Function('document', 'window', 'performance', 'requestAnimationFrame', 'setTimeout', loader) as (...args: unknown[]) => void
   run(fakeDocument, fakeWindow, fakePerformance, (frame: Callback) => frames.push(frame), (timer: Callback, ms = 0) => timers.push({ run: timer, ms }))
@@ -73,10 +100,25 @@ function runLoader({
     fire: (type: string) => (listeners.get(type) ?? []).forEach((listener) => listener()),
     paint: (name: string) =>
       observers
-        .filter((o) => !o.disconnected && o.options)
-        .forEach((o) => o.onPaint({ getEntriesByName: (n) => (n === name ? [{ name }] : []) })),
+        .filter((o) => !o.disconnected && o.options?.type === 'paint')
+        .forEach((o) => o.onPaint({ getEntriesByName: (n) => (n === name ? [{ name }] : []), getEntries: () => [{ name }] })),
+    /** An element reaches the screen: its Element Timing entry (the priority image unless another is given). */
+    paintImage: (element: unknown = image) =>
+      observers
+        .filter((o) => !o.disconnected && o.options?.type === 'element')
+        .forEach((o) => o.onPaint({ getEntriesByName: () => [], getEntries: () => [{ element }] })),
+    /** The page scrolls, moving the image's top edge to `imageTop`. */
+    scrollImageTo: (imageTop: number) => {
+      top = imageTop
+    },
     hide: () => {
       fakeDocument.visibilityState = 'hidden'
+    },
+    /** Settles the priority image's decode() and lets its callbacks run. */
+    decode: async (ok: boolean) => {
+      if (ok) resolveDecode()
+      else rejectDecode(new Error('EncodingError'))
+      await decoding.catch(() => undefined)
     },
     /** Runs pending frame callbacks, then timers due within `upToMs`. */
     advance: (upToMs: number) => {
@@ -112,6 +154,126 @@ describe('deferAppScript', () => {
     browser.paint(FCP)
     expect(browser.appended).toEqual([{ type: 'module', crossOrigin: '', src: '/assets/app-abc.js' }])
     expect(browser.observers.every((o) => o.disconnected)).toBe(true)
+  })
+
+  it('with a priority (LCP) image, also waits until it is decoded and its frame has run', async () => {
+    const browser = runLoader({ priorityImage: true })
+    browser.paint(FCP)
+    browser.advance(0)
+    expect(browser.appended).toHaveLength(0)
+    await browser.decode(true)
+    expect(browser.appended).toHaveLength(0)
+    browser.advance(0)
+    expect(browser.appended).toHaveLength(1)
+  })
+
+  it('a priority image that cannot be decoded does not hold the bundle back', async () => {
+    const browser = runLoader({ priorityImage: true })
+    browser.paint(FCP)
+    await browser.decode(false)
+    browser.advance(0)
+    expect(browser.appended).toHaveLength(1)
+  })
+
+  // Both ways of learning about the paint reach the image wait, with or without Element Timing, so every combination
+  // must keep the limit and the hidden-tab exit.
+  describe.each([
+    ['the observer reports the paint', false, false],
+    ['the paint is already in the timeline', true, false],
+    ['the observer reports the paint, with Element Timing', false, true],
+    ['the paint is already in the timeline, with Element Timing', true, true],
+  ])('with a priority image, when %s', (_case, paintedBefore: boolean, elementTiming: boolean) => {
+    const start = () => {
+      const browser = runLoader({ priorityImage: true, paintedBefore, elementTiming })
+      if (!paintedBefore) browser.paint(FCP)
+      return browser
+    }
+
+    it('loads after three seconds when the image never finishes', () => {
+      const browser = start()
+      browser.advance(2999)
+      expect(browser.appended).toHaveLength(0)
+      browser.advance(3000)
+      expect(browser.appended).toHaveLength(1)
+    })
+
+    it('loads when the tab is hidden while the image decodes', () => {
+      const browser = start()
+      expect(browser.appended).toHaveLength(0)
+      browser.hide()
+      browser.fire('visibilitychange')
+      expect(browser.appended).toHaveLength(1)
+    })
+  })
+
+  describe('with Element Timing (Chromium)', () => {
+    const start = (elementTiming = true) => {
+      const browser = runLoader({ priorityImage: true, elementTiming })
+      browser.paint(FCP)
+      return browser
+    }
+
+    it("waits for the priority image's own paint entry, not for decode and a frame", async () => {
+      const browser = start()
+      expect(browser.observers.find((o) => o.options?.type === 'element')?.options).toEqual({ type: 'element', buffered: true })
+      await browser.decode(true)
+      browser.advance(0)
+      expect(browser.appended).toHaveLength(0)
+      browser.paintImage()
+      expect(browser.appended).toHaveLength(1)
+      expect(browser.observers.every((o) => o.disconnected)).toBe(true)
+    })
+
+    it('does not wait for a paint that cannot come: the image fails to decode', async () => {
+      const browser = start()
+      await browser.decode(false)
+      expect(browser.appended).toHaveLength(1)
+    })
+
+    it('does not wait for a paint that cannot come: the image left the screen before it was decoded', async () => {
+      const browser = start()
+      browser.scrollImageTo(-2500)
+      await browser.decode(true)
+      expect(browser.appended).toHaveLength(1)
+    })
+
+    it("another element's entry does not start it", () => {
+      const browser = start()
+      browser.paintImage({})
+      expect(browser.appended).toHaveLength(0)
+    })
+
+    it('still loads after three seconds when no entry arrives', () => {
+      const browser = start()
+      browser.advance(2999)
+      expect(browser.appended).toHaveLength(0)
+      browser.advance(3000)
+      expect(browser.appended).toHaveLength(1)
+    })
+
+    it('an image without elementtiming falls back to decode and a frame', async () => {
+      const browser = runLoader({ priorityImage: true, supportedEntryTypes: ['paint', 'element'] })
+      browser.paint(FCP)
+      expect(browser.observers.some((o) => o.options?.type === 'element')).toBe(false)
+      await browser.decode(true)
+      browser.advance(0)
+      expect(browser.appended).toHaveLength(1)
+    })
+  })
+
+  it.each([
+    ['below the first screen', 800],
+    ['above a restored scroll position', -2500],
+  ])('does not wait for a priority image %s (not the LCP)', (_case, imageTop: number) => {
+    const browser = runLoader({ priorityImage: true, imageTop, elementTiming: true })
+    browser.paint(FCP)
+    expect(browser.appended).toHaveLength(1)
+  })
+
+  it('does not wait for the image without HTMLImageElement.decode()', () => {
+    const browser = runLoader({ priorityImage: true, decodeSupported: false })
+    browser.paint(FCP)
+    expect(browser.appended).toHaveLength(1)
   })
 
   it('observes buffered paint entries', () => {
