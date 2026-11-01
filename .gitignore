@@ -1,8 +1,6 @@
-# Local WordPress source material: retain locally, outside public repository history.
-/cloner/source/
-/cloner/archive/
-/cloner/extracted/
-/cloner/*.xml
+# Local working material, kept out of the repository (31.10.2026): WordPress source and
+# analysis (tmp/cloner/), Stage A handover, progress log, review output and delivery (tmp/docs/).
+/tmp/
 
 # Local credentials and generated caches.
 .env
@@ -11,3 +9,9 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# Agent orchestration session state (any depth, including app/src/**).
+.omc/
+
+# Browser automation scratch output (screenshots, page snapshots).
+.playwright-mcp/
