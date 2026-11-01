@@ -54,7 +54,7 @@ test.describe('dive background with motion', () => {
     await expect(page.locator('.dive-zone--deep')).toHaveCSS('visibility', 'visible')
   })
 
-  test('without scroll timelines (Firefox) script gives the water and the zones the same opacity', async ({ page }) => {
+  test('without scroll timelines (Firefox) script gives the water and the zones the same opacity', async ({ page, isMobile }) => {
     // Chromium has scroll timelines, so pretend it has not: the CSS animation still runs and wins on
     // screen, while the script writes its own value into each element's style. Both must agree.
     await page.addInitScript(() => {
@@ -79,6 +79,17 @@ test.describe('dive background with motion', () => {
           { message: `${selector} at ${progress}` })
           .toBe(true)
       }
+      // The depth scale (shown on wide screens only; a hidden element runs no CSS animation).
+      if (isMobile) continue
+      await expect
+        .poll(() =>
+          page.locator('.dive-scale-fill').evaluate((el) => {
+            const fromScript = new DOMMatrix((el as HTMLElement).style.transform || 'none').d
+            const fromCss = new DOMMatrix(getComputedStyle(el).transform).d
+            return Math.abs(fromScript - fromCss) < 0.03
+          }),
+        { message: `.dive-scale-fill at ${progress}` })
+        .toBe(true)
     }
   })
 
@@ -109,6 +120,32 @@ test.describe('dive background with motion', () => {
     await expect(page.locator('.dive-gauge')).toHaveCSS('pointer-events', 'none')
     expect(await page.evaluate(() => document.getAnimations().length)).toBeGreaterThan(10)
   })
+})
+
+test('the depth scale on the left fills down to 30 m, beside the text column and never over it', async ({ page, isMobile }) => {
+  await gotoHydrated(page, localePath('tr', 'home'))
+  const scale = page.locator('.dive-scale')
+  if (isMobile) {
+    await expect(scale).toBeHidden()
+    return
+  }
+  await expect(scale).toBeVisible()
+  await expect(scale.locator('li')).toHaveText(['0', '5', '10', '15', '20', '25', '30'])
+  const fill = () => page.locator('.dive-scale-fill').evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).d)
+  await expect.poll(fill).toBe(0)
+  await scrollToProgress(page, 1)
+  await expect.poll(fill).toBe(1)
+  const [scaleBox, columnBox] = await Promise.all([scale.boundingBox(), page.locator('main .container-page').first().boundingBox()])
+  expect(scaleBox && columnBox && scaleBox.x + scaleBox.width <= columnBox.x).toBe(true)
+})
+
+test('reduced motion: the water still darkens with the scroll, a change of colour rather than motion', async ({ page }) => {
+  // The base rule shortens every animation to 0.01ms; a scroll timeline must not care.
+  await gotoHydrated(page, localePath('tr', 'home'))
+  await scrollToProgress(page, 1)
+  await expect.poll(() => opacity(page, '.dive-water--deep')).toBe(1)
+  await scrollToProgress(page, 0)
+  await expect.poll(() => opacity(page, '.dive-water--surface')).toBe(0)
 })
 
 test('reduced motion: no bubbles or animals, the gauge still reads the depth', async ({ page }) => {

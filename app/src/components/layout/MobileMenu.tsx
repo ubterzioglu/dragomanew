@@ -47,9 +47,17 @@ export function MobileMenu() {
       }
     }
     document.addEventListener('keydown', onKeyDown)
+    // From xl the header shows the desktop row and hides this menu: close it, or the page stays locked
+    // (a tablet turned to landscape, a widened window).
+    const desktop = window.matchMedia('(min-width: 80rem)')
+    const closeOnDesktop = () => {
+      if (desktop.matches) setOpen(false)
+    }
+    desktop.addEventListener('change', closeOnDesktop)
     return () => {
       document.body.style.overflow = previousOverflow
       document.removeEventListener('keydown', onKeyDown)
+      desktop.removeEventListener('change', closeOnDesktop)
     }
   }, [open])
 

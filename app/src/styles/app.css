@@ -101,7 +101,8 @@
     text-wrap: balance;
   }
 
-  /* Dark orange: keeps 3:1 on white and on the deepest dive water (brand orange drops to 2.7:1 there). */
+  /* Dark orange: keeps 3:1 on white and on the dive water's veil, where all focusable content sits
+     (brand orange drops below 3:1 there). */
   :focus-visible {
     outline: 3px solid var(--color-brand-orange-ink);
     outline-offset: 2px;
@@ -231,6 +232,14 @@
     translate: -50% 0;
     background: rgb(255 255 255 / 0.85);
     mask-image: linear-gradient(to right, transparent, #000 1rem, #000 calc(100% - 1rem), transparent);
+  }
+
+  /* Phones: the veil spans the screen, and a soft edge would fall under the focus rings of content at
+     the 1rem page edge. */
+  @media (width < 48rem) {
+    .dive-veil {
+      mask-image: none;
+    }
   }
 
   .dive-bubbles,
@@ -411,6 +420,104 @@
     }
   }
 
+  /* Fake depth scale on the left (UBT, 01.11.2026), in the dark style of the gauge on the right:
+     0–30 m, its bar filling and its marker sliding down with the scroll (lib/diveDepth.ts is not
+     needed: both follow the scroll evenly). Shown only from 85rem, where the margin left of the 76rem
+     text column is wide enough. */
+  .dive-scale {
+    position: fixed;
+    top: 50%;
+    left: 1.25rem;
+    z-index: 20;
+    display: none;
+    gap: 0.5rem;
+    height: min(60vh, 28rem);
+    padding: 0.875rem 0.625rem 0.875rem 0.75rem;
+    translate: 0 -50%;
+    pointer-events: none;
+    border-radius: 9999px;
+    background: rgb(20 34 29 / 0.85);
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+  }
+
+  @media (width >= 85rem) {
+    .dive-scale {
+      display: flex;
+    }
+  }
+
+  /* The track, with a tick every metre. */
+  .dive-scale-track {
+    position: relative;
+    width: 0.375rem;
+    border-radius: 9999px;
+    background:
+      repeating-linear-gradient(to bottom, rgb(255 255 255 / 0.5) 0 1px, transparent 1px calc(100% / 30)),
+      rgb(255 255 255 / 0.15);
+  }
+
+  .dive-scale-fill {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(to bottom, #c6efe9, #2f8fb0);
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+
+  /* As tall as the track: moved down by its own height, its top edge (the marker) runs 0 → 30 m. */
+  .dive-scale-runner {
+    position: absolute;
+    inset: 0;
+  }
+
+  .dive-scale-marker {
+    position: absolute;
+    top: -0.375rem;
+    left: 50%;
+    width: 0.75rem;
+    aspect-ratio: 1;
+    translate: -50% 0;
+    border: 2px solid #fff;
+    border-radius: 9999px;
+    background: #2f8fb0;
+  }
+
+  .dive-scale-labels {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-block: -0.375rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .dive-scale-unit {
+    align-self: flex-end;
+    opacity: 0.7;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .dive-scale-fill,
+    .dive-scale-runner {
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root block);
+    }
+
+    .dive-scale-fill {
+      animation-name: scale-fill;
+    }
+
+    .dive-scale-runner {
+      animation-name: scale-run;
+    }
+  }
+
   /* The depth gauge must never hide a keyboard focus (WCAG 2.4.11), and has no place on paper. */
   :root:has(:focus-visible) .dive-gauge {
     visibility: hidden;
@@ -418,7 +525,8 @@
 
   @media print {
     .dive-bg,
-    .dive-gauge {
+    .dive-gauge,
+    .dive-scale {
       display: none;
     }
   }
@@ -444,6 +552,24 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes scale-fill {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes scale-run {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
   }
 }
 

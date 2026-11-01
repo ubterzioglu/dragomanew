@@ -19,6 +19,17 @@ test.describe('E02 mobile', () => {
     await expect(page.getByRole('button', { name: ui.a11y.openMenu })).toBeFocused()
   })
 
+  test('an open menu closes and unlocks the page when the desktop row takes over', async ({ page }) => {
+    await gotoHydrated(page, localePath('tr', 'diving'))
+    await page.getByRole('button', { name: ui.a11y.openMenu }).click()
+    await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('hidden')
+    // A tablet turned to landscape: wider than xl (80rem), where the menu button is hidden.
+    await page.setViewportSize({ width: 1366, height: 1024 })
+    await expect.poll(() => page.evaluate(() => document.body.style.overflow)).not.toBe('hidden')
+    // Only the desktop row's menu is visible: the panel closed with it.
+    await expect(page.locator(`header nav[aria-label="${ui.a11y.mainNav}"]:visible`)).toHaveCount(1)
+  })
+
   test('language switcher keeps the same activity', async ({ page }) => {
     await page.goto(eventUrl('tr', events.klasik))
     // The header renders a desktop and a mobile switcher; only one is visible.

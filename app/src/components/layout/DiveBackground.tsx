@@ -1,7 +1,7 @@
 import { useRef, type ComponentType } from 'react'
 import { DIVE_ZONES, WATER_LAYERS, waterLayerOpacity, zoneOpacity, type DiveZone, type WaterLayer } from '../../lib/diveDepth'
 import { Barracuda, FishSchool, Grouper, Jellyfish, Moray, Octopus, Ray, SmallFish, Turtle } from './DiveCreatures'
-import { useDiveScroll } from './useDiveScroll'
+import { lacksScrollTimelines, useDiveScroll } from './useDiveScroll'
 
 /** Must match the bubbles styled one by one (nth-child) in app.css. */
 const BUBBLE_COUNT = 30
@@ -40,11 +40,6 @@ const ZONE_SWIMMERS: Record<DiveZone, readonly Swimmer[]> = {
     { Shape: Moray, kind: 'fish' },
     { Shape: Grouper, kind: 'fish', right: true, phoneHidden: true },
   ],
-}
-
-/** Browsers without scroll-driven animations (Firefox): the water and the zones follow the scroll from script. */
-function lacksScrollTimelines(): boolean {
-  return typeof CSS !== 'undefined' && !CSS.supports('animation-timeline: scroll()')
 }
 
 /** Opacity and visibility through the style object (CSSOM), which the page policy allows. */

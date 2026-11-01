@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { Outlet, ScrollRestoration, useMatches, type UIMatch } from 'react-router-dom'
 import { DepthGauge } from '../components/layout/DepthGauge'
+import { DepthScale } from '../components/layout/DepthScale'
 import { DiveBackground } from '../components/layout/DiveBackground'
 import { Footer } from '../components/layout/Footer'
 import { Header } from '../components/layout/Header'
@@ -53,6 +54,7 @@ export function RootLayout() {
             <Footer />
             <MobileActionBar cta={handle?.cta ?? 'contact'} />
             <DepthGauge />
+            <DepthScale />
           </div>
         </NotFoundPageProvider>
         {/* Hash entries from native "#id" navigation all share the "default" key; give them their own. */}

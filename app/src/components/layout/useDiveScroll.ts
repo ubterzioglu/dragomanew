@@ -1,6 +1,11 @@
 import { useEffect, useRef } from 'react'
 import { scrollProgress } from '../../lib/diveDepth'
 
+/** Browsers without scroll-driven animations (Firefox): the dive's scroll effects run from script there. */
+export function lacksScrollTimelines(): boolean {
+  return typeof CSS !== 'undefined' && !CSS.supports('animation-timeline: scroll()')
+}
+
 /**
  * Calls onProgress with the share of the page scrolled (0 at the top, 1 at the bottom), once per
  * frame at most: on scroll, on resize and when the page grows or shrinks without a scroll (an

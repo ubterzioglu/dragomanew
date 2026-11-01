@@ -74,7 +74,7 @@ export function EventDetailPage({ event }: { event: DragomanEvent }) {
 
       <div className="container-page grid gap-10 py-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         {/* First in the DOM so phones see price/duration right below the title; desktop puts it on the right. */}
-        <aside className="lg:sticky lg:top-32 lg:col-start-2 lg:row-start-1 lg:self-start">
+        <aside className="lg:sticky lg:top-24 lg:col-start-2 lg:row-start-1 lg:self-start">
           <EventInfoBox event={event} />
         </aside>
 
