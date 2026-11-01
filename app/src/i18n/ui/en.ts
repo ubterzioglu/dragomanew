@@ -37,6 +37,7 @@ export const en = {
     languageSwitcher: 'Language',
     breadcrumb: 'Breadcrumb',
     footerNav: 'Footer menu',
+    ascend: 'Surface: back to the top of the page',
   },
   actions: {
     explore: 'Explore',

@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 import { localePath } from '../../src/i18n/pages'
+import { getUi } from '../../src/i18n/ui'
 import { gotoHydrated } from './helpers'
 
 const WATER = ['.dive-water--surface', '.dive-water--mid', '.dive-water--deep'] as const
@@ -137,6 +138,23 @@ test('the depth scale on the left fills down to 30 m, beside the text column and
   await expect.poll(fill).toBe(1)
   const [scaleBox, columnBox] = await Promise.all([scale.boundingBox(), page.locator('main .container-page').first().boundingBox()])
   expect(scaleBox && columnBox && scaleBox.x + scaleBox.width <= columnBox.x).toBe(true)
+})
+
+test('the thumbs-up button appears a screen down and takes the page back to the top', async ({ page }) => {
+  await gotoHydrated(page, localePath('tr', 'home'))
+  const ascend = page.getByRole('button', { name: getUi('tr').a11y.ascend })
+  await expect(ascend).toHaveCount(0)
+  await scrollToProgress(page, 0.5)
+  await expect(ascend).toBeVisible()
+  // It sits above the gauge, not on it.
+  const [ascendBox, gaugeBox] = await Promise.all([ascend.boundingBox(), page.locator('.dive-gauge').boundingBox()])
+  expect(ascendBox && gaugeBox && ascendBox.y + ascendBox.height <= gaugeBox.y).toBe(true)
+
+  await ascend.click()
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0)
+  // Keyboard users carry on from the logo; the button goes away at the surface.
+  await expect(page.locator('header a').first()).toBeFocused()
+  await expect(ascend).toHaveCount(0)
 })
 
 test('reduced motion: the water still darkens with the scroll, a change of colour rather than motion', async ({ page }) => {

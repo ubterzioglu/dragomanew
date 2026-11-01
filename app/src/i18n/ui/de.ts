@@ -37,6 +37,7 @@ export const de = {
     languageSwitcher: 'Sprache',
     breadcrumb: 'Brotkrumennavigation',
     footerNav: 'Fußzeilenmenü',
+    ascend: 'Auftauchen: zurück zum Seitenanfang',
   },
   actions: {
     explore: 'Ansehen',

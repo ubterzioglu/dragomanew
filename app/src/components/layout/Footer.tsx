@@ -27,7 +27,25 @@ export function Footer() {
 
   return (
     <footer>
-      <div className="bg-brand-green-dark text-white">
+      {/* Sign-off above the green part, on the dive background (UBT, 01.11.2026). */}
+      <div className="container-page flex flex-col items-center gap-4 py-12 text-center md:py-16">
+        <img
+          src="/brand/dragoman-logo-480.webp"
+          srcSet="/brand/dragoman-logo-480.webp 480w, /brand/dragoman-logo-960.webp 960w"
+          sizes="(min-width: 48rem) 32rem, 75vw"
+          width={960}
+          height={416}
+          alt="Dragoman"
+          loading="lazy"
+          decoding="async"
+          className="h-auto w-3/4 max-w-lg"
+        />
+        <p className="font-display text-2xl font-semibold tracking-wide text-brand-orange-ink md:text-4xl">{ui.brand.slogan}</p>
+      </div>
+
+      {/* The green part ends the page. On phones the bottom padding keeps the copyright line clear of
+          the fixed action bar and of the depth gauge and ascend button stacked above it. */}
+      <div className="bg-brand-green-dark pb-48 text-white md:pb-0">
         <div className="container-page grid gap-10 py-12 md:grid-cols-2 lg:grid-cols-4">
           <section aria-labelledby="footer-contact">
             <h2 id="footer-contact" className={headingClass}>
@@ -110,23 +128,6 @@ export function Footer() {
             </p>
           </div>
         </div>
-      </div>
-
-      {/* Sign-off under the green part, on the dive background (UBT, 01.11.2026). The mobile bottom
-          padding keeps it clear of the fixed action bar and the depth gauge above it. */}
-      <div className="container-page flex flex-col items-center gap-4 pt-12 pb-40 text-center md:py-16">
-        <img
-          src="/brand/dragoman-logo-480.webp"
-          srcSet="/brand/dragoman-logo-480.webp 480w, /brand/dragoman-logo-960.webp 960w"
-          sizes="(min-width: 48rem) 32rem, 75vw"
-          width={960}
-          height={416}
-          alt="Dragoman"
-          loading="lazy"
-          decoding="async"
-          className="h-auto w-3/4 max-w-lg"
-        />
-        <p className="font-display text-2xl font-semibold tracking-wide text-brand-orange-ink md:text-4xl">{ui.brand.slogan}</p>
       </div>
     </footer>
   )

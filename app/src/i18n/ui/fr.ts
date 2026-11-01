@@ -37,6 +37,7 @@ export const fr = {
     languageSwitcher: 'Langue',
     breadcrumb: 'Fil d’Ariane',
     footerNav: 'Menu de pied de page',
+    ascend: 'Remonter : retour en haut de la page',
   },
   actions: {
     explore: 'Découvrir',

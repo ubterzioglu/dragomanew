@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { Outlet, ScrollRestoration, useMatches, type UIMatch } from 'react-router-dom'
+import { AscendButton } from '../components/layout/AscendButton'
 import { DepthGauge } from '../components/layout/DepthGauge'
 import { DepthScale } from '../components/layout/DepthScale'
 import { DiveBackground } from '../components/layout/DiveBackground'
@@ -54,6 +55,7 @@ export function RootLayout() {
             <Footer />
             <MobileActionBar cta={handle?.cta ?? 'contact'} />
             <DepthGauge />
+            <AscendButton />
             <DepthScale />
           </div>
         </NotFoundPageProvider>

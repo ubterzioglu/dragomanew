@@ -62,10 +62,21 @@ test.describe('E02 mobile', () => {
   test('fixed bar does not cover the bottom of the footer', async ({ page }) => {
     await page.goto(localePath('tr', 'home'))
     await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight))
-    const slogan = page.locator('footer').getByText(ui.brand.slogan)
-    const [sloganBox, barBox] = await Promise.all([slogan.boundingBox(), page.locator('div.fixed.bottom-0').boundingBox()])
-    expect(sloganBox && barBox && sloganBox.y + sloganBox.height <= barBox.y).toBe(true)
-    // The footer, with its logo sign-off, reaches the end of the page: nothing below it.
+    // The copyright line is the last text on the page; it stays above the bar, the depth gauge and
+    // the ascend button.
+    const copyright = page.locator('footer').getByText(ui.footer.rights)
+    const ascend = page.getByRole('button', { name: ui.a11y.ascend })
+    await expect(ascend).toBeVisible()
+    const [copyrightBox, ...fixedBoxes] = await Promise.all([
+      copyright.boundingBox(),
+      page.locator('div.fixed.bottom-0').boundingBox(),
+      page.locator('.dive-gauge').boundingBox(),
+      ascend.boundingBox(),
+    ])
+    for (const box of fixedBoxes) expect(copyrightBox && box && copyrightBox.y + copyrightBox.height <= box.y).toBe(true)
+    // The logo sign-off sits above the green part, and the green part ends the page.
+    const logoBottom = await page.locator('footer img[alt="Dragoman"]').evaluate((img) => img.getBoundingClientRect().bottom)
+    expect(logoBottom).toBeLessThanOrEqual(copyrightBox?.y ?? 0)
     const gap = await page.evaluate(() => {
       const footer = document.querySelector('footer')?.getBoundingClientRect()
       return footer ? document.documentElement.scrollHeight - (window.scrollY + footer.bottom) : Infinity

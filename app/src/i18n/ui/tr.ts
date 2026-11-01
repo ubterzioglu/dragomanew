@@ -36,6 +36,7 @@ export const tr = {
     languageSwitcher: 'Dil seçimi',
     breadcrumb: 'Sayfa konumu',
     footerNav: 'Alt menü',
+    ascend: 'Yüzeye çık: sayfanın başına dön',
   },
   actions: {
     explore: 'İncele',
