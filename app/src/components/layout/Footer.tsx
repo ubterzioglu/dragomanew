@@ -27,20 +27,24 @@ export function Footer() {
 
   return (
     <footer>
-      {/* Sign-off above the green part, on the dive background (UBT, 01.11.2026). */}
-      <div className="container-page flex flex-col items-center gap-4 py-12 text-center md:py-16">
-        <img
-          src="/brand/dragoman-logo-480.webp"
-          srcSet="/brand/dragoman-logo-480.webp 480w, /brand/dragoman-logo-960.webp 960w"
-          sizes="(min-width: 48rem) 32rem, 75vw"
-          width={960}
-          height={416}
-          alt="Dragoman"
-          loading="lazy"
-          decoding="async"
-          className="h-auto w-3/4 max-w-lg"
-        />
-        <p className="font-display text-2xl font-semibold tracking-wide text-brand-orange-ink md:text-4xl">{ui.brand.slogan}</p>
+      {/* Sign-off above the green part: its own full-width band on the soft green, so it reads as a
+          section of its own rather than the tail of the page text (UBT, 01.11.2026: "ayrı section,
+          biraz küçük"). */}
+      <div className="relative border-t border-brand-green-dark/15 bg-brand-green-soft">
+        <div className="container-page flex flex-col items-center gap-3 py-8 text-center md:py-10">
+          <img
+            src="/brand/dragoman-logo-480.webp"
+            srcSet="/brand/dragoman-logo-480.webp 480w, /brand/dragoman-logo-960.webp 960w"
+            sizes="(min-width: 48rem) 18rem, 50vw"
+            width={960}
+            height={416}
+            alt="Dragoman"
+            loading="lazy"
+            decoding="async"
+            className="h-auto w-1/2 max-w-72"
+          />
+          <p className="font-display text-lg font-semibold tracking-wide text-brand-orange-ink md:text-2xl">{ui.brand.slogan}</p>
+        </div>
       </div>
 
       {/* The green part ends the page. On phones the bottom padding keeps the copyright line clear of

@@ -1,6 +1,7 @@
 // Silhouettes for the dive background, solid currentColor, facing left; app.css mirrors the ones
 // that swim right and fades each animal as a whole, so parts that overlap never darken. Parts are
 // separate paths: inside one path, overlapping parts drawn the other way round would leave holes.
+// The divers' limbs are thick round-capped strokes: bolder than outlines at the 7–9rem they get.
 
 /** The small fish's outline, also used for the shoal. */
 const SMALL_FISH = 'M2 16C12 4 34 2 48 13L62 4 57 16l5 12-14-9C34 30 12 28 2 16Z'
@@ -89,6 +90,73 @@ export function Ray() {
   return (
     <svg viewBox="0 0 80 64" fill="currentColor">
       <path d="M6 32C14 22 26 6 34 4c6 8 12 18 16 26l28 1v2l-28 1c-4 8-10 18-16 26C26 58 14 42 6 32Z" />
+    </svg>
+  )
+}
+
+/**
+ * Scuba diver in side view, swimming level to the left: mask and regulator in front, tank on the
+ * back, one arm reaching forward, legs in a scissor kick with long fins. Drawn in a 128×62 box, the
+ * body between y 22 and 60, so the exhaled bubbles have room to rise above the head. The arm hangs
+ * clear of the regulator hose: close together they merged into one blob at 8rem.
+ */
+function DiverBody() {
+  return (
+    <g stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="23" cy="38" r="7.5" stroke="none" />
+      <rect x="12" y="33.5" width="8" height="7" rx="1.5" stroke="none" />
+      <rect x="11" y="42" width="7" height="4" rx="1.5" stroke="none" />
+      <path d="M17 44c5 5 11 4 15-1" fill="none" strokeWidth="2" />
+      <path d="M31 38h33" fill="none" strokeWidth="11" />
+      <rect x="34" y="23.5" width="30" height="9.5" rx="4.5" stroke="none" />
+      <rect x="30" y="25" width="5" height="5" rx="1" stroke="none" />
+      <path d="M40 43l-9 12H17" fill="none" strokeWidth="5" />
+      <path d="M64 37l18-5 18 4" fill="none" strokeWidth="6" />
+      <path d="M98 32c12-3 22-4 29-1-3 6-15 9-28 9Z" stroke="none" />
+      <path d="M64 40l16 6 16 4" fill="none" strokeWidth="6" />
+      <path d="M94 46c12 2 22 5 31 9-7 3-19 2-31-1Z" stroke="none" />
+    </g>
+  )
+}
+
+/**
+ * Three or four exhaled bubbles over the mask; app.css lets each one rise and fade in turn
+ * (.dive-exhale), so the diver reads as breathing. Rings, like the big bubbles of the water.
+ */
+function Exhale() {
+  return (
+    <g className="dive-exhale-trail">
+      <circle className="dive-exhale" cx="17" cy="29" r="2" />
+      <circle className="dive-exhale" cx="21" cy="27.5" r="2.6" />
+      <circle className="dive-exhale" cx="24" cy="28.5" r="1.6" />
+      <circle className="dive-exhale" cx="19" cy="30.5" r="3" />
+    </g>
+  )
+}
+
+/** Diver swimming level. */
+export function Diver() {
+  return (
+    <svg viewBox="0 0 128 62" fill="currentColor">
+      <DiverBody />
+      <Exhale />
+    </svg>
+  )
+}
+
+/**
+ * Diver descending head first, the body tilted 22° down; the bubbles stay outside the tilt and rise
+ * straight up, as they would in the water.
+ */
+export function DiverDescending() {
+  return (
+    <svg viewBox="0 0 130 82" fill="currentColor">
+      <g transform="rotate(-22 69 40)">
+        <DiverBody />
+      </g>
+      <g transform="translate(2 18)">
+        <Exhale />
+      </g>
     </svg>
   )
 }

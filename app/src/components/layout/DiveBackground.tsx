@@ -1,6 +1,6 @@
 import { useRef, type ComponentType } from 'react'
 import { DIVE_ZONES, WATER_LAYERS, waterLayerOpacity, zoneOpacity, type DiveZone, type WaterLayer } from '../../lib/diveDepth'
-import { Barracuda, FishSchool, Grouper, Jellyfish, Moray, Octopus, Ray, SmallFish, Turtle } from './DiveCreatures'
+import { Barracuda, Diver, DiverDescending, FishSchool, Grouper, Jellyfish, Moray, Octopus, Ray, SmallFish, Turtle } from './DiveCreatures'
 import { lacksScrollTimelines, useDiveScroll } from './useDiveScroll'
 
 /** Must match the bubbles styled one by one (nth-child) in app.css. */
@@ -8,14 +8,21 @@ const BUBBLE_COUNT = 30
 
 interface Swimmer {
   Shape: ComponentType
-  /** fish: tail wiggle · glider: slow tilt (turtle, ray) · drifter: drifts and pulses (jellyfish, octopus). */
-  kind: 'fish' | 'glider' | 'drifter'
+  /**
+   * fish: tail wiggle · glider: slow tilt (turtle, ray) · drifter: drifts and pulses (jellyfish, octopus) ·
+   * diver: a slow level swim with a gentle bob, breathing out bubbles.
+   */
+  kind: 'fish' | 'glider' | 'drifter' | 'diver'
   right?: boolean
   /** Left out on phones, which get a smaller cast. */
   phoneHidden?: boolean
 }
 
-/** Sea life by depth (UBT, 01.11.2026); app.css places each one (nth-child within its zone). */
+/**
+ * Sea life by depth (UBT, 01.11.2026), the divers added last in each zone (UBT, 01.11.2026: "arka
+ * planda dalgıçlar da olsun"); app.css places each one (nth-child within its zone), so the order
+ * here is part of the layout.
+ */
 const ZONE_SWIMMERS: Record<DiveZone, readonly Swimmer[]> = {
   shallow: [
     { Shape: SmallFish, kind: 'fish' },
@@ -25,6 +32,8 @@ const ZONE_SWIMMERS: Record<DiveZone, readonly Swimmer[]> = {
     { Shape: Jellyfish, kind: 'drifter' },
     { Shape: FishSchool, kind: 'fish', right: true },
     { Shape: Jellyfish, kind: 'drifter', phoneHidden: true },
+    // Just below the surface, on the way down.
+    { Shape: DiverDescending, kind: 'diver', phoneHidden: true },
   ],
   mid: [
     { Shape: Turtle, kind: 'glider', right: true },
@@ -32,6 +41,7 @@ const ZONE_SWIMMERS: Record<DiveZone, readonly Swimmer[]> = {
     { Shape: SmallFish, kind: 'fish', right: true },
     { Shape: Octopus, kind: 'drifter' },
     { Shape: FishSchool, kind: 'fish', phoneHidden: true },
+    { Shape: Diver, kind: 'diver' },
   ],
   deep: [
     { Shape: Grouper, kind: 'fish' },
@@ -39,6 +49,9 @@ const ZONE_SWIMMERS: Record<DiveZone, readonly Swimmer[]> = {
     { Shape: Barracuda, kind: 'fish', right: true, phoneHidden: true },
     { Shape: Moray, kind: 'fish' },
     { Shape: Grouper, kind: 'fish', right: true, phoneHidden: true },
+    // Swims right at the grouper's depth, towards it; the second one is still coming down.
+    { Shape: Diver, kind: 'diver', right: true },
+    { Shape: DiverDescending, kind: 'diver', phoneHidden: true },
   ],
 }
 

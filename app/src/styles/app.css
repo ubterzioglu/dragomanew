@@ -302,7 +302,8 @@
   .dive-bubble:nth-child(30) { left: 94%; width: 1.75rem; animation-duration: 20s; animation-delay: -3s; }
 
   /* Sea life by depth: small fish, a shoal and jellyfish near the surface; a turtle, a barracuda, an
-     octopus and a shoal in mid-water; groupers, a stingray, a barracuda and a moray at the bottom.
+     octopus and a shoal in mid-water; groupers, a stingray, a barracuda and a moray at the bottom;
+     divers where divers are, one descending near the surface, one in mid-water, two at the bottom.
      A zone out of view is also hidden, so the browser stops drawing its moving animals. Without
      scroll timelines or script, the shallow zone stays. */
   .dive-zone {
@@ -387,6 +388,27 @@
     animation: drift-pulse 2.2s ease-in-out infinite alternate;
   }
 
+  /* Divers swim level like the fish (swim-left/right, slower by their nth-child durations) with a
+     gentle bob, and breathe out: each exhaled bubble (one SVG ring) rises from the mask and fades in
+     turn, in the SVG's own units. Reduced motion hides the whole school, bubbles included. */
+  .dive-swimmer--diver svg {
+    animation: diver-bob 4.5s ease-in-out infinite alternate;
+  }
+
+  .dive-exhale {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: exhale 2.8s ease-out infinite;
+  }
+
+  .dive-exhale:nth-child(2) { animation-delay: 0.7s; }
+  .dive-exhale:nth-child(3) { animation-delay: 1.4s; }
+  .dive-exhale:nth-child(4) { animation-delay: 2.1s; }
+
   /* DiveBackground.tsx lists the animals of each zone; here each gets its depth, size, speed and head start. */
   .dive-zone--shallow .dive-swimmer:nth-child(1) { top: 10%; width: 2.25rem; animation-duration: 30s; animation-delay: -6s; }
   .dive-zone--shallow .dive-swimmer:nth-child(2) { top: 13%; width: 1.75rem; animation-duration: 30s; animation-delay: -8s; }
@@ -395,16 +417,20 @@
   .dive-zone--shallow .dive-swimmer:nth-child(5) { top: 18%; width: 2.75rem; animation-duration: 28s; animation-delay: -10s; }
   .dive-zone--shallow .dive-swimmer:nth-child(6) { top: 52%; width: 7rem; animation-duration: 40s; animation-delay: -15s; }
   .dive-zone--shallow .dive-swimmer:nth-child(7) { top: 64%; width: 2rem; animation-duration: 34s; animation-delay: -24s; }
+  .dive-zone--shallow .dive-swimmer:nth-child(8) { top: 40%; width: 7rem; animation-duration: 64s; animation-delay: -14s; }
   .dive-zone--mid .dive-swimmer:nth-child(1) { top: 36%; width: 7rem; animation-duration: 70s; animation-delay: -30s; }
   .dive-zone--mid .dive-swimmer:nth-child(2) { top: 58%; width: 8rem; animation-duration: 40s; animation-delay: -12s; }
   .dive-zone--mid .dive-swimmer:nth-child(3) { top: 74%; width: 2.25rem; animation-duration: 32s; animation-delay: -5s; }
   .dive-zone--mid .dive-swimmer:nth-child(4) { top: 20%; width: 4rem; animation-duration: 36s; animation-delay: -8s; }
   .dive-zone--mid .dive-swimmer:nth-child(5) { top: 84%; width: 6rem; animation-duration: 44s; animation-delay: -26s; }
+  .dive-zone--mid .dive-swimmer:nth-child(6) { top: 46%; width: 8rem; animation-duration: 76s; animation-delay: -44s; }
   .dive-zone--deep .dive-swimmer:nth-child(1) { top: 44%; width: 9rem; animation-duration: 80s; animation-delay: -35s; }
   .dive-zone--deep .dive-swimmer:nth-child(2) { top: 64%; width: 8rem; animation-duration: 60s; animation-delay: -20s; }
   .dive-zone--deep .dive-swimmer:nth-child(3) { top: 80%; width: 7rem; animation-duration: 38s; animation-delay: -28s; }
   .dive-zone--deep .dive-swimmer:nth-child(4) { top: 22%; width: 10rem; animation-duration: 55s; animation-delay: -10s; }
   .dive-zone--deep .dive-swimmer:nth-child(5) { top: 88%; width: 6rem; animation-duration: 66s; animation-delay: -50s; }
+  .dive-zone--deep .dive-swimmer:nth-child(6) { top: 52%; width: 8.5rem; animation-duration: 84s; animation-delay: -30s; }
+  .dive-zone--deep .dive-swimmer:nth-child(7) { top: 30%; width: 7rem; animation-duration: 72s; animation-delay: -58s; }
 
   /* Phones: half the bubbles and a smaller cast per zone, no edge shade (the text column is the whole width). */
   @media (width < 48rem) {
@@ -754,5 +780,29 @@
   }
   to {
     transform: rotate(4deg);
+  }
+}
+
+@keyframes diver-bob {
+  from {
+    transform: translateY(-0.3rem) rotate(-1.5deg);
+  }
+  to {
+    transform: translateY(0.3rem) rotate(1.5deg);
+  }
+}
+
+/* One exhaled bubble: grows as it rises some 24 SVG units and drifts back over the diver's head. */
+@keyframes exhale {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.5);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(5px, -24px) scale(1.2);
   }
 }

@@ -113,6 +113,27 @@ test.describe('dive background with motion', () => {
     await expect(gauge).toBeHidden()
   })
 
+  test('divers swim in mid and deep water, breathing out bubbles, with no style attribute from the server', async ({ page }) => {
+    // The prerendered HTML as served, before hydration: the strict page policy allows no style attribute.
+    const served = await (await page.request.get(localePath('tr', 'home'))).text()
+    const background = served.slice(served.indexOf('class="dive-bg"'), served.indexOf('class="dive-veil"'))
+    expect(background).toContain('dive-swimmer--diver')
+    expect(background).not.toContain(' style=')
+
+    await gotoHydrated(page, localePath('tr', 'home'))
+    await scrollToProgress(page, 0.5)
+    const midDiver = page.locator('.dive-zone--mid .dive-swimmer--diver').first()
+    await expect(midDiver).toBeVisible()
+    await expect(midDiver.locator('.dive-exhale')).toHaveCount(4)
+    // The exhaled bubbles run their own animation, on top of the diver's swim and bob.
+    expect(await midDiver.locator('.dive-exhale').first().evaluate((el) => el.getAnimations().length)).toBeGreaterThanOrEqual(1)
+
+    await scrollToProgress(page, 1)
+    await expect(page.locator('.dive-zone--deep .dive-swimmer--diver').first()).toBeVisible()
+    // Pale at the bottom, like the other deep animals.
+    await expect(page.locator('.dive-zone--deep .dive-swimmer--diver').first()).toHaveCSS('color', 'rgb(186, 230, 238)')
+  })
+
   test('bubbles and animals move behind the content and never take clicks', async ({ page }) => {
     await gotoHydrated(page, localePath('tr', 'home'))
     await expect(page.locator('.dive-bubble').first()).toBeVisible()
