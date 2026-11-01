@@ -58,7 +58,10 @@ export function DiveBackground() {
           if (shade.current) shade.current.style.opacity = String(progress)
           for (const zone of DIVE_ZONES) {
             const element = zones.current[zone]
-            if (element) element.style.opacity = String(zoneOpacity(zone, progress))
+            if (!element) continue
+            const shown = zoneOpacity(zone, progress)
+            element.style.opacity = String(shown)
+            element.style.visibility = shown > 0 ? 'visible' : 'hidden'
           }
         }
       : null,

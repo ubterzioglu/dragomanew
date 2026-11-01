@@ -36,12 +36,16 @@ test.describe('dive background with motion', () => {
     await gotoHydrated(page, localePath('tr', 'home'))
     await expect.poll(() => opacity(page, '.dive-zone--shallow')).toBe('1')
     await expect.poll(() => opacity(page, '.dive-zone--deep')).toBe('0')
+    // A zone out of view is hidden too, so its animals are not drawn.
+    await expect(page.locator('.dive-zone--deep')).toHaveCSS('visibility', 'hidden')
     await scrollToProgress(page, 0.5)
     await expect.poll(() => opacity(page, '.dive-zone--mid')).toBe('1')
     await expect.poll(() => opacity(page, '.dive-zone--shallow')).toBe('0')
+    await expect(page.locator('.dive-zone--shallow')).toHaveCSS('visibility', 'hidden')
     await scrollToProgress(page, 1)
     await expect.poll(() => opacity(page, '.dive-zone--deep')).toBe('1')
     await expect.poll(() => opacity(page, '.dive-zone--mid')).toBe('0')
+    await expect(page.locator('.dive-zone--deep')).toHaveCSS('visibility', 'visible')
   })
 
   test('without scroll timelines (Firefox) script gives the water and the zones the same opacity', async ({ page }) => {
@@ -61,9 +65,10 @@ test.describe('dive background with motion', () => {
         await expect
           .poll(() =>
             page.locator(selector).evaluate((el) => {
-              const fromScript = Number((el as HTMLElement).style.opacity)
-              const fromCss = Number(getComputedStyle(el).opacity)
-              return Math.abs(fromScript - fromCss) < 0.03
+              const { style } = el as HTMLElement
+              const computed = getComputedStyle(el)
+              const sameVisibility = !style.visibility || style.visibility === computed.visibility
+              return Math.abs(Number(style.opacity) - Number(computed.opacity)) < 0.03 && sameVisibility
             }),
           { message: `${selector} at ${progress}` })
           .toBe(true)

@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* Class names live in src/ and index.html. Tests, scripts and notes are not scanned: their words
+   ("container" in a comment, a class written in a test) would otherwise ship as utilities. */
+@source not "../../tests";
+@source not "../../scripts";
+@source not "../../deploy";
+@source not "../../tools";
+
 /*
  * Self-hosted fonts (no third-party font requests): one file per weight covering TR/EN/FR/DE,
  * built by scripts/fonts-subset.mjs from the OFL sources. Four weights in use; font-medium is not.
@@ -240,14 +247,17 @@
      a barracuda in mid-water, a grouper, a stingray and a barracuda at the bottom. Each zone fades
      with the dive; lib/diveDepth.ts (zoneOpacity) has the same ranges for browsers without scroll
      timelines. Without either, the shallow zone stays. */
+  /* A zone out of view is also hidden, so the browser stops drawing its moving animals. */
   .dive-zone {
     position: absolute;
     inset: 0;
     opacity: 0;
+    visibility: hidden;
   }
 
   .dive-zone--shallow {
     opacity: 1;
+    visibility: visible;
   }
 
   /* Longhands: the CSS minifier turns a shorthand without a name ("animation: linear both") into "none". */
@@ -480,9 +490,11 @@
   0%,
   70% {
     opacity: 1;
+    visibility: visible;
   }
   100% {
     opacity: 0;
+    visibility: hidden;
   }
 }
 
@@ -490,20 +502,24 @@
   0%,
   100% {
     opacity: 0;
+    visibility: hidden;
   }
   25%,
   75% {
     opacity: 1;
+    visibility: visible;
   }
 }
 
 @keyframes zone-deep {
   0% {
     opacity: 0;
+    visibility: hidden;
   }
   40%,
   100% {
     opacity: 1;
+    visibility: visible;
   }
 }
 
