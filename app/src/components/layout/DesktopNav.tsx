@@ -6,8 +6,9 @@ import { formatTemplate } from '../../i18n/ui'
 import { CATEGORY_NAV, type NavItem } from './navItems'
 import { SiteNavLink } from './SiteNavLink'
 
+// One-row header (Header.tsx): labels never wrap, at a size that fits all four languages from xl.
 const linkClass = ({ isActive }: { isActive: boolean }): string =>
-  `inline-flex min-h-11 items-center px-3 font-display text-lg font-semibold uppercase tracking-wide transition-colors ${
+  `inline-flex min-h-11 items-center whitespace-nowrap px-2.5 font-display text-base font-semibold uppercase tracking-wide transition-colors ${
     isActive ? 'text-brand-green' : 'text-ink hover:text-brand-green'
   }`
 
@@ -84,7 +85,7 @@ export function DesktopNav() {
   const locale = useLocale()
   const ui = useUi()
   return (
-    <nav aria-label={ui.a11y.mainNav} className="hidden lg:block">
+    <nav aria-label={ui.a11y.mainNav} className="hidden xl:block">
       <ul className="flex items-center">
         {CATEGORY_NAV.map((item) =>
           item.children ? (

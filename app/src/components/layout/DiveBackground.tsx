@@ -1,15 +1,15 @@
 import { useRef, type ComponentType } from 'react'
-import { DIVE_ZONES, waterOpacity, zoneOpacity, type DiveZone } from '../../lib/diveDepth'
-import { Barracuda, Grouper, Jellyfish, Ray, SmallFish, Turtle } from './DiveCreatures'
+import { DIVE_ZONES, WATER_LAYERS, waterLayerOpacity, zoneOpacity, type DiveZone, type WaterLayer } from '../../lib/diveDepth'
+import { Barracuda, FishSchool, Grouper, Jellyfish, Moray, Octopus, Ray, SmallFish, Turtle } from './DiveCreatures'
 import { useDiveScroll } from './useDiveScroll'
 
 /** Must match the bubbles styled one by one (nth-child) in app.css. */
-const BUBBLE_COUNT = 20
+const BUBBLE_COUNT = 30
 
 interface Swimmer {
   Shape: ComponentType
-  /** fish: tail wiggle · glider: slow tilt (turtle, ray) · jelly: drifts and pulses. */
-  kind: 'fish' | 'glider' | 'jelly'
+  /** fish: tail wiggle · glider: slow tilt (turtle, ray) · drifter: drifts and pulses (jellyfish, octopus). */
+  kind: 'fish' | 'glider' | 'drifter'
   right?: boolean
   /** Left out on phones, which get a smaller cast. */
   phoneHidden?: boolean
@@ -22,17 +22,23 @@ const ZONE_SWIMMERS: Record<DiveZone, readonly Swimmer[]> = {
     { Shape: SmallFish, kind: 'fish', phoneHidden: true },
     { Shape: SmallFish, kind: 'fish', right: true },
     { Shape: SmallFish, kind: 'fish', right: true, phoneHidden: true },
-    { Shape: Jellyfish, kind: 'jelly' },
+    { Shape: Jellyfish, kind: 'drifter' },
+    { Shape: FishSchool, kind: 'fish', right: true },
+    { Shape: Jellyfish, kind: 'drifter', phoneHidden: true },
   ],
   mid: [
     { Shape: Turtle, kind: 'glider', right: true },
     { Shape: Barracuda, kind: 'fish', phoneHidden: true },
     { Shape: SmallFish, kind: 'fish', right: true },
+    { Shape: Octopus, kind: 'drifter' },
+    { Shape: FishSchool, kind: 'fish', phoneHidden: true },
   ],
   deep: [
     { Shape: Grouper, kind: 'fish' },
     { Shape: Ray, kind: 'glider', right: true },
     { Shape: Barracuda, kind: 'fish', right: true, phoneHidden: true },
+    { Shape: Moray, kind: 'fish' },
+    { Shape: Grouper, kind: 'fish', right: true, phoneHidden: true },
   ],
 }
 
@@ -41,35 +47,44 @@ function lacksScrollTimelines(): boolean {
   return typeof CSS !== 'undefined' && !CSS.supports('animation-timeline: scroll()')
 }
 
+/** Opacity and visibility through the style object (CSSOM), which the page policy allows. */
+function show(element: HTMLElement | null | undefined, opacity: number): void {
+  if (!element) return
+  element.style.opacity = String(opacity)
+  element.style.visibility = opacity > 0 ? 'visible' : 'hidden'
+}
+
 /**
- * Decorative page background (UBT, 01.11.2026): the water turns from white to turquoise while
- * scrolling down, with light from the surface, plankton, rising bubbles and the sea life of each
- * depth (all styled in app.css).
+ * Decorative page background (UBT, 01.11.2026): the water darkens from white through turquoise and
+ * blue to navy while scrolling down, with light from the surface, plankton, rising bubbles and the
+ * sea life of each depth. A light veil behind the text column keeps the text readable on dark water.
+ * All styled in app.css; the server renders no style attribute.
  */
 export function DiveBackground() {
-  const water = useRef<HTMLDivElement>(null)
-  const shade = useRef<HTMLDivElement>(null)
+  const water = useRef<Partial<Record<WaterLayer, HTMLDivElement | null>>>({})
   const zones = useRef<Partial<Record<DiveZone, HTMLDivElement | null>>>({})
-  // Opacity through the style object (CSSOM), which the page policy allows; the server renders no style.
+  const shade = useRef<HTMLDivElement>(null)
   useDiveScroll(
     lacksScrollTimelines()
       ? (progress) => {
-          if (water.current) water.current.style.opacity = String(waterOpacity(progress))
-          if (shade.current) shade.current.style.opacity = String(progress)
-          for (const zone of DIVE_ZONES) {
-            const element = zones.current[zone]
-            if (!element) continue
-            const shown = zoneOpacity(zone, progress)
-            element.style.opacity = String(shown)
-            element.style.visibility = shown > 0 ? 'visible' : 'hidden'
-          }
+          for (const layer of WATER_LAYERS) show(water.current[layer], waterLayerOpacity(layer, progress))
+          for (const zone of DIVE_ZONES) show(zones.current[zone], zoneOpacity(zone, progress))
+          show(shade.current, progress)
         }
       : null,
   )
 
   return (
     <div className="dive-bg" aria-hidden="true">
-      <div ref={water} className="dive-water" />
+      {WATER_LAYERS.map((layer) => (
+        <div
+          key={layer}
+          ref={(element) => {
+            water.current[layer] = element
+          }}
+          className={`dive-water dive-water--${layer}`}
+        />
+      ))}
       <div ref={shade} className="dive-shade" />
       <div className="dive-bubbles">
         {Array.from({ length: BUBBLE_COUNT }, (_, index) => (
@@ -103,6 +118,7 @@ export function DiveBackground() {
           </div>
         ))}
       </div>
+      <div className="dive-veil" />
     </div>
   )
 }

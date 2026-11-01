@@ -1,10 +1,6 @@
 /** Depth the dive gauge shows at the bottom of the page (Kaş dives reach about 30 m). */
 export const MAX_DIVE_DEPTH_M = 30
 
-/** The dive-deeper keyframes in app.css: the water's opacity at 15 % of the page. Keep both in step. */
-const WATER_STOP = 0.15
-const WATER_AT_STOP = 0.43
-
 /** Share of the page scrolled: 0 at the top, 1 at the bottom, 0 on a page that does not scroll. */
 export function scrollProgress(scrollY: number, scrollable: number): number {
   if (!(scrollable > 0) || !(scrollY > 0)) return 0
@@ -45,9 +41,19 @@ export function zoneOpacity(zone: DiveZone, progress: number): number {
   return 1
 }
 
-/** Opacity of the turquoise water at a scroll progress, as the CSS keyframes give it where scroll timelines exist. */
-export function waterOpacity(progress: number): number {
-  const p = Math.min(Math.max(progress, 0), 1)
-  if (p <= WATER_STOP) return (p / WATER_STOP) * WATER_AT_STOP
-  return WATER_AT_STOP + ((p - WATER_STOP) / (1 - WATER_STOP)) * (1 - WATER_AT_STOP)
+/** The water darkens in three layers, each over its own part of the page: turquoise, blue, navy. */
+export type WaterLayer = 'surface' | 'mid' | 'deep'
+export const WATER_LAYERS: readonly WaterLayer[] = ['surface', 'mid', 'deep']
+
+/** app.css gives the same numbers as the water layers' animation ranges. Keep both in step. */
+const WATER_RAMPS: Record<WaterLayer, { start: number; end: number }> = {
+  surface: { start: 0, end: 0.2 },
+  mid: { start: 0.3, end: 0.7 },
+  deep: { start: 0.6, end: 1 },
+}
+
+/** Opacity of a water layer at a scroll progress: 0 before its range, rising evenly to 1 at its end. */
+export function waterLayerOpacity(layer: WaterLayer, progress: number): number {
+  const { start, end } = WATER_RAMPS[layer]
+  return Math.min(Math.max((progress - start) / (end - start), 0), 1)
 }

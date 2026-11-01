@@ -2,10 +2,50 @@
 // that swim right and fades each animal as a whole, so parts that overlap never darken. Parts are
 // separate paths: inside one path, overlapping parts drawn the other way round would leave holes.
 
+/** The small fish's outline, also used for the shoal. */
+const SMALL_FISH = 'M2 16C12 4 34 2 48 13L62 4 57 16l5 12-14-9C34 30 12 28 2 16Z'
+
 export function SmallFish() {
   return (
     <svg viewBox="0 0 64 32" fill="currentColor" fillRule="evenodd">
-      <path d="M2 16C12 4 34 2 48 13L62 4 57 16l5 12-14-9C34 30 12 28 2 16Zm11-3a2 2 0 1 0 4 0 2 2 0 1 0-4 0Z" />
+      <path d={`${SMALL_FISH}m11-3a2 2 0 1 0 4 0 2 2 0 1 0-4 0Z`} />
+    </svg>
+  )
+}
+
+/** A shoal of five small fish swimming together. */
+export function FishSchool() {
+  return (
+    <svg viewBox="0 0 160 90" fill="currentColor">
+      <path d={SMALL_FISH} transform="translate(0 20) scale(0.8)" />
+      <path d={SMALL_FISH} transform="translate(46 0) scale(0.7)" />
+      <path d={SMALL_FISH} transform="translate(56 44) scale(0.75)" />
+      <path d={SMALL_FISH} transform="translate(104 18) scale(0.65)" />
+      <path d={SMALL_FISH} transform="translate(100 62) scale(0.6)" />
+    </svg>
+  )
+}
+
+/** Octopus: a round head and six curling arms. */
+export function Octopus() {
+  return (
+    <svg viewBox="0 0 48 56" fill="currentColor">
+      <path d="M24 2c9 0 15 7 15 15 0 6-3 10-6 12H15c-3-2-6-6-6-12C9 9 15 2 24 2Z" />
+      <path d="M16 27c-2 8-7 14-13 15 1 2 4 2 7 0 4-3 7-8 8-14Z" />
+      <path d="M19 28c-1 9-3 16-8 22 2 1 5-1 7-4 3-5 4-11 4-18Z" />
+      <path d="M22 29c0 9 0 17-3 24 2 0 4-2 5-5 1-6 1-12 1-19Z" />
+      <path d="M26 29c0 7 0 13 1 19 1 3 3 5 5 5-3-7-3-15-3-24Z" />
+      <path d="M29 28c0 7 1 13 4 18 2 3 5 5 7 4-5-6-7-13-8-22Z" />
+      <path d="M32 27c1 6 4 11 8 14 3 2 6 2 7 0-6-1-11-7-13-15Z" />
+    </svg>
+  )
+}
+
+/** Moray eel: a long body in waves. */
+export function Moray() {
+  return (
+    <svg viewBox="0 0 120 26" fill="currentColor" fillRule="evenodd">
+      <path d="M2 13C6 7 12 6 18 7c10 2 16-4 26-4s16 7 26 7 16-6 26-5c8 1 14 3 22 2v4c-8 2-14 1-22 0s-16 7-26 7-16-7-26-7-16 6-26 6c-6 0-12 0-16-4Zm7-3a1.5 1.5 0 1 0 3 0 1.5 1.5 0 1 0-3 0Z" />
     </svg>
   )
 }

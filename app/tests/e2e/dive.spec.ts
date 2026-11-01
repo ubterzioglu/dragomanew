@@ -2,7 +2,8 @@ import { expect, test, type Page } from '@playwright/test'
 import { localePath } from '../../src/i18n/pages'
 import { gotoHydrated } from './helpers'
 
-const LAYERS = ['.dive-water', '.dive-zone--shallow', '.dive-zone--mid', '.dive-zone--deep'] as const
+const WATER = ['.dive-water--surface', '.dive-water--mid', '.dive-water--deep'] as const
+const ZONES = ['.dive-zone--shallow', '.dive-zone--mid', '.dive-zone--deep'] as const
 
 /** Scrolls to a share of the page (0 top, 1 bottom). */
 async function scrollToProgress(page: Page, progress: number): Promise<void> {
@@ -12,39 +13,44 @@ async function scrollToProgress(page: Page, progress: number): Promise<void> {
   }, progress)
 }
 
-const opacity = (page: Page, selector: string) => page.locator(selector).evaluate((el) => getComputedStyle(el).opacity)
+const opacity = (page: Page, selector: string) =>
+  page.locator(selector).evaluate((el) => Number(getComputedStyle(el).opacity))
 
 // The decorative dive background (UBT, 01.11.2026). Every other spec runs with reduced motion
 // (playwright.config.ts), so the moving parts are checked here.
 test.describe('dive background with motion', () => {
   test.use({ reducedMotion: 'no-preference' })
 
-  test('the water turns turquoise and the gauge counts down to 30 m', async ({ page }) => {
+  test('the water darkens to navy under a light text veil, and the gauge counts down to 30 m', async ({ page }) => {
     await gotoHydrated(page, localePath('tr', 'home'))
-    const water = page.locator('.dive-water')
     const gauge = page.locator('.dive-gauge')
-    await expect(water).toHaveCSS('background-color', 'rgb(198, 239, 233)')
-    await expect(water).toHaveCSS('opacity', '0')
+    await expect(page.locator('.dive-water--deep')).toHaveCSS('background-color', 'rgb(10, 37, 64)')
+    for (const layer of WATER) await expect.poll(() => opacity(page, layer)).toBe(0)
     await expect(gauge).toHaveText('0 m')
 
+    await scrollToProgress(page, 0.25)
+    await expect.poll(() => opacity(page, '.dive-water--surface')).toBe(1)
+    await expect.poll(() => opacity(page, '.dive-water--deep')).toBe(0)
+
     await scrollToProgress(page, 1)
-    await expect(water).toHaveCSS('opacity', '1')
+    for (const layer of WATER) await expect.poll(() => opacity(page, layer)).toBe(1)
     await expect(gauge).toHaveText('30 m')
+    await expect(page.locator('.dive-veil')).toHaveCSS('background-color', 'rgba(255, 255, 255, 0.85)')
   })
 
   test('each depth has its own sea life', async ({ page }) => {
     await gotoHydrated(page, localePath('tr', 'home'))
-    await expect.poll(() => opacity(page, '.dive-zone--shallow')).toBe('1')
-    await expect.poll(() => opacity(page, '.dive-zone--deep')).toBe('0')
+    await expect.poll(() => opacity(page, '.dive-zone--shallow')).toBe(1)
+    await expect.poll(() => opacity(page, '.dive-zone--deep')).toBe(0)
     // A zone out of view is hidden too, so its animals are not drawn.
     await expect(page.locator('.dive-zone--deep')).toHaveCSS('visibility', 'hidden')
     await scrollToProgress(page, 0.5)
-    await expect.poll(() => opacity(page, '.dive-zone--mid')).toBe('1')
-    await expect.poll(() => opacity(page, '.dive-zone--shallow')).toBe('0')
+    await expect.poll(() => opacity(page, '.dive-zone--mid')).toBe(1)
+    await expect.poll(() => opacity(page, '.dive-zone--shallow')).toBe(0)
     await expect(page.locator('.dive-zone--shallow')).toHaveCSS('visibility', 'hidden')
     await scrollToProgress(page, 1)
-    await expect.poll(() => opacity(page, '.dive-zone--deep')).toBe('1')
-    await expect.poll(() => opacity(page, '.dive-zone--mid')).toBe('0')
+    await expect.poll(() => opacity(page, '.dive-zone--deep')).toBe(1)
+    await expect.poll(() => opacity(page, '.dive-zone--mid')).toBe(0)
     await expect(page.locator('.dive-zone--deep')).toHaveCSS('visibility', 'visible')
   })
 
@@ -59,9 +65,9 @@ test.describe('dive background with motion', () => {
       })
     })
     await gotoHydrated(page, localePath('tr', 'home'))
-    for (const progress of [0, 0.1, 0.35, 0.5, 0.7, 0.9, 1]) {
+    for (const progress of [0, 0.1, 0.35, 0.5, 0.65, 0.7, 0.9, 1]) {
       await scrollToProgress(page, progress)
-      for (const selector of LAYERS) {
+      for (const selector of [...WATER, ...ZONES]) {
         await expect
           .poll(() =>
             page.locator(selector).evaluate((el) => {
@@ -83,7 +89,7 @@ test.describe('dive background with motion', () => {
     await expect(gauge).toHaveText('30 m')
     // Doubling the page height without a scroll: the same position is now halfway down.
     await page.evaluate(() => {
-      // A style property, not a class: the stylesheet build reads this file and would ship the class.
+      // A style property, not a class: a class written here would never reach the stylesheet.
       const spacer = document.createElement('div')
       spacer.style.height = '200vh'
       document.body.append(spacer)

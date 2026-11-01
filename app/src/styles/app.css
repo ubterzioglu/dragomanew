@@ -62,8 +62,10 @@
   /* Panel background (info boxes, badges, image placeholders). White on UBT's request (01.11.2026);
      page sections have none, so the dive background below shows through. */
   --color-sand: #fff;
-  /* Deepest point of the dive background: ink-muted text keeps ~5.9:1 on it, orange ink ~4.6:1. */
-  --color-dive-deep: #c6efe9;
+  /* Dive background water: turquoise, blue and navy layers (text sits on the veil above them). */
+  --color-dive-surface: #c6efe9;
+  --color-dive-mid: #2f8fb0;
+  --color-dive-deep: #0a2540;
   --color-line: #e2ded5;
   /* Form field borders need 3:1 against white (WCAG 1.4.11); ~3.6:1. */
   --color-line-strong: #7d8a84;
@@ -81,7 +83,7 @@
     background: #fff;
     -webkit-text-size-adjust: 100%;
     /* Keep focused elements clear of the sticky header and mobile action bar. */
-    scroll-padding-top: 8.5rem; /* desktop sticky header is ~122px */
+    scroll-padding-top: 6.5rem; /* the one-row sticky header is 81px at most */
     scroll-padding-bottom: 6rem;
   }
 
@@ -127,11 +129,14 @@
   }
 }
 
-/* Dive background (UBT, 01.11.2026): the water turns from white to turquoise while scrolling down,
-   with light from the surface, drifting plankton, rising bubbles and fish behind the content.
-   CSS only, because the page policy allows no inline styles; DiveBackground.tsx holds the markup.
-   Without scroll-driven animations the water stays white; with reduced motion nothing moves.
-   Text sits on this layer: it never gets darker than --color-dive-deep behind the text column. */
+/* Dive background (UBT, 01.11.2026): the water darkens from white through turquoise and blue to
+   navy while scrolling down, with light from the surface, drifting plankton, rising bubbles and the
+   sea life of each depth. Text never sits on the water itself: a light veil behind the text column
+   keeps it readable, and the margins show the full dive. CSS only, because the page policy allows
+   no inline styles; DiveBackground.tsx holds the markup and, for browsers without scroll timelines,
+   drives the same opacities from script (lib/diveDepth.ts mirrors every range below).
+   Animations that follow the scroll use longhands and written-out first keyframes: the CSS minifier
+   turns a nameless shorthand into "none", and Chrome eased an implicit first keyframe. */
 @layer components {
   .dive-bg {
     position: fixed;
@@ -142,7 +147,7 @@
     background-color: #fff;
   }
 
-  /* Light from the surface: soft beams that sway. White, so they show once the water turns turquoise. */
+  /* Light from the surface: soft beams that sway, brightest where the water is dark. */
   .dive-bg::before {
     content: '';
     position: absolute;
@@ -166,8 +171,8 @@
     animation: plankton-drift 45s linear infinite;
   }
 
-  /* Turquoise water over the white base, and deeper water at the edges of wide screens. Both fade in
-     with the dive through opacity, which the compositor animates without repainting the screen. */
+  /* Three water layers over the white base, each fading in over its own part of the page, and deeper
+     water at the edges of wide screens. Opacity only: the compositor animates it without repainting. */
   .dive-water,
   .dive-shade {
     position: absolute;
@@ -176,25 +181,56 @@
     opacity: 0;
   }
 
-  .dive-water {
+  .dive-water--surface {
+    background-color: var(--color-dive-surface);
+  }
+
+  .dive-water--mid {
+    background-color: var(--color-dive-mid);
+  }
+
+  .dive-water--deep {
     background-color: var(--color-dive-deep);
   }
 
-  /* Clear well beyond the 76rem text column from 90rem up; narrower screens get no shade (below). */
   .dive-shade {
-    background: radial-gradient(ellipse 75% 90% at 50% 45%, transparent 60%, rgb(11 79 108 / 0.22));
+    background: radial-gradient(ellipse 75% 90% at 50% 45%, transparent 60%, rgb(4 18 33 / 0.45));
   }
 
   @supports (animation-timeline: scroll()) {
-    .dive-water {
-      animation: dive-deeper linear both;
+    .dive-water,
+    .dive-shade {
+      animation-name: fade-in;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
       animation-timeline: scroll(root block);
     }
 
-    .dive-shade {
-      animation: dive-shade linear both;
-      animation-timeline: scroll(root block);
+    .dive-water--surface {
+      animation-range: 0% 20%;
     }
+
+    .dive-water--mid {
+      animation-range: 30% 70%;
+    }
+
+    .dive-water--deep {
+      animation-range: 60% 100%;
+    }
+  }
+
+  /* The light veil behind the text column (the 76rem page container), its soft 1rem edge outside it:
+     brand green keeps ~4.8:1 and ink-muted ~5.4:1 on it even over the navy water. Pure white, so it
+     cannot be seen near the surface, where the water is still white. */
+  .dive-veil {
+    position: absolute;
+    inset-block: 0;
+    left: 50%;
+    z-index: 1;
+    width: min(100%, 78rem);
+    translate: -50% 0;
+    background: rgb(255 255 255 / 0.85);
+    mask-image: linear-gradient(to right, transparent, #000 1rem, #000 calc(100% - 1rem), transparent);
   }
 
   .dive-bubbles,
@@ -203,25 +239,28 @@
     inset: 0;
   }
 
+  /* A white rim with a thin sea-coloured ring: seen on white near the top and on navy at the bottom. */
   .dive-bubble {
     position: absolute;
     bottom: -3rem;
     width: 1rem;
     aspect-ratio: 1;
-    border: 1.5px solid rgb(11 79 108 / 0.24);
+    border: 1.5px solid rgb(255 255 255 / 0.6);
     border-radius: 9999px;
     background: radial-gradient(
       circle at 32% 28%,
       rgb(255 255 255 / 0.95) 0 14%,
-      rgb(255 255 255 / 0.25) 15% 45%,
-      rgb(11 79 108 / 0.1) 75%
+      rgb(255 255 255 / 0.3) 15% 45%,
+      rgb(11 79 108 / 0.12) 75%
     );
-    box-shadow: inset 0 0 0.35rem rgb(255 255 255 / 0.6);
+    box-shadow:
+      0 0 0 1px rgb(11 79 108 / 0.22),
+      inset 0 0 0.35rem rgb(255 255 255 / 0.6);
     opacity: 0;
     animation: bubble-rise 16s linear infinite;
   }
 
-  /* DiveBackground.tsx renders 20 bubbles; each gets its own lane, size, speed and head start. */
+  /* DiveBackground.tsx renders 30 bubbles; each gets its own lane, size, speed and head start. */
   .dive-bubble:nth-child(1) { left: 2%; width: 1rem; animation-duration: 15s; animation-delay: -2s; }
   .dive-bubble:nth-child(2) { left: 7%; width: 2.25rem; animation-duration: 22s; animation-delay: -11s; }
   .dive-bubble:nth-child(3) { left: 12%; width: 0.75rem; animation-duration: 12s; animation-delay: -6s; }
@@ -242,12 +281,21 @@
   .dive-bubble:nth-child(18) { left: 87%; width: 1.5rem; animation-duration: 18s; animation-delay: -2s; }
   .dive-bubble:nth-child(19) { left: 92%; width: 0.625rem; animation-duration: 11s; animation-delay: -9s; }
   .dive-bubble:nth-child(20) { left: 96%; width: 2rem; animation-duration: 20s; animation-delay: -16s; }
+  .dive-bubble:nth-child(21) { left: 4.5%; width: 1.375rem; animation-duration: 17s; animation-delay: -12s; }
+  .dive-bubble:nth-child(22) { left: 14.5%; width: 0.75rem; animation-duration: 13s; animation-delay: -4s; }
+  .dive-bubble:nth-child(23) { left: 24.5%; width: 2.5rem; animation-duration: 24s; animation-delay: -18s; }
+  .dive-bubble:nth-child(24) { left: 34.5%; width: 1rem; animation-duration: 15s; animation-delay: -7s; }
+  .dive-bubble:nth-child(25) { left: 44.5%; width: 2.125rem; animation-duration: 21s; animation-delay: -2s; }
+  .dive-bubble:nth-child(26) { left: 54.5%; width: 0.625rem; animation-duration: 12s; animation-delay: -9s; }
+  .dive-bubble:nth-child(27) { left: 64.5%; width: 1.625rem; animation-duration: 19s; animation-delay: -14s; }
+  .dive-bubble:nth-child(28) { left: 74.5%; width: 2.75rem; animation-duration: 25s; animation-delay: -6s; }
+  .dive-bubble:nth-child(29) { left: 84.5%; width: 0.875rem; animation-duration: 14s; animation-delay: -11s; }
+  .dive-bubble:nth-child(30) { left: 94%; width: 1.75rem; animation-duration: 20s; animation-delay: -3s; }
 
-  /* Sea life by depth (UBT, 01.11.2026): small fish and a jellyfish near the surface, a turtle and
-     a barracuda in mid-water, a grouper, a stingray and a barracuda at the bottom. Each zone fades
-     with the dive; lib/diveDepth.ts (zoneOpacity) has the same ranges for browsers without scroll
-     timelines. Without either, the shallow zone stays. */
-  /* A zone out of view is also hidden, so the browser stops drawing its moving animals. */
+  /* Sea life by depth: small fish, a shoal and jellyfish near the surface; a turtle, a barracuda, an
+     octopus and a shoal in mid-water; groupers, a stingray, a barracuda and a moray at the bottom.
+     A zone out of view is also hidden, so the browser stops drawing its moving animals. Without
+     scroll timelines or script, the shallow zone stays. */
   .dive-zone {
     position: absolute;
     inset: 0;
@@ -260,7 +308,6 @@
     visibility: visible;
   }
 
-  /* Longhands: the CSS minifier turns a shorthand without a name ("animation: linear both") into "none". */
   @supports (animation-timeline: scroll()) {
     .dive-zone {
       animation-timing-function: linear;
@@ -284,15 +331,21 @@
     }
   }
 
+  /* The whole animal fades as one, so its overlapping parts never darken. Behind the veil it stays
+     faint; in the margins it shows clearly. */
   .dive-swimmer {
     position: absolute;
     left: 0;
     width: 4rem;
-    /* The whole animal at 8%, so its overlapping parts never darken. Faint enough that text an
-       animal swims behind keeps 4.5:1 at full depth (brand green ~4.6:1). */
     color: rgb(11 79 108);
-    opacity: 0.08;
+    opacity: 0.35;
     animation: swim-left 44s linear infinite;
+  }
+
+  /* Pale animals at the bottom, to show on the navy water. */
+  .dive-zone--deep .dive-swimmer {
+    color: rgb(186 230 238);
+    opacity: 0.45;
   }
 
   .dive-swimmer svg {
@@ -317,26 +370,32 @@
     animation: glide 5s ease-in-out infinite alternate;
   }
 
-  .dive-swimmer--jelly {
-    animation: jelly-drift 30s ease-in-out infinite alternate;
+  .dive-swimmer--drifter {
+    animation: drift-across 30s ease-in-out infinite alternate;
   }
 
-  .dive-swimmer--jelly svg {
-    animation: jelly-pulse 2.2s ease-in-out infinite alternate;
+  .dive-swimmer--drifter svg {
+    animation: drift-pulse 2.2s ease-in-out infinite alternate;
   }
 
   /* DiveBackground.tsx lists the animals of each zone; here each gets its depth, size, speed and head start. */
-  .dive-zone--shallow .dive-swimmer:nth-child(1) { top: 12%; width: 2.25rem; animation-duration: 30s; animation-delay: -6s; }
-  .dive-zone--shallow .dive-swimmer:nth-child(2) { top: 16%; width: 1.75rem; animation-duration: 30s; animation-delay: -8s; }
-  .dive-zone--shallow .dive-swimmer:nth-child(3) { top: 34%; width: 2rem; animation-duration: 34s; animation-delay: -20s; }
-  .dive-zone--shallow .dive-swimmer:nth-child(4) { top: 38%; width: 1.5rem; animation-duration: 34s; animation-delay: -22s; }
-  .dive-zone--shallow .dive-swimmer:nth-child(5) { top: 20%; width: 2.75rem; animation-duration: 28s; animation-delay: -10s; }
-  .dive-zone--mid .dive-swimmer:nth-child(1) { top: 40%; width: 7rem; animation-duration: 70s; animation-delay: -30s; }
-  .dive-zone--mid .dive-swimmer:nth-child(2) { top: 60%; width: 8rem; animation-duration: 40s; animation-delay: -12s; }
+  .dive-zone--shallow .dive-swimmer:nth-child(1) { top: 10%; width: 2.25rem; animation-duration: 30s; animation-delay: -6s; }
+  .dive-zone--shallow .dive-swimmer:nth-child(2) { top: 13%; width: 1.75rem; animation-duration: 30s; animation-delay: -8s; }
+  .dive-zone--shallow .dive-swimmer:nth-child(3) { top: 30%; width: 2rem; animation-duration: 34s; animation-delay: -20s; }
+  .dive-zone--shallow .dive-swimmer:nth-child(4) { top: 33%; width: 1.5rem; animation-duration: 34s; animation-delay: -22s; }
+  .dive-zone--shallow .dive-swimmer:nth-child(5) { top: 18%; width: 2.75rem; animation-duration: 28s; animation-delay: -10s; }
+  .dive-zone--shallow .dive-swimmer:nth-child(6) { top: 52%; width: 7rem; animation-duration: 40s; animation-delay: -15s; }
+  .dive-zone--shallow .dive-swimmer:nth-child(7) { top: 64%; width: 2rem; animation-duration: 34s; animation-delay: -24s; }
+  .dive-zone--mid .dive-swimmer:nth-child(1) { top: 36%; width: 7rem; animation-duration: 70s; animation-delay: -30s; }
+  .dive-zone--mid .dive-swimmer:nth-child(2) { top: 58%; width: 8rem; animation-duration: 40s; animation-delay: -12s; }
   .dive-zone--mid .dive-swimmer:nth-child(3) { top: 74%; width: 2.25rem; animation-duration: 32s; animation-delay: -5s; }
-  .dive-zone--deep .dive-swimmer:nth-child(1) { top: 46%; width: 9rem; animation-duration: 80s; animation-delay: -35s; }
-  .dive-zone--deep .dive-swimmer:nth-child(2) { top: 66%; width: 8rem; animation-duration: 60s; animation-delay: -20s; }
-  .dive-zone--deep .dive-swimmer:nth-child(3) { top: 82%; width: 7rem; animation-duration: 38s; animation-delay: -28s; }
+  .dive-zone--mid .dive-swimmer:nth-child(4) { top: 20%; width: 4rem; animation-duration: 36s; animation-delay: -8s; }
+  .dive-zone--mid .dive-swimmer:nth-child(5) { top: 84%; width: 6rem; animation-duration: 44s; animation-delay: -26s; }
+  .dive-zone--deep .dive-swimmer:nth-child(1) { top: 44%; width: 9rem; animation-duration: 80s; animation-delay: -35s; }
+  .dive-zone--deep .dive-swimmer:nth-child(2) { top: 64%; width: 8rem; animation-duration: 60s; animation-delay: -20s; }
+  .dive-zone--deep .dive-swimmer:nth-child(3) { top: 80%; width: 7rem; animation-duration: 38s; animation-delay: -28s; }
+  .dive-zone--deep .dive-swimmer:nth-child(4) { top: 22%; width: 10rem; animation-duration: 55s; animation-delay: -10s; }
+  .dive-zone--deep .dive-swimmer:nth-child(5) { top: 88%; width: 6rem; animation-duration: 66s; animation-delay: -50s; }
 
   /* Phones: half the bubbles and a smaller cast per zone, no edge shade (the text column is the whole width). */
   @media (width < 48rem) {
@@ -364,7 +423,8 @@
     }
   }
 
-  /* The base rule shortens every animation to 0.01ms, which would make endless motion flicker. */
+  /* The base rule shortens every animation to 0.01ms, which would make endless motion flicker.
+     The water still follows the scroll: a change of colour, not motion. */
   @media (prefers-reduced-motion: reduce) {
     .dive-bubbles,
     .dive-school {
@@ -378,21 +438,7 @@
   }
 }
 
-/* 0.43 at 15% gives #e8f8f5 over white: the water is light early on and deepens towards the bottom.
-   The first keyframe is written out: Chrome eased the implicit one, which script (Firefox) cannot follow. */
-@keyframes dive-deeper {
-  0% {
-    opacity: 0;
-  }
-  15% {
-    opacity: 0.43;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes dive-shade {
+@keyframes fade-in {
   from {
     opacity: 0;
   }
@@ -439,19 +485,19 @@
   }
 }
 
-/* Off screen at both ends: the widest animal (the grouper) is 9rem. */
+/* Off screen at both ends: the longest animal (the moray) is 10rem. */
 @keyframes swim-left {
   from {
     transform: translate3d(calc(100vw + 2rem), 0, 0);
   }
   to {
-    transform: translate3d(-10rem, 1.5rem, 0);
+    transform: translate3d(-12rem, 1.5rem, 0);
   }
 }
 
 @keyframes swim-right {
   from {
-    transform: translate3d(-10rem, 0, 0);
+    transform: translate3d(-12rem, 0, 0);
   }
   to {
     transform: translate3d(calc(100vw + 2rem), -1.5rem, 0);
@@ -467,7 +513,7 @@
   }
 }
 
-@keyframes jelly-drift {
+@keyframes drift-across {
   from {
     transform: translate3d(70vw, 8vh, 0);
   }
@@ -476,7 +522,7 @@
   }
 }
 
-@keyframes jelly-pulse {
+@keyframes drift-pulse {
   from {
     transform: scale(1, 1);
   }

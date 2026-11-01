@@ -1,5 +1,36 @@
 import { describe, expect, it } from 'vitest'
-import { DIVE_ZONES, diveDepth, MAX_DIVE_DEPTH_M, scrollProgress, waterOpacity, zoneOpacity } from '../../src/lib/diveDepth'
+import { DIVE_ZONES, diveDepth, MAX_DIVE_DEPTH_M, scrollProgress, WATER_LAYERS, waterLayerOpacity, zoneOpacity } from '../../src/lib/diveDepth'
+
+describe('waterLayerOpacity', () => {
+  // Mirrors the water-in animation ranges in app.css: turquoise 0–20 %, blue 30–70 %, navy 60–100 %.
+  it('turns the surface turquoise within the first fifth of the page', () => {
+    expect(waterLayerOpacity('surface', 0)).toBe(0)
+    expect(waterLayerOpacity('surface', 0.1)).toBeCloseTo(0.5)
+    expect(waterLayerOpacity('surface', 0.2)).toBe(1)
+    expect(waterLayerOpacity('surface', 1)).toBe(1)
+  })
+
+  it('brings in the blue in mid-water and the navy towards the bottom', () => {
+    expect(waterLayerOpacity('mid', 0.3)).toBe(0)
+    expect(waterLayerOpacity('mid', 0.5)).toBeCloseTo(0.5)
+    expect(waterLayerOpacity('mid', 0.8)).toBe(1)
+    expect(waterLayerOpacity('deep', 0.6)).toBe(0)
+    expect(waterLayerOpacity('deep', 0.8)).toBeCloseTo(0.5)
+    expect(waterLayerOpacity('deep', 1)).toBe(1)
+  })
+
+  it('stays between 0 and 1 and only ever deepens on the way down', () => {
+    for (const layer of WATER_LAYERS) {
+      let previous = 0
+      for (let step = -10; step <= 110; step += 1) {
+        const opacity = waterLayerOpacity(layer, step / 100)
+        expect(opacity).toBeGreaterThanOrEqual(previous)
+        expect(opacity).toBeLessThanOrEqual(1)
+        previous = opacity
+      }
+    }
+  })
+})
 
 describe('zoneOpacity', () => {
   // Mirrors the zone-* keyframes and animation ranges in app.css.
@@ -69,21 +100,5 @@ describe('diveDepth', () => {
 
   it('takes another maximum depth', () => {
     expect(diveDepth(0.5, 18)).toBe(9)
-  })
-})
-
-describe('waterOpacity', () => {
-  // Mirrors the dive-deeper keyframes in app.css: 0 at the top, 0.43 at 15 %, 1 at the bottom, linear in between.
-  it('follows the keyframes of the CSS water', () => {
-    expect(waterOpacity(0)).toBe(0)
-    expect(waterOpacity(0.15)).toBeCloseTo(0.43)
-    expect(waterOpacity(0.075)).toBeCloseTo(0.215)
-    expect(waterOpacity(0.575)).toBeCloseTo(0.715)
-    expect(waterOpacity(1)).toBe(1)
-  })
-
-  it('stays between 0 and 1', () => {
-    expect(waterOpacity(-0.5)).toBe(0)
-    expect(waterOpacity(1.5)).toBe(1)
   })
 })
