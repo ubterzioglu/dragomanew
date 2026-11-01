@@ -6,6 +6,15 @@
 - Yerel çalışma klasörü: `C:\temp_private\dragomanew`
 - Hedef MVP yayını: **1 Aralık 2026**
 
+## Güncel durum — 1 Kasım 2026
+
+- **Aşama A ziyaretçi sitesi hazır ve önizlemede:** [notyetbro.club](https://notyetbro.club/) (arama motorlarına kapalı; metin, görsel ve fiyatlar örnek). Kod `app/` altında: React 19, TypeScript, Vite, Tailwind CSS 4. `vite-react-ssg` dört dilde 197 sayfayı önceden üretilmiş HTML olarak çıkarır.
+- **Geliştirme:** `app/` klasöründe `npm ci`, sonra `npm run dev`. Her değişiklikten sonra `npm run verify` (tip denetimi, lint, birim testleri, build, bağlantı denetimi, uçtan uca testler).
+- **Yayın:** `main` dalına push, ardından Coolify'da Redeploy. Ayrıntı: [app/deploy/KURULUM.md](./app/deploy/KURULUM.md).
+- **Açık olanlar:** müşteri kararları ve teyit bekleyen içerik (fiyatlar, görsel hakları, ekip, yorumlar, yasal metinler), eksik görseller, kalıcı alan adına geçiş. Aşama B (Supabase formları, yönetim paneli, bildirimler) henüz başlamadı.
+
+Aşağıdaki bölümler dokümantasyon aşamasının (26–29 Ekim 2026) kaydıdır.
+
 ## Çalışma ve teslim yöntemi
 
 UBT, dokümantasyon tamamlandığında belgeyi **Claude Code'a vererek uygulamayı geliştirecek**. Bu oturumun kapsamı brief, içerik envanteri, layout kararları ve uygulanabilir devir dokümantasyonunu tamamlamaktır. Görsel taslak veya çalışan site hazırlığı bu aşamanın sonraki adımı olarak varsayılmaz. Nihai uygulama belgesi, kesin kararları, geliştiricinin önerebileceği ayrıntıları ve müşteri kararı bekleyen konuları açıkça ayırmalıdır. V4 kapsam kaydı korunur; tamamlanan dokümantasyon Claude Code için tutarlı bir başlangıç noktası sağlamalıdır.
