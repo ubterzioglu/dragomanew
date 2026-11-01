@@ -8,7 +8,7 @@ import { buttonClass } from '../../components/ui/Button'
 import type { LocalizedPaths } from '../../i18n/pages'
 import { useLocale, useUi } from '../../i18n/LocaleContext'
 import { TextField } from '../forms/Field'
-import { DemoResult, useDemoSubmission } from '../forms/submission'
+import { DemoFormFields, DemoResult, useDemoSubmission } from '../forms/submission'
 import type { SourceQuestion } from './healthFormSource'
 import { healthAnswersSchema, healthForms, needsReview, type HealthFormKind } from './healthForms'
 
@@ -29,7 +29,7 @@ export function HealthFormPage({ kind, alternates }: HealthFormPageProps) {
   const form = healthForms[kind]
   const schema = useMemo(() => healthAnswersSchema(ui, form), [ui, form])
   const [reviewFlag, setReviewFlag] = useState(false)
-  const { canSubmit, result, submissions, submit } = useDemoSubmission('health')
+  const { ready, canSubmit, result, submissions, submit } = useDemoSubmission('health')
   const {
     register,
     handleSubmit,
@@ -104,39 +104,41 @@ export function HealthFormPage({ kind, alternates }: HealthFormPageProps) {
           ))}
         </div>
 
-        <form method="post" noValidate onSubmit={handleSubmit(onValid)} className="mt-10 space-y-8">
-          <h2 className="text-3xl font-bold">{form.sectionHeading[locale]}</h2>
-          {form.groups.map((group) => (
-            <section key={group.heading.tr} className="space-y-3">
-              <h3 className="text-2xl font-semibold text-brand-green">{group.heading[locale]}</h3>
-              {group.questions.map(renderQuestion)}
-            </section>
-          ))}
+        <form method="post" noValidate onSubmit={handleSubmit(onValid)} className="mt-10">
+          <DemoFormFields ready={ready} className="space-y-8">
+            <h2 className="text-3xl font-bold">{form.sectionHeading[locale]}</h2>
+            {form.groups.map((group) => (
+              <section key={group.heading.tr} className="space-y-3">
+                <h3 className="text-2xl font-semibold text-brand-green">{group.heading[locale]}</h3>
+                {group.questions.map(renderQuestion)}
+              </section>
+            ))}
 
-          <div className="grid gap-5 sm:grid-cols-2">
-            <TextField id={`${idPrefix}-participant`} label={ui.health.participantName} error={errors.participantName?.message} {...register('participantName')} />
-            <TextField id={`${idPrefix}-guardian`} label={ui.health.guardianName} optional {...register('guardianName')} />
-          </div>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <TextField id={`${idPrefix}-participant`} label={ui.health.participantName} error={errors.participantName?.message} {...register('participantName')} />
+              <TextField id={`${idPrefix}-guardian`} label={ui.health.guardianName} optional {...register('guardianName')} />
+            </div>
 
-          <p className="flex gap-3 rounded-card border border-line bg-sand p-4">
-            <PenLine aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-brand-green" />
-            <span>{ui.health.signatureNotice}</span>
-          </p>
+            <p className="flex gap-3 rounded-card border border-line bg-sand p-4">
+              <PenLine aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-brand-green" />
+              <span>{ui.health.signatureNotice}</span>
+            </p>
 
-          <button type="submit" disabled={!canSubmit} className={buttonClass('primary', 'w-full sm:w-auto')}>
-            {ui.health.submit}
-          </button>
-          {result && (
-            <DemoResult key={submissions}>
-              {reviewFlag && (
-                <p className="mt-3 flex gap-3 rounded-card border border-brand-orange/40 bg-white p-4 text-ink">
-                  <AlertTriangle aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-brand-orange-ink" />
-                  <span>{ui.health.reviewNotice}</span>
-                </p>
-              )}
-              <p className="mt-3 text-sm">{ui.health.completeNotice}</p>
-            </DemoResult>
-          )}
+            <button type="submit" disabled={!canSubmit} className={buttonClass('primary', 'w-full sm:w-auto')}>
+              {ui.health.submit}
+            </button>
+            {result && (
+              <DemoResult key={submissions}>
+                {reviewFlag && (
+                  <p className="mt-3 flex gap-3 rounded-card border border-brand-orange/40 bg-white p-4 text-ink">
+                    <AlertTriangle aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-brand-orange-ink" />
+                    <span>{ui.health.reviewNotice}</span>
+                  </p>
+                )}
+                <p className="mt-3 text-sm">{ui.health.completeNotice}</p>
+              </DemoResult>
+            )}
+          </DemoFormFields>
         </form>
       </div>
     </>

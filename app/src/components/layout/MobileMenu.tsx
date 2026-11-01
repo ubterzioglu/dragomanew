@@ -1,9 +1,10 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import { useLocale, useUi } from '../../i18n/LocaleContext'
 import { localePath } from '../../i18n/pages'
 import { CATEGORY_NAV, UTILITY_NAV } from './navItems'
+import { SiteNavLink } from './SiteNavLink'
 
 const itemClass = ({ isActive }: { isActive: boolean }): string =>
   `block rounded-md px-3 py-3 text-lg ${isActive ? 'bg-brand-green-soft font-semibold text-brand-green' : 'text-ink'}`
@@ -76,18 +77,18 @@ export function MobileMenu() {
           <ul className="space-y-1">
             {CATEGORY_NAV.map((item) => (
               <li key={item.label}>
-                <NavLink to={localePath(locale, item.page)} className={itemClass} end>
+                <SiteNavLink to={localePath(locale, item.page)} className={itemClass} end>
                   {ui.nav[item.label]}
-                </NavLink>
+                </SiteNavLink>
                 {item.children && (
                   <ul className="ml-4 border-l border-line pl-2">
                     {item.children
                       .filter((child) => child.page !== item.page)
                       .map((child) => (
                         <li key={child.label}>
-                          <NavLink to={localePath(locale, child.page)} className={itemClass}>
+                          <SiteNavLink to={localePath(locale, child.page)} className={itemClass}>
                             {ui.nav[child.label]}
-                          </NavLink>
+                          </SiteNavLink>
                         </li>
                       ))}
                   </ul>
@@ -100,9 +101,9 @@ export function MobileMenu() {
           <ul className="space-y-1">
             {UTILITY_NAV.map((item) => (
               <li key={item.label}>
-                <NavLink to={localePath(locale, item.page)} className={itemClass}>
+                <SiteNavLink to={localePath(locale, item.page)} className={itemClass}>
                   {ui.nav[item.label]}
-                </NavLink>
+                </SiteNavLink>
               </li>
             ))}
           </ul>

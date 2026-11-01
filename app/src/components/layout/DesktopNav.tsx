@@ -1,10 +1,10 @@
 import { useEffect, useId, useRef, useState, type FocusEvent, type KeyboardEvent } from 'react'
-import { NavLink } from 'react-router-dom'
 import { ChevronDown } from 'lucide-react'
 import { useLocale, useUi } from '../../i18n/LocaleContext'
 import { localePath } from '../../i18n/pages'
 import { formatTemplate } from '../../i18n/ui'
 import { CATEGORY_NAV, type NavItem } from './navItems'
+import { SiteNavLink } from './SiteNavLink'
 
 const linkClass = ({ isActive }: { isActive: boolean }): string =>
   `inline-flex min-h-11 items-center px-3 font-display text-lg font-semibold uppercase tracking-wide transition-colors ${
@@ -45,9 +45,9 @@ function NavDropdown({ item }: { item: NavItem }) {
       onKeyDown={closeOnEscape}
       onBlur={closeWhenFocusLeaves}
     >
-      <NavLink to={localePath(locale, item.page)} className={linkClass}>
+      <SiteNavLink to={localePath(locale, item.page)} className={linkClass}>
         {ui.nav[item.label]}
-      </NavLink>
+      </SiteNavLink>
       <button
         ref={buttonRef}
         type="button"
@@ -66,13 +66,13 @@ function NavDropdown({ item }: { item: NavItem }) {
       >
         {item.children?.map((child) => (
           <li key={child.label}>
-            <NavLink
+            <SiteNavLink
               to={localePath(locale, child.page)}
               end
               className="block px-4 py-2.5 text-base text-ink hover:bg-brand-green-soft hover:text-brand-green"
             >
               {ui.nav[child.label]}
-            </NavLink>
+            </SiteNavLink>
           </li>
         ))}
       </ul>
@@ -91,9 +91,9 @@ export function DesktopNav() {
             <NavDropdown key={item.label} item={item} />
           ) : (
             <li key={item.label}>
-              <NavLink to={localePath(locale, item.page)} className={linkClass}>
+              <SiteNavLink to={localePath(locale, item.page)} className={linkClass}>
                 {ui.nav[item.label]}
-              </NavLink>
+              </SiteNavLink>
             </li>
           ),
         )}

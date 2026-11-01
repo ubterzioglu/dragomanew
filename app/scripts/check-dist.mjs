@@ -3,12 +3,15 @@
 //  - <html lang>, canonical and noindex present on every page
 //  - every internal link points at a page that exists in dist/
 //  - canonical is the page's own URL; hreflang targets exist, include x-default and the page itself
+//  - every language has its own 404 page for the host to serve (deploy/nginx/dragoman.conf)
 //  - robots.txt keeps the Stage A preview out of search indexes
 //  - Stage A pages show the sample-content banner
 //  - nothing is loaded from another origin (scripts, styles, fonts, media, preconnects, CSS url())
 //  - content data is not in the JS bundle; per-page loader JSON carries no source details
 //  - the app script starts after the first paint (no blocking module script left)
+//  - one Content-Security-Policy meta tag ahead of every script, allowing exactly the page's inline scripts
 // Exit code 1 when anything fails.  Usage: node scripts/check-dist.mjs
+import { createHash } from 'node:crypto'
 import { existsSync } from 'node:fs'
 import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
@@ -26,8 +29,10 @@ const PUBLIC_RELEASE = env.VITE_PUBLIC_RELEASE === 'true'
 const ORIGIN = env.VITE_SITE_ORIGIN?.trim() ? new URL(env.VITE_SITE_ORIGIN.trim()).origin : 'https://dragoman-turkey.com'
 // Stage A review index: noindex, never built for a public release, so it claims no canonical URL.
 const NO_CANONICAL = new Set(['/__demo/'])
-// The 404 page points canonical and hreflang at the home pages instead of itself.
-const NOT_SELF_REFERENCING = new Set(['/404/'])
+// The 404 pages (one per language, served by the host under that prefix) point canonical
+// and hreflang at the home pages instead of themselves.
+const NOT_FOUND_PAGES = ['/404/', '/tr/404/', '/fr/404/', '/de/404/']
+const NOT_SELF_REFERENCING = new Set(NOT_FOUND_PAGES)
 
 // Tags that make the browser fetch something on page load. Plain <a href> links to other sites are fine.
 const LOADING_TAGS = /<(?:script|img|source|iframe|video|audio|link)\b[^>]*>/g
@@ -82,6 +87,27 @@ function checkHead(url, html, fail) {
   }
   if (!alternates.some((link) => link.hreflang === 'x-default')) fail('hreflang set has no x-default')
   if (!NOT_SELF_REFERENCING.has(url) && !alternates.some((link) => link.href === `${ORIGIN}${url}`)) fail('hreflang set does not include the page itself')
+}
+
+// Recomputed here rather than imported from src/lib/contentSecurityPolicy.ts, so a bug there or an
+// edit to the HTML after hashing shows up as a mismatch instead of a blocked script in the browser.
+function checkContentSecurityPolicy(html, fail) {
+  const metas = [...html.matchAll(/<meta http-equiv="Content-Security-Policy" content="([^"]*)">/g)]
+  if (metas.length !== 1) return fail(`${metas.length} Content-Security-Policy meta tags (expected 1)`)
+  const [meta] = metas
+  const firstScript = html.indexOf('<script')
+  if (firstScript >= 0 && meta.index > firstScript) fail('Content-Security-Policy comes after a script, which it then does not cover')
+  const policy = meta[1]
+  if (/unsafe-inline|unsafe-eval/.test(policy)) fail('Content-Security-Policy allows unsafe-inline or unsafe-eval')
+  const allowed = new Set((/script-src ([^;]*)/.exec(policy)?.[1] ?? '').split(' ').filter((source) => source.startsWith("'sha256-")))
+  const inline = new Set()
+  for (const [, attributes, body] of html.matchAll(/<script(?![^>]*\ssrc=)([^>]*)>([\s\S]*?)<\/script>/gi)) {
+    const type = /\stype="([^"]*)"/i.exec(attributes)?.[1]
+    if (type !== undefined && !/^(?:module|text\/javascript)$/i.test(type)) continue
+    inline.add(`'sha256-${createHash('sha256').update(body.replace(/\r\n?/g, '\n'), 'utf8').digest('base64')}'`)
+  }
+  for (const hash of inline) if (!allowed.has(hash)) fail(`inline script ${hash} is blocked by the page's Content-Security-Policy`)
+  for (const hash of allowed) if (!inline.has(hash)) fail(`Content-Security-Policy allows ${hash}, which matches no inline script`)
 }
 
 async function checkRobots(fail) {
@@ -143,6 +169,7 @@ async function main() {
     else if (!html.includes(`<link rel="modulepreload" crossorigin href="${bundle}" fetchpriority="low">`)) fail(`no low-priority modulepreload for ${bundle}`)
     if (!NO_CANONICAL.has(url) && !/<link[^>]+rel="canonical"/.test(html)) fail('missing canonical')
     checkHead(url, html, fail)
+    checkContentSecurityPolicy(html, fail)
 
     for (const match of html.matchAll(/href="(\/[^"]*)"/g)) {
       linkCount += 1
@@ -150,6 +177,7 @@ async function main() {
     }
   }
 
+  for (const url of NOT_FOUND_PAGES) if (!targetExists(url)) failures.push(`${url}: missing (the host's 404 page for that language)`)
   await checkRobots((message) => failures.push(message))
   await checkStylesheets((message) => failures.push(message))
   await checkContentStaysServerSide((message) => failures.push(message))

@@ -40,6 +40,20 @@ test('E01: a failed content fetch during client navigation still opens the page'
   await expect(page.getByText('Unexpected Application Error')).toHaveCount(0)
 })
 
+// Back to an address with a #fragment: the router has already moved there, and assigning the same
+// URL would only scroll, leaving the error page up. The page must reload instead.
+test('E01: a failed content fetch on Back to a #fragment address still opens the page', async ({ page }) => {
+  const ui = getUi('tr')
+  await gotoHydrated(page, `${localePath('tr', 'home')}#hero-title`)
+  await page.locator(`main a[href="${localePath('tr', 'seaKayak')}"]`).first().click()
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(ui.nav.seaKayak)
+  await page.route(/static-loader-data/, (route) => route.abort())
+  await page.goBack()
+  await expect(page).toHaveURL(new RegExp(`${localePath('tr', 'home')}#hero-title$`))
+  await expect(page.locator('#hero-title')).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: ui.notFound.title })).toHaveCount(0)
+})
+
 test('E01: archived events have no page and no card', async ({ page }) => {
   const { events, eventUrl } = await import('./targets')
   const response = await page.goto(eventUrl('tr', events.archived))

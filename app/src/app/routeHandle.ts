@@ -17,12 +17,15 @@ export interface RouteHandle {
    */
   alternates: Alternates | ((params: Params, content: ContentRepository) => Alternates)
   cta?: PageCta
+  /** The page is a 404 page, which the host serves at any missing address. */
+  notFound?: true
 }
 
 export interface ResolvedHandle {
   locale: Locale
   alternates: Alternates
   cta?: PageCta
+  notFound?: true
 }
 
 function isRouteHandle(value: unknown): value is RouteHandle {
@@ -31,22 +34,27 @@ function isRouteHandle(value: unknown): value is RouteHandle {
   return typeof locale === 'string' && isLocale(locale)
 }
 
-/** Matches the prerendered /404/ page, which hosts serve for any missing URL. */
-export const NOT_FOUND_HANDLE: RouteHandle = { locale: 'en', alternates: null }
+/**
+ * Matches the prerendered 404 page of each language (/404/, /tr/404/ …), which
+ * the host serves for any missing URL under that language's prefix (deploy/nginx).
+ */
+export function notFoundHandle(locale: Locale): ResolvedHandle {
+  return { locale, alternates: null, notFound: true }
+}
 
 /**
  * The deepest matched route's handle wins (detail page over category). A
  * detail route whose record does not exist renders the 404 page, so it takes
- * the 404 handle too and hydrates the same tree as the served /404/ HTML.
+ * its language's 404 handle and hydrates the same tree as the served 404 HTML.
  */
 export function findRouteHandle(matches: readonly UIMatch[], content: ContentRepository): ResolvedHandle | null {
   for (let i = matches.length - 1; i >= 0; i -= 1) {
     const match = matches[i]
     if (match && isRouteHandle(match.handle)) {
-      const { locale, alternates, cta } = match.handle
-      if (typeof alternates !== 'function') return { locale, cta, alternates }
+      const { locale, alternates, cta, notFound } = match.handle
+      if (typeof alternates !== 'function') return { locale, cta, alternates, notFound }
       const resolved = alternates(match.params, content)
-      return resolved ? { locale, cta, alternates: resolved } : { locale: NOT_FOUND_HANDLE.locale, alternates: null }
+      return resolved ? { locale, cta, alternates: resolved } : notFoundHandle(locale)
     }
   }
   return null

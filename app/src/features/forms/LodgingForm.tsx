@@ -6,7 +6,21 @@ import { useUi } from '../../i18n/LocaleContext'
 import { formatTemplate } from '../../i18n/ui'
 import { TextAreaField, TextField } from './Field'
 import { lodgingSchema, MAX_CHILDREN } from './schemas'
-import { DemoResult, useDemoSubmission } from './submission'
+import { DemoFormFields, DemoResult, useDemoSubmission } from './submission'
+
+// Also written into the markup, so the prerendered form shows what react-hook-form sets on hydration.
+const LODGING_DEFAULTS = {
+  fullName: '',
+  email: '',
+  phone: '',
+  checkIn: '',
+  checkOut: '',
+  adults: 2,
+  children: 0,
+  childAges: [] as number[],
+  rooms: 1,
+  preferences: '',
+}
 
 /** Accommodation request (guide §1): separate from transfers; asks each child's age. */
 export function LodgingForm() {
@@ -20,23 +34,8 @@ export function LodgingForm() {
     getValues,
     setValue,
     formState: { errors },
-  } = useForm({
-    resolver: zodResolver(schema),
-    shouldUnregister: true,
-    defaultValues: {
-      fullName: '',
-      email: '',
-      phone: '',
-      checkIn: '',
-      checkOut: '',
-      adults: 2,
-      children: 0,
-      childAges: [],
-      rooms: 1,
-      preferences: '',
-    },
-  })
-  const { canSubmit, result, submissions, submit } = useDemoSubmission('lodging')
+  } = useForm({ resolver: zodResolver(schema), shouldUnregister: true, defaultValues: LODGING_DEFAULTS })
+  const { ready, canSubmit, result, submissions, submit } = useDemoSubmission('lodging')
   const childCount = useWatch({ control, name: 'children' })
   const visibleChildren = Number.isInteger(childCount) ? Math.min(Math.max(childCount, 0), MAX_CHILDREN) : 0
   const field = (name: string) => `${idPrefix}-${name}`
@@ -50,45 +49,47 @@ export function LodgingForm() {
   const number = { type: 'number', step: 1, inputMode: 'numeric' } as const
 
   return (
-    <form method="post" noValidate onSubmit={handleSubmit(submit)} className="space-y-5">
-      <div className="grid gap-5 sm:grid-cols-2">
-        <TextField id={field('in')} label={ui.forms.checkIn} type="date" error={errors.checkIn?.message} {...register('checkIn')} />
-        <TextField id={field('out')} label={ui.forms.checkOut} type="date" error={errors.checkOut?.message} {...register('checkOut')} />
-        <TextField id={field('adults')} label={ui.forms.adults} min={1} {...number} error={errors.adults?.message} {...register('adults', { valueAsNumber: true })} />
-        <TextField id={field('children')} label={ui.forms.children} min={0} max={MAX_CHILDREN} {...number} error={errors.children?.message} {...register('children', { valueAsNumber: true })} />
-        <TextField id={field('rooms')} label={ui.forms.rooms} min={1} {...number} error={errors.rooms?.message} {...register('rooms', { valueAsNumber: true })} />
-      </div>
-
-      {visibleChildren > 0 && (
-        <div className="grid gap-4 rounded-card border border-line p-4 sm:grid-cols-3">
-          {Array.from({ length: visibleChildren }, (_, index) => (
-            <TextField
-              key={index}
-              id={field(`age-${index}`)}
-              label={formatTemplate(ui.forms.childAge, { n: index + 1 })}
-              min={0}
-              max={17}
-              {...number}
-              error={errors.childAges?.[index]?.message}
-              {...register(`childAges.${index}`, { valueAsNumber: true })}
-            />
-          ))}
-          {childAgesError && <p className="text-sm font-semibold text-red-700 sm:col-span-3">{childAgesError}</p>}
+    <form method="post" noValidate onSubmit={handleSubmit(submit)}>
+      <DemoFormFields ready={ready} className="space-y-5">
+        <div className="grid gap-5 sm:grid-cols-2">
+          <TextField id={field('in')} label={ui.forms.checkIn} type="date" error={errors.checkIn?.message} {...register('checkIn')} />
+          <TextField id={field('out')} label={ui.forms.checkOut} type="date" error={errors.checkOut?.message} {...register('checkOut')} />
+          <TextField id={field('adults')} label={ui.forms.adults} min={1} {...number} error={errors.adults?.message} defaultValue={LODGING_DEFAULTS.adults} {...register('adults', { valueAsNumber: true })} />
+          <TextField id={field('children')} label={ui.forms.children} min={0} max={MAX_CHILDREN} {...number} error={errors.children?.message} defaultValue={LODGING_DEFAULTS.children} {...register('children', { valueAsNumber: true })} />
+          <TextField id={field('rooms')} label={ui.forms.rooms} min={1} {...number} error={errors.rooms?.message} defaultValue={LODGING_DEFAULTS.rooms} {...register('rooms', { valueAsNumber: true })} />
         </div>
-      )}
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <TextField id={field('name')} label={ui.forms.fullName} autoComplete="name" error={errors.fullName?.message} {...register('fullName')} />
-        <TextField id={field('email')} label={ui.forms.email} type="email" autoComplete="email" error={errors.email?.message} {...register('email')} />
-        <TextField id={field('phone')} label={ui.forms.phone} type="tel" autoComplete="tel" optional {...register('phone')} />
-      </div>
-      <TextAreaField id={field('prefs')} label={ui.forms.lodgingPreferences} optional {...register('preferences')} />
+        {visibleChildren > 0 && (
+          <div className="grid gap-4 rounded-card border border-line p-4 sm:grid-cols-3">
+            {Array.from({ length: visibleChildren }, (_, index) => (
+              <TextField
+                key={index}
+                id={field(`age-${index}`)}
+                label={formatTemplate(ui.forms.childAge, { n: index + 1 })}
+                min={0}
+                max={17}
+                {...number}
+                error={errors.childAges?.[index]?.message}
+                {...register(`childAges.${index}`, { valueAsNumber: true })}
+              />
+            ))}
+            {childAgesError && <p className="text-sm font-semibold text-red-700 sm:col-span-3">{childAgesError}</p>}
+          </div>
+        )}
 
-      <p className="text-sm text-ink-muted">{ui.forms.lodgingNote}</p>
-      <button type="submit" disabled={!canSubmit} className={buttonClass('primary', 'w-full sm:w-auto')}>
-        {ui.forms.submitRequest}
-      </button>
-      {result && <DemoResult key={submissions} />}
+        <div className="grid gap-5 sm:grid-cols-2">
+          <TextField id={field('name')} label={ui.forms.fullName} autoComplete="name" error={errors.fullName?.message} {...register('fullName')} />
+          <TextField id={field('email')} label={ui.forms.email} type="email" autoComplete="email" error={errors.email?.message} {...register('email')} />
+          <TextField id={field('phone')} label={ui.forms.phone} type="tel" autoComplete="tel" optional {...register('phone')} />
+        </div>
+        <TextAreaField id={field('prefs')} label={ui.forms.lodgingPreferences} optional {...register('preferences')} />
+
+        <p className="text-sm text-ink-muted">{ui.forms.lodgingNote}</p>
+        <button type="submit" disabled={!canSubmit} className={buttonClass('primary', 'w-full sm:w-auto')}>
+          {ui.forms.submitRequest}
+        </button>
+        {result && <DemoResult key={submissions} />}
+      </DemoFormFields>
     </form>
   )
 }

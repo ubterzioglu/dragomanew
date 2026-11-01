@@ -92,9 +92,7 @@ export function DemoIndexPage() {
           <tr>
             <td className="px-4 py-2 font-semibold">404</td>
             <td className="px-4 py-2">
-              <Link to="/404/" className="text-brand-green underline">
-                /404/
-              </Link>
+              <LocaleLinks build={(locale) => `${localePath(locale, 'home')}404/`} />
             </td>
           </tr>
         </Table>

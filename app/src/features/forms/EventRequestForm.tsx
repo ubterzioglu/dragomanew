@@ -11,7 +11,7 @@ import { needsDistribution } from '../../lib/options'
 import { describedBy, TextAreaField, TextField } from './Field'
 import { PriceSummary } from './PriceSummary'
 import { eventRequestSchema } from './schemas'
-import { DemoResult, useDemoSubmission } from './submission'
+import { DemoFormFields, DemoResult, useDemoSubmission } from './submission'
 
 /**
  * First short booking request (V6 §6): one event only, auto-selected. Name,
@@ -26,26 +26,25 @@ export function EventRequestForm({ event }: { event: DragomanEvent }) {
   const showPrices = event.priceDisplay === 'numeric'
   const schema = useMemo(() => eventRequestSchema(ui, event.options), [ui, event.options])
 
+  // Also written into the markup, so the prerendered form shows what react-hook-form sets on hydration.
+  const defaultValues = {
+    fullName: '',
+    email: '',
+    phone: '',
+    preferredDate: '',
+    partySize: 2,
+    message: '',
+    // Every option starts at 0 so the visitor chooses; the sum check asks them to assign the whole party.
+    distribution: multi ? Object.fromEntries(event.options.map((option) => [option.id, 0])) : undefined,
+  }
   const {
     register,
     handleSubmit,
     setFocus,
     control,
     formState: { errors },
-  } = useForm({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      fullName: '',
-      email: '',
-      phone: '',
-      preferredDate: '',
-      partySize: 2,
-      message: '',
-      // Every option starts at 0 so the visitor chooses; the sum check asks them to assign the whole party.
-      distribution: multi ? Object.fromEntries(event.options.map((option) => [option.id, 0])) : undefined,
-    },
-  })
-  const { canSubmit, result, submissions, submit } = useDemoSubmission('event-request')
+  } = useForm({ resolver: zodResolver(schema), defaultValues })
+  const { ready, canSubmit, result, submissions, submit } = useDemoSubmission('event-request')
 
   const partySize = useWatch({ control, name: 'partySize' })
   const distribution = useWatch({ control, name: 'distribution' })
@@ -65,71 +64,75 @@ export function EventRequestForm({ event }: { event: DragomanEvent }) {
   }
 
   return (
-    <form method="post" noValidate onSubmit={handleSubmit(submit, focusDistribution)} className="space-y-5">
-      <p className="rounded-lg bg-sand px-4 py-3">
-        <span className="text-sm text-ink-muted">{ui.forms.activity}{ui.typography.labelSeparator}</span>
-        <span className="font-semibold">{pick(event.title, locale).value}</span>
-      </p>
+    <form method="post" noValidate onSubmit={handleSubmit(submit, focusDistribution)}>
+      <DemoFormFields ready={ready} className="space-y-5">
+        <p className="rounded-lg bg-sand px-4 py-3">
+          <span className="text-sm text-ink-muted">{ui.forms.activity}{ui.typography.labelSeparator}</span>
+          <span className="font-semibold">{pick(event.title, locale).value}</span>
+        </p>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <TextField id={field('name')} label={ui.forms.fullName} autoComplete="name" error={errors.fullName?.message} {...register('fullName')} />
-        <TextField id={field('email')} label={ui.forms.email} type="email" autoComplete="email" error={errors.email?.message} {...register('email')} />
-        <TextField id={field('date')} label={ui.forms.preferredDate} type="date" error={errors.preferredDate?.message} {...register('preferredDate')} />
-        <TextField
-          id={field('party')}
-          label={ui.forms.partySize}
-          type="number"
-          min={1}
-          step={1}
-          inputMode="numeric"
-          error={errors.partySize?.message}
-          {...register('partySize', { valueAsNumber: true })}
-        />
-      </div>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <TextField id={field('name')} label={ui.forms.fullName} autoComplete="name" error={errors.fullName?.message} {...register('fullName')} />
+          <TextField id={field('email')} label={ui.forms.email} type="email" autoComplete="email" error={errors.email?.message} {...register('email')} />
+          <TextField id={field('date')} label={ui.forms.preferredDate} type="date" error={errors.preferredDate?.message} {...register('preferredDate')} />
+          <TextField
+            id={field('party')}
+            label={ui.forms.partySize}
+            type="number"
+            min={1}
+            step={1}
+            inputMode="numeric"
+            error={errors.partySize?.message}
+            defaultValue={defaultValues.partySize}
+            {...register('partySize', { valueAsNumber: true })}
+          />
+        </div>
 
-      {multi && (
-        <fieldset aria-describedby={describedBy(field('dist'), distributionError, 'hint')} className="rounded-card border border-line p-4">
-          <legend className="px-1 font-semibold">{ui.forms.distributionLegend}</legend>
-          <p id={`${field('dist')}-hint`} className="text-sm text-ink-muted">
-            {formatTemplate(ui.forms.distributionHint, { count: Number.isInteger(partySize) ? partySize : '…' })}
-          </p>
-          <div className="mt-3 grid gap-4 sm:grid-cols-2">
-            {event.options.map((option) => (
-              <TextField
-                key={option.id}
-                id={field(`opt-${option.id}`)}
-                label={`${pick(option.name, locale).value}${showPrices && option.price !== null ? ` — ${formatMoney(option.price, option.currency, locale)}` : ''}`}
-                type="number"
-                min={0}
-                step={1}
-                inputMode="numeric"
-                error={errors.distribution?.[option.id]?.message}
-                // The sum error belongs to the group; mark every option so the red border shows where to fix it.
-                aria-invalid={errors.distribution?.[option.id] || distributionError ? true : undefined}
-                {...register(`distribution.${option.id}`, { valueAsNumber: true })}
-              />
-            ))}
-          </div>
-          {distributionError && (
-            <p id={`${field('dist')}-error`} role="alert" className="mt-2 text-sm font-semibold text-red-700">
-              {distributionError}
+        {multi && (
+          <fieldset aria-describedby={describedBy(field('dist'), distributionError, 'hint')} className="rounded-card border border-line p-4">
+            <legend className="px-1 font-semibold">{ui.forms.distributionLegend}</legend>
+            <p id={`${field('dist')}-hint`} className="text-sm text-ink-muted">
+              {formatTemplate(ui.forms.distributionHint, { count: Number.isInteger(partySize) ? partySize : '…' })}
             </p>
-          )}
-        </fieldset>
-      )}
+            <div className="mt-3 grid gap-4 sm:grid-cols-2">
+              {event.options.map((option) => (
+                <TextField
+                  key={option.id}
+                  id={field(`opt-${option.id}`)}
+                  label={`${pick(option.name, locale).value}${showPrices && option.price !== null ? ` — ${formatMoney(option.price, option.currency, locale)}` : ''}`}
+                  type="number"
+                  min={0}
+                  step={1}
+                  inputMode="numeric"
+                  error={errors.distribution?.[option.id]?.message}
+                  // The sum error belongs to the group; mark every option so the red border shows where to fix it.
+                  aria-invalid={errors.distribution?.[option.id] || distributionError ? true : undefined}
+                  defaultValue={defaultValues.distribution?.[option.id]}
+                  {...register(`distribution.${option.id}`, { valueAsNumber: true })}
+                />
+              ))}
+            </div>
+            {distributionError && (
+              <p id={`${field('dist')}-error`} role="alert" className="mt-2 text-sm font-semibold text-red-700">
+                {distributionError}
+              </p>
+            )}
+          </fieldset>
+        )}
 
-      <PriceSummary event={event} counts={counts} />
+        <PriceSummary event={event} counts={counts} />
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <TextField id={field('phone')} label={ui.forms.phone} type="tel" autoComplete="tel" optional {...register('phone')} />
-      </div>
-      <TextAreaField id={field('message')} label={ui.forms.message} optional {...register('message')} />
+        <div className="grid gap-5 sm:grid-cols-2">
+          <TextField id={field('phone')} label={ui.forms.phone} type="tel" autoComplete="tel" optional {...register('phone')} />
+        </div>
+        <TextAreaField id={field('message')} label={ui.forms.message} optional {...register('message')} />
 
-      <p className="text-sm text-ink-muted">{ui.pages.requestNote}</p>
-      <button type="submit" disabled={!canSubmit} className={buttonClass('primary', 'w-full sm:w-auto')}>
-        {ui.forms.submitRequest}
-      </button>
-      {result && <DemoResult key={submissions} />}
+        <p className="text-sm text-ink-muted">{ui.pages.requestNote}</p>
+        <button type="submit" disabled={!canSubmit} className={buttonClass('primary', 'w-full sm:w-auto')}>
+          {ui.forms.submitRequest}
+        </button>
+        {result && <DemoResult key={submissions} />}
+      </DemoFormFields>
     </form>
   )
 }

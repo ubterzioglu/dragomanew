@@ -36,7 +36,11 @@ export function RouteError() {
     } catch {
       return
     }
-    window.location.assign(target)
+    // The router has usually moved the address bar to the target already, and assigning the same URL
+    // with a #fragment only scrolls: reload in that case.
+    const { pathname: here, search: query, hash: fragment } = window.location
+    if (here + query + fragment === target) window.location.reload()
+    else window.location.assign(target)
   }, [reload, target])
   // While prerendering, a failing page must fail the build rather than ship this fallback.
   if (import.meta.env.SSR) throw error

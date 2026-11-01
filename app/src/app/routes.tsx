@@ -23,7 +23,7 @@ import { TransportPage } from '../features/transport/TransportPage'
 import { LOCALES, type Locale } from '../i18n/locales'
 import { localePath } from '../i18n/pages'
 import { isPublicRelease } from '../lib/env'
-import { NOT_FOUND_HANDLE, type RouteHandle } from './routeHandle'
+import { notFoundHandle, type RouteHandle } from './routeHandle'
 import { staticRouteSpecs, toRoutePath, type StaticRouteSpec } from './routePaths'
 import { RootLayout } from './RootLayout'
 import { RouteError } from './RouteError'
@@ -116,7 +116,7 @@ function toRouteRecord(spec: StaticRouteSpec): RouteRecord {
 
 // ── Detail pages: one route per language, prerendered for every visible record ──
 
-// Lookups use the route's own language, not the context (which falls back to the 404 language).
+// Lookups use the route's own language: the context only carries it once the record is found.
 function EventRoute({ category, locale }: { category: CategoryKey; locale: Locale }) {
   const { slug = '' } = useParams()
   const event = useContent().eventBySlug(category, locale, slug)
@@ -193,7 +193,16 @@ function detailRoutes(locale: Locale): RouteRecord[] {
   ]
 }
 
-const notFoundHandle = NOT_FOUND_HANDLE
+// Prerendered as /404/, /tr/404/ … for the host's error pages; '*' covers client navigation.
+function notFoundRoutes(locale: Locale): RouteRecord[] {
+  const home = toRoutePath(localePath(locale, 'home'))
+  const prefix = home ? `${home}/` : ''
+  const handle = notFoundHandle(locale)
+  return [
+    { path: `${prefix}404`, element: <NotFoundPage />, handle },
+    { path: `${prefix}*`, element: <NotFoundPage />, handle },
+  ]
+}
 
 // Stage A review index; never part of a public release build.
 const demoRoutes: RouteRecord[] = isPublicRelease
@@ -207,6 +216,10 @@ const demoRoutes: RouteRecord[] = isPublicRelease
       },
     ]
 
+// Addresses are case-sensitive, like the files the host serves: /TR/ is a missing page in the browser too,
+// so it hydrates the same 404 HTML the host answers with (deploy/nginx/dragoman.conf).
+const caseSensitive = (route: RouteRecord): RouteRecord => ({ ...route, caseSensitive: true })
+
 export const routes: RouteRecord[] = [
   {
     path: '/',
@@ -216,9 +229,7 @@ export const routes: RouteRecord[] = [
       ...staticRouteSpecs().map(toRouteRecord),
       ...LOCALES.flatMap(detailRoutes),
       ...demoRoutes,
-      // Prerendered as /404/ for the host's error page; '*' covers client navigation.
-      { path: '404', element: <NotFoundPage />, handle: notFoundHandle },
-      { path: '*', element: <NotFoundPage />, handle: notFoundHandle },
-    ],
+      ...LOCALES.flatMap(notFoundRoutes),
+    ].map(caseSensitive),
   },
 ]

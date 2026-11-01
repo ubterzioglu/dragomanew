@@ -2,6 +2,7 @@ import { defineConfig, loadEnv, type UserConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import type { ViteReactSSGOptions } from 'vite-react-ssg'
+import { addContentSecurityPolicyToPages } from './src/lib/contentSecurityPolicy'
 import { deferAppScript } from './src/lib/deferAppScript'
 import { resolveSiteOrigin } from './src/lib/siteOrigin'
 
@@ -24,6 +25,12 @@ const ssgOptions: ViteReactSSGOptions = {
   dirStyle: 'nested',
   includedRoutes: (paths) => paths.filter((route) => !route.includes(':') && !route.includes('*')).map(withTrailingSlash),
   onPageRendered: (_route, html) => deferAppScript(charsetFirst(html)),
+  // Each page's policy allows its inline scripts by hash, so it is added once every page is final.
+  onFinished: async (outDir) => {
+    await addContentSecurityPolicyToPages(outDir)
+  },
+  // Critical-CSS inlining would add <style> blocks the policy does not allow.
+  beastiesOptions: false,
 }
 
 export default defineConfig(({ mode }): UserConfig & { ssgOptions: ViteReactSSGOptions } => {

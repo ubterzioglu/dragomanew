@@ -1,4 +1,3 @@
-import { NavLink } from 'react-router-dom'
 import { useLocale, useUi } from '../../i18n/LocaleContext'
 import { localePath, type LocalizedPaths } from '../../i18n/pages'
 import { DesktopNav } from './DesktopNav'
@@ -6,6 +5,7 @@ import { LanguageSwitcher } from './LanguageSwitcher'
 import { Logo } from './Logo'
 import { MobileMenu } from './MobileMenu'
 import { UTILITY_NAV } from './navItems'
+import { SiteNavLink } from './SiteNavLink'
 
 interface HeaderProps {
   alternates: LocalizedPaths
@@ -27,14 +27,14 @@ export function Header({ alternates }: HeaderProps) {
             <ul className="flex items-center gap-5 text-sm">
               {UTILITY_NAV.map((item) => (
                 <li key={item.label}>
-                  <NavLink
+                  <SiteNavLink
                     to={localePath(locale, item.page)}
                     className={({ isActive }) =>
                       isActive ? 'font-semibold text-brand-green' : 'text-ink-muted hover:text-brand-green'
                     }
                   >
                     {ui.nav[item.label]}
-                  </NavLink>
+                  </SiteNavLink>
                 </li>
               ))}
             </ul>

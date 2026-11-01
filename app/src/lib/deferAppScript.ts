@@ -11,6 +11,8 @@ const PAINT_TIMEOUT_MS = 3000
  * rasterised that frame, which let the bundle compete with the first paint.
  * Without Paint Timing it falls back to the next frame. A tab opened or hidden
  * in the background paints nothing, so it loads the bundle right away.
+ * React DOM (a dynamic import of the bundle) is deliberately not preloaded: in
+ * Lighthouse it pushed the home page's LCP to ~2.8 s in half the runs (session 7).
  */
 export function deferAppScript(html: string): string {
   const match = APP_SCRIPT.exec(html)

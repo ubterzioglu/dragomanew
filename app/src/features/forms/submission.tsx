@@ -33,7 +33,9 @@ function useHydrated(): boolean {
 /**
  * Submit state shared by all sample forms. The button stays disabled until
  * hydration: a prerendered form submitted without JS would do a native GET and
- * put names, e-mails and health answers into the URL.
+ * put names, e-mails and health answers into the URL. `ready` keeps the fields
+ * disabled until then (DemoFormFields), because react-hook-form writes its default
+ * values back as it hydrates and would silently drop anything typed or picked earlier.
  */
 export function useDemoSubmission(kind: FormKind, submitter: FormSubmitter = demoSubmitter) {
   const hydrated = useHydrated()
@@ -52,7 +54,20 @@ export function useDemoSubmission(kind: FormKind, submitter: FormSubmitter = dem
       setSending(false)
     }
   }
-  return { sending, canSubmit: hydrated && !sending, result, submissions, submit, reset: () => setResult(null) }
+  return { ready: hydrated, sending, canSubmit: hydrated && !sending, result, submissions, submit, reset: () => setResult(null) }
+}
+
+/**
+ * Holds a sample form's contents, disabled until hydration (useDemoSubmission's `ready`).
+ * Disabled rather than inert: questions and labels stay readable, also to screen readers,
+ * find-in-page and visitors without JavaScript; only the controls take no input yet.
+ */
+export function DemoFormFields({ ready, className, children }: { ready: boolean; className: string; children: ReactNode }) {
+  return (
+    <fieldset disabled={!ready} className={`min-w-0 ${className}`}>
+      {children}
+    </fieldset>
+  )
 }
 
 /**

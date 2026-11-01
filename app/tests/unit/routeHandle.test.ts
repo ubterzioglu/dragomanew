@@ -1,6 +1,6 @@
 import type { UIMatch } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
-import { findRouteHandle, type RouteHandle } from '../../src/app/routeHandle'
+import { findRouteHandle, notFoundHandle, type RouteHandle } from '../../src/app/routeHandle'
 import { contentData } from '../../src/content/data'
 import { createStaticRepository, EMPTY_CONTENT } from '../../src/content/staticRepository'
 import { eventAlternates } from '../../src/content/urls'
@@ -36,9 +36,10 @@ describe('findRouteHandle', () => {
     expect(findRouteHandle([match(detail, { slug: event.slug.tr })], content)?.alternates).toEqual(eventAlternates(event))
   })
 
-  // A host serves the prerendered /404/ (English, contact CTA) for a missing slug; hydration must see the same tree.
-  it('falls back to the 404 handle when a detail record does not exist', () => {
+  // A host serves the language's prerendered 404 (/de/404/, contact CTA) for a missing slug; hydration must see the same tree.
+  it("falls back to its language's 404 handle when a detail record does not exist", () => {
     const detail: RouteHandle = { locale: 'de', cta: 'request', alternates: () => null }
-    expect(findRouteHandle([match(detail, { slug: 'gone' })], empty)).toEqual({ locale: 'en', alternates: null })
+    expect(findRouteHandle([match(detail, { slug: 'gone' })], empty)).toEqual(notFoundHandle('de'))
+    expect(notFoundHandle('de')).toEqual({ locale: 'de', alternates: null, notFound: true })
   })
 })

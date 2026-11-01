@@ -4,6 +4,7 @@ import { Footer } from '../components/layout/Footer'
 import { Header } from '../components/layout/Header'
 import { MobileActionBar } from '../components/layout/MobileActionBar'
 import { SampleBanner } from '../components/layout/SampleBanner'
+import { NotFoundPageProvider } from '../components/layout/SiteNavLink'
 import { SkipLink } from '../components/layout/SkipLink'
 import { ContentProvider } from '../content/ContentContext'
 import { createStaticRepository, EMPTY_CONTENT, isContentData, type ContentData } from '../content/staticRepository'
@@ -37,17 +38,19 @@ export function RootLayout() {
   return (
     <ContentProvider repository={content}>
       <LocaleProvider locale={locale}>
-        {/* The footer's own bottom padding keeps it clear of the fixed mobile bar (Footer.tsx). */}
-        <div className="flex min-h-dvh flex-col">
-          <SkipLink />
-          {!isPublicRelease && <SampleBanner />}
-          <Header alternates={alternates} />
-          <main id="main" tabIndex={-1} className="flex-1 outline-none">
-            <Outlet />
-          </main>
-          <Footer />
-          <MobileActionBar cta={handle?.cta ?? 'contact'} />
-        </div>
+        <NotFoundPageProvider value={handle?.notFound ?? false}>
+          {/* The footer's own bottom padding keeps it clear of the fixed mobile bar (Footer.tsx). */}
+          <div className="flex min-h-dvh flex-col">
+            <SkipLink />
+            {!isPublicRelease && <SampleBanner />}
+            <Header alternates={alternates} />
+            <main id="main" tabIndex={-1} className="flex-1 outline-none">
+              <Outlet />
+            </main>
+            <Footer />
+            <MobileActionBar cta={handle?.cta ?? 'contact'} />
+          </div>
+        </NotFoundPageProvider>
         {/* Hash entries from native "#id" navigation all share the "default" key; give them their own. */}
         <ScrollRestoration getKey={(location) => (location.hash ? location.pathname + location.hash : location.key)} />
       </LocaleProvider>

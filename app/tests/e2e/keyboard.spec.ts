@@ -82,9 +82,10 @@ test.describe('M6 keyboard, forms', () => {
     await form.getByLabel(ui.forms.email).fill('ornek@example.com')
     await form.getByLabel(ui.forms.preferredDate).fill('2026-12-05')
     await form.getByRole('button', { name: ui.forms.submitRequest }).press('Enter')
-    await expect(form.locator('fieldset [role="alert"]')).toBeVisible()
-    await expect(form.locator('fieldset input[type="number"]').first()).toBeFocused()
-    await expect(form.locator('fieldset input[aria-invalid="true"]')).toHaveCount(await form.locator('fieldset input[type="number"]').count())
+    const options = form.getByRole('group', { name: ui.forms.distributionLegend })
+    await expect(options.locator('[role="alert"]')).toBeVisible()
+    await expect(options.locator('input[type="number"]').first()).toBeFocused()
+    await expect(options.locator('input[aria-invalid="true"]')).toHaveCount(await options.locator('input[type="number"]').count())
   })
 })
 

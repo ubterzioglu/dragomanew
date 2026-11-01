@@ -23,7 +23,7 @@ test.describe('sample forms (guide §5–6)', () => {
     await gotoHydrated(page, eventUrl('tr', events.klasik))
     const form = page.locator('#request form')
     await form.getByLabel(ui.forms.partySize).fill('4')
-    const optionInputs = form.locator('fieldset input[type="number"]')
+    const optionInputs = form.getByRole('group', { name: ui.forms.distributionLegend }).locator('input[type="number"]')
     await optionInputs.nth(0).fill('2')
     await optionInputs.nth(1).fill('2')
     await expect(form.getByText(ui.forms.summaryTitle)).toBeVisible()
@@ -130,7 +130,32 @@ test.describe('sample forms (guide §5–6)', () => {
   })
 })
 
+// Read without JavaScript (and before hydration), a form shows the values react-hook-form starts from,
+// so the price estimate and the fields agree.
+test.describe('prerendered form defaults', () => {
+  test.use({ javaScriptEnabled: false })
+
+  test('party size, options, trip type and lodging counts are filled in', async ({ page }) => {
+    await page.goto(eventUrl('tr', events.klasik))
+    const request = page.locator('#request form')
+    await expect(request.getByLabel(ui.forms.partySize, { exact: true })).toHaveValue('2')
+    for (const option of await request.getByRole('group', { name: ui.forms.distributionLegend }).locator('input[type="number"]').all()) {
+      await expect(option).toHaveValue('0')
+    }
+
+    await page.goto(localePath('tr', 'transport'))
+    await expect(page.getByLabel(ui.forms.oneWay, { exact: true })).toBeChecked()
+    await expect(page.getByLabel(ui.forms.roundTrip, { exact: true })).not.toBeChecked()
+    await expect(page.getByLabel(ui.forms.partySize, { exact: true })).toHaveValue('2')
+    await expect(page.getByLabel(ui.forms.adults, { exact: true })).toHaveValue('2')
+    await expect(page.getByLabel(ui.forms.children, { exact: true })).toHaveValue('0')
+    await expect(page.getByLabel(ui.forms.rooms, { exact: true })).toHaveValue('1')
+  })
+})
+
 // Privacy: a prerendered form must never fall back to a native GET that writes answers into the URL.
+// Its fields also take no input before hydration, because react-hook-form would write its defaults
+// back over anything typed; disabled rather than inert, so the questions stay readable.
 test.describe('forms without JavaScript', () => {
   test.use({ javaScriptEnabled: false })
 
@@ -142,16 +167,25 @@ test.describe('forms without JavaScript', () => {
   ]
 
   for (const target of pages) {
-    test(`${target.name}: submit is inert and nothing reaches the URL`, async ({ page }) => {
+    test(`${target.name}: fields and submit take no input, stay readable, and nothing reaches the URL`, async ({ page }) => {
       await page.goto(target.path())
       const submits = page.locator('form button[type="submit"]')
       await expect(submits).not.toHaveCount(0)
       for (const submit of await submits.all()) await expect(submit).toBeDisabled()
 
+      for (const form of await page.locator('main form').all()) {
+        await expect(form.locator(':scope > fieldset')).toHaveAttribute('disabled', '')
+        await expect(form.locator('input, textarea, select').first()).toBeDisabled()
+        await expect(form.locator('label').first()).toBeVisible()
+        expect(await form.evaluate((el) => el.closest('[inert]'))).toBeNull()
+        await expect(form.locator('[inert]')).toHaveCount(0)
+      }
       const name = page.locator('form input:not([type]), form input[type="text"], form input[type="email"]').first()
-      await name.fill('Örnek Ziyaretçi')
-      await name.press('Enter')
+      await name.click({ force: true })
+      await page.keyboard.type('Örnek Ziyaretçi')
+      await page.keyboard.press('Enter')
       await page.waitForLoadState()
+      await expect(name).toHaveValue('')
       expect(new URL(page.url()).search).toBe('')
       expect(page.url()).not.toContain('Ziyaret')
     })
