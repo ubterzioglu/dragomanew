@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 
 /**
  * Opens a page and waits for hydration (RootLayout sets <html data-hydrated>). The app script
@@ -15,13 +15,15 @@ export async function gotoHydrated(page: Page, url: string): Promise<void> {
 /** Collects console errors and failed same-origin requests while a test runs. */
 export function watchPage(page: Page) {
   const problems: string[] = []
+  // The site under test: the local preview, or a deployed host (E2E_BASE_URL in playwright.config.ts).
+  const siteHost = new URL(String(test.info().project.use.baseURL)).host
   page.on('console', (message) => {
     if (message.type() === 'error') problems.push(`console: ${message.text()}`)
   })
   page.on('pageerror', (error) => problems.push(`pageerror: ${error.message}`))
   page.on('response', (response) => {
     const url = new URL(response.url())
-    if (url.host === 'localhost:4173' && response.status() >= 400) problems.push(`${response.status()} ${url.pathname}`)
+    if (url.host === siteHost && response.status() >= 400) problems.push(`${response.status()} ${url.pathname}`)
   })
   return problems
 }

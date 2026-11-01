@@ -5,8 +5,18 @@ import { getUi } from '../../src/i18n/ui'
 import { gotoHydrated, watchPage } from './helpers'
 import { events, eventUrl, templatePages } from './targets'
 
-/** Answers `url` the way deploy/nginx/dragoman.conf does for a missing page: that language's 404 HTML, status 404. */
+/**
+ * The 404 itself, as watchPage reports it: the response, and Chrome's console line for it. Over HTTP/2 and HTTP/3
+ * there is no reason phrase, so a deployed host's line ends in "status of 404 ()".
+ */
+const isHost404 = (problem: string) => problem.startsWith('404 ') || /status of 404 \((Not Found)?\)$/.test(problem)
+
+/**
+ * Answers `url` the way deploy/nginx/dragoman.conf does for a missing page: that language's 404 HTML, status 404.
+ * A deployed host (E2E_BASE_URL) answers for itself, so its real 404 is what gets checked there.
+ */
 async function serveAsHost404(page: Page, url: string, notFoundPage: string): Promise<void> {
+  if (process.env.E2E_BASE_URL) return
   const body = await (await page.request.get(notFoundPage)).text()
   await page.route(url, (route) => route.fulfill({ status: 404, contentType: 'text/html; charset=utf-8', body }))
 }
@@ -27,7 +37,6 @@ for (const locale of LOCALES) {
       await expect(page.getByRole('link', { name: ui.notFound.backHome })).toHaveAttribute('href', localePath(locale, 'home'))
     }
     // The 404 status is the point (and Chrome logs it); anything else, such as a hydration mismatch, is a problem.
-    const isHost404 = (problem: string) => problem.startsWith('404 ') || problem.endsWith('status of 404 (Not Found)')
     expect(problems.filter((p) => p.startsWith('404 '))).toEqual(missingPages.map((url) => `404 ${url}`))
     expect(problems.filter((p) => !isHost404(p))).toEqual([])
   })
@@ -57,7 +66,7 @@ test('U26: a wrong-case address is a missing page, served and hydrated as the En
   await gotoHydrated(page, '/TR/')
   await expect(page.locator('html')).toHaveAttribute('lang', LOCALE_TAG.en)
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(getUi('en').notFound.title)
-  expect(problems.filter((p) => !p.startsWith('404 ') && !p.endsWith('status of 404 (Not Found)'))).toEqual([])
+  expect(problems.filter((p) => !isHost404(p))).toEqual([])
 })
 
 const FORM_PAGES = [
