@@ -16,6 +16,9 @@ export default defineConfig({
   use: {
     baseURL: deployedHost ?? 'http://localhost:4173',
     trace: 'retain-on-failure',
+    // The dive background's endless animations, drawn without a GPU in a dozen parallel browsers,
+    // starved the CPU (axe timeouts, session 11). Reduced motion stills them; dive.spec.ts covers them.
+    reducedMotion: 'reduce',
   },
   webServer: deployedHost
     ? undefined

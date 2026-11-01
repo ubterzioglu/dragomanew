@@ -77,7 +77,7 @@ export function TransportPage() {
       </PageHero>
 
       {sections.map((section) => (
-        <section key={section.id} id={section.id} aria-labelledby={`${section.id}-title`} className="even:bg-sand">
+        <section key={section.id} id={section.id} aria-labelledby={`${section.id}-title`}>
           <div className="container-page grid gap-10 py-12 lg:grid-cols-2">
             <div>
               <h2 id={`${section.id}-title`} className="text-3xl font-bold md:text-4xl">

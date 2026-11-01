@@ -65,7 +65,7 @@ export function HomePage() {
 
       {/* 3. Featured tours, activities and announcements */}
       {featured.length > 0 && (
-        <Section id="featured" title={ui.pages.featuredTitle} tone="sand">
+        <Section id="featured" title={ui.pages.featuredTitle}>
           <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {featured.map((item) => (
               <li key={item.key} className="flex">
@@ -93,7 +93,7 @@ export function HomePage() {
       </Section>
 
       {/* 5. Google reviews (sample until the real source is connected) */}
-      <Section id="reviews" title={ui.pages.reviewsTitle} tone="sand">
+      <Section id="reviews" title={ui.pages.reviewsTitle}>
         <Badge tone="sample" className="mb-6">
           {ui.pages.reviewsNote}
         </Badge>

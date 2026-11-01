@@ -48,7 +48,7 @@ export function CategoryPage({ category }: { category: CategoryKey }) {
       </PageHero>
 
       {groups.map(({ group, events }) => (
-        <section key={group.id} aria-labelledby={`group-${group.id}`} className="even:bg-sand">
+        <section key={group.id} aria-labelledby={`group-${group.id}`}>
           <div className="container-page py-10 md:py-14">
             <h2 id={`group-${group.id}`} className="text-3xl font-bold md:text-4xl">
               {pick(group.title, locale).value}

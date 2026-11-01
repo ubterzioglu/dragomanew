@@ -1,5 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { Outlet, ScrollRestoration, useMatches, type UIMatch } from 'react-router-dom'
+import { DepthGauge } from '../components/layout/DepthGauge'
+import { DiveBackground } from '../components/layout/DiveBackground'
 import { Footer } from '../components/layout/Footer'
 import { Header } from '../components/layout/Header'
 import { MobileActionBar } from '../components/layout/MobileActionBar'
@@ -41,6 +43,7 @@ export function RootLayout() {
         <NotFoundPageProvider value={handle?.notFound ?? false}>
           {/* The footer's own bottom padding keeps it clear of the fixed mobile bar (Footer.tsx). */}
           <div className="flex min-h-dvh flex-col">
+            <DiveBackground />
             <SkipLink />
             {!isPublicRelease && <SampleBanner />}
             <Header alternates={alternates} />
@@ -49,6 +52,7 @@ export function RootLayout() {
             </main>
             <Footer />
             <MobileActionBar cta={handle?.cta ?? 'contact'} />
+            <DepthGauge />
           </div>
         </NotFoundPageProvider>
         {/* Hash entries from native "#id" navigation all share the "default" key; give them their own. */}

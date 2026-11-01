@@ -58,7 +58,7 @@ export function PostPage({ post }: { post: Post }) {
       </article>
 
       {related.length > 0 && (
-        <section aria-labelledby="related-title" className="bg-sand">
+        <section aria-labelledby="related-title">
           <div className="container-page py-12">
             <h2 id="related-title" className="text-3xl font-bold">
               {ui.pages.relatedEvents}

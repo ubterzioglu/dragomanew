@@ -57,7 +57,7 @@ export function TransportForm() {
           <legend className="font-semibold">{ui.forms.tripType}</legend>
           <div className="mt-2 flex flex-wrap gap-3">
             {(['oneWay', 'roundTrip'] as const).map((type) => (
-              <label key={type} className="flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border border-line-strong px-4 has-[:checked]:border-brand-green has-[:checked]:bg-brand-green-soft">
+              <label key={type} className="flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border border-line-strong bg-white px-4 has-[:checked]:border-brand-green has-[:checked]:bg-brand-green-soft">
                 <input type="radio" value={type} className="size-4 accent-brand-green" defaultChecked={type === TRANSPORT_DEFAULTS.tripType} {...register('tripType')} />
                 {ui.forms[type]}
               </label>

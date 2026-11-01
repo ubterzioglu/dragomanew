@@ -26,7 +26,7 @@ export function EventCard({ event, cover, href, headingLevel = 'h3' }: EventCard
 
   return (
     // The focus ring moves from the stretched link to the card frame so keyboard users see the whole card selected.
-    <article className="group relative flex w-full flex-col overflow-hidden rounded-card border border-line bg-white shadow-sm transition-shadow hover:shadow-md has-[a:focus-visible]:outline-3 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-brand-orange">
+    <article className="group relative flex w-full flex-col overflow-hidden rounded-card border border-line bg-white shadow-sm transition-shadow hover:shadow-md has-[a:focus-visible]:outline-3 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-brand-orange-ink">
       <div className="relative aspect-[4/3] overflow-hidden bg-sand">
         <Picture
           asset={cover}

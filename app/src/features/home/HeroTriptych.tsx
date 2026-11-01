@@ -18,7 +18,7 @@ export function HeroTriptych({ hero }: { hero: HomeContent['hero'] }) {
   const content = useContent()
 
   return (
-    <section aria-labelledby="hero-title" className="bg-sand">
+    <section aria-labelledby="hero-title">
       <div className="container-page pt-10 pb-6 md:pt-14">
         <h1 id="hero-title" className="max-w-3xl text-4xl font-bold text-ink md:text-6xl">
           {pick(hero.heading, locale).value}

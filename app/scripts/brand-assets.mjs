@@ -15,7 +15,8 @@ const OUT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'p
 async function main() {
   await mkdir(OUT_DIR, { recursive: true })
 
-  for (const width of [240, 480]) {
+  // 960: the large footer logo on high-density screens.
+  for (const width of [240, 480, 960]) {
     await sharp(LOGO).resize({ width }).webp({ quality: 90 }).toFile(path.join(OUT_DIR, `dragoman-logo-${width}.webp`))
   }
   await sharp(LOGO).resize({ width: 480 }).png({ compressionLevel: 9 }).toFile(path.join(OUT_DIR, 'dragoman-logo-480.png'))

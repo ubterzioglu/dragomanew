@@ -54,7 +54,7 @@ test.describe('E02 mobile', () => {
     const slogan = page.locator('footer').getByText(ui.brand.slogan)
     const [sloganBox, barBox] = await Promise.all([slogan.boundingBox(), page.locator('div.fixed.bottom-0').boundingBox()])
     expect(sloganBox && barBox && sloganBox.y + sloganBox.height <= barBox.y).toBe(true)
-    // The green footer reaches the end of the page: no white strip below it.
+    // The footer, with its logo sign-off, reaches the end of the page: nothing below it.
     const gap = await page.evaluate(() => {
       const footer = document.querySelector('footer')?.getBoundingClientRect()
       return footer ? document.documentElement.scrollHeight - (window.scrollY + footer.bottom) : Infinity

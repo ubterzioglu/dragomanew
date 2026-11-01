@@ -14,7 +14,7 @@ interface PageHeroProps {
 /** Top area of category and content pages: breadcrumb, title, intro, cover photo. */
 export function PageHero({ title, breadcrumbs, cover, children }: PageHeroProps) {
   return (
-    <section className="bg-sand">
+    <section>
       <div className={`container-page grid gap-8 py-8 md:py-12 ${cover ? 'lg:grid-cols-2 lg:items-center' : ''}`}>
         <div>
           <Breadcrumbs items={breadcrumbs} />

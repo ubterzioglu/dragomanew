@@ -58,7 +58,7 @@ export function EventDetailPage({ event }: { event: DragomanEvent }) {
   return (
     <>
       <PageHead title={title} description={summary} alternates={eventAlternates(event)} />
-      <div className="bg-sand">
+      <div>
         <div className="container-page py-8 md:py-10">
           <Breadcrumbs
             items={[

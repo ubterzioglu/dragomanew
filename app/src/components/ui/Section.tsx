@@ -4,16 +4,16 @@ interface SectionProps {
   id?: string
   title?: string
   intro?: string
-  tone?: 'white' | 'sand'
   children: ReactNode
   /** Extra element shown at the right of the heading (e.g. "All posts" link). */
   action?: ReactNode
 }
 
-export function Section({ id, title, intro, tone = 'white', children, action }: SectionProps) {
+// No background of its own: the page's dive background (DiveBackground.tsx) shows through.
+export function Section({ id, title, intro, children, action }: SectionProps) {
   const headingId = id ? `${id}-title` : undefined
   return (
-    <section id={id} aria-labelledby={title ? headingId : undefined} className={tone === 'sand' ? 'bg-sand' : 'bg-white'}>
+    <section id={id} aria-labelledby={title ? headingId : undefined}>
       <div className="container-page py-12 md:py-16">
         {(title || action) && (
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4">

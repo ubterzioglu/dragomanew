@@ -67,7 +67,7 @@ export function HealthFormPage({ kind, alternates }: HealthFormPageProps) {
             {(['yes', 'no'] as const).map((answer) => (
               <label
                 key={answer}
-                className="flex min-h-11 min-w-20 cursor-pointer items-center justify-center gap-2 rounded-lg border border-line-strong px-3 has-[:checked]:border-brand-green has-[:checked]:bg-brand-green-soft has-[:checked]:font-semibold"
+                className="flex min-h-11 min-w-20 cursor-pointer items-center justify-center gap-2 rounded-lg border border-line-strong bg-white px-3 has-[:checked]:border-brand-green has-[:checked]:bg-brand-green-soft has-[:checked]:font-semibold"
               >
                 <input type="radio" value={answer} className="size-4 accent-brand-green focus-visible:outline-brand-green" {...register(`answers.${question.code}`)} />
                 {ui.health[answer]}

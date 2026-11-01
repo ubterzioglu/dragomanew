@@ -20,7 +20,7 @@ function TeamSection() {
   const team = content.team()
   if (team.length === 0) return null
   return (
-    <section aria-labelledby="team-title" className="bg-sand">
+    <section aria-labelledby="team-title">
       <div className="container-page py-12">
         <h2 id="team-title" className="text-3xl font-bold md:text-4xl">
           {ui.pages.teamTitle}
