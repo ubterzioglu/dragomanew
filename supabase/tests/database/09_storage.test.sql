@@ -10,7 +10,7 @@ create table tests.people (name text primary key, user_id uuid not null, email t
 grant usage on schema tests to anon, authenticated;
 grant select on tests.people to anon, authenticated;
 
-create function tests.sign_in(p_name text, p_aal text default 'aal2')
+create function tests.sign_in(p_name text, p_aal text default 'aal1')
 returns void
 language plpgsql
 as $$
@@ -60,7 +60,7 @@ select tests.sign_in('editor');
 select lives_ok(
   $$ insert into storage.objects (bucket_id, name, owner_id)
      values ('media-originals', 'pgtap-photo/' || repeat('ab', 32) || '.jpg', '10000000-0000-4000-8000-000000000004') $$,
-  'content.edit uploads a master at <id>/<sha256>.jpg'
+  'content.edit uploads a master at <id>/<sha256>.jpg (plain aal1 sign-in)'
 );
 select throws_ok(
   $$ insert into storage.objects (bucket_id, name) values ('media-originals', 'pgtap-photo/original.jpg') $$,
@@ -84,12 +84,12 @@ select is(
   'a master cannot be renamed or replaced'
 );
 
-select tests.sign_in('editor', 'aal1');
+select tests.sign_in('editor', null);
 select throws_ok(
   $$ insert into storage.objects (bucket_id, name) values ('media-originals', 'pgtap-other/' || repeat('ab', 32) || '.jpg') $$,
-  '42501', null, 'uploading needs AAL2'
+  '42501', null, 'uploading needs a signed-in session (no aal claim is refused)'
 );
-select is_empty($$ select 1 from storage.objects where bucket_id = 'media-originals' $$, 'reading masters needs AAL2');
+select is_empty($$ select 1 from storage.objects where bucket_id = 'media-originals' $$, 'reading masters needs a signed-in session');
 
 reset role;
 select tests.sign_in('resv');

@@ -1,4 +1,5 @@
--- claim / hand over / reassign: allowed for the right role, refused for everyone else.
+-- claim / hand over / reassign: allowed for the right role, refused for everyone else. Staff sign in
+-- at aal1 (Google or e-mail + password; no TOTP since 2026-11-02), so tests.sign_in defaults to it.
 -- Also the before_user_created auth hook.
 begin;
 create extension if not exists pgtap with schema extensions;
@@ -13,7 +14,7 @@ grant usage on schema tests to authenticated;
 grant select on tests.people to authenticated;
 
 /** Act as a signed-in user: role authenticated plus the JWT claims Auth would issue. */
-create function tests.sign_in(p_name text, p_aal text default 'aal2')
+create function tests.sign_in(p_name text, p_aal text default 'aal1')
 returns void
 language plpgsql
 as $$
@@ -65,12 +66,12 @@ reset role;
 select tests.sign_in('editor');
 select throws_ok($$ select public.claim_request('40000000-0000-4000-8000-000000000001') $$, '42501', null, 'the content role cannot claim');
 reset role;
-select tests.sign_in('resv', 'aal1');
-select throws_ok($$ select public.claim_request('40000000-0000-4000-8000-000000000001') $$, '42501', null, 'claiming needs AAL2');
+select tests.sign_in('resv', null);
+select throws_ok($$ select public.claim_request('40000000-0000-4000-8000-000000000001') $$, '42501', null, 'claiming needs a signed-in session (no aal claim is refused)');
 
 reset role;
 select tests.sign_in('resv');
-select lives_ok($$ select public.claim_request('40000000-0000-4000-8000-000000000001') $$, 'reservations claims a pending request');
+select lives_ok($$ select public.claim_request('40000000-0000-4000-8000-000000000001') $$, 'reservations claims a pending request with a plain aal1 sign-in');
 
 reset role;
 select results_eq(
@@ -102,10 +103,10 @@ select throws_ok(
   '42501', null, 'accounting cannot hand over'
 );
 reset role;
-select tests.sign_in('resv', 'aal1');
+select tests.sign_in('resv', null);
 select throws_ok(
   $$ select public.hand_over_request('40000000-0000-4000-8000-000000000001', '20000000-0000-4000-8000-000000000008') $$,
-  '42501', null, 'handing over needs AAL2'
+  '42501', null, 'handing over needs a signed-in session (no aal claim is refused)'
 );
 
 reset role;
@@ -163,17 +164,17 @@ select throws_ok(
   '42501', null, 'accounting cannot reassign'
 );
 reset role;
-select tests.sign_in('admin', 'aal1');
+select tests.sign_in('admin', null);
 select throws_ok(
   $$ select public.reassign_request('40000000-0000-4000-8000-000000000001', '20000000-0000-4000-8000-000000000002') $$,
-  '42501', null, 'reassigning needs AAL2'
+  '42501', null, 'reassigning needs a signed-in session (no aal claim is refused)'
 );
 
 reset role;
 select tests.sign_in('admin');
 select lives_ok(
   $$ select public.reassign_request('40000000-0000-4000-8000-000000000001', '20000000-0000-4000-8000-000000000002') $$,
-  'main_admin reassigns a request'
+  'main_admin reassigns a request with a plain aal1 sign-in'
 );
 select throws_ok(
   $$ select public.reassign_request('40000000-0000-4000-8000-000000000001', '20000000-0000-4000-8000-000000000002') $$,

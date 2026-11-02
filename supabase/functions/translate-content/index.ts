@@ -6,7 +6,7 @@ import { createTranslateStore } from './store.ts'
 
 /**
  * Thin Deno entry for translate-content. verify_jwt is off; handler.ts checks the staff session
- * (AAL2 + content.translate). DEEPL_API_KEY is a function secret and never leaves the server.
+ * (signed-in token + content.translate). DEEPL_API_KEY is a function secret and never leaves the server.
  */
 
 const url = requiredEnv('SUPABASE_URL')

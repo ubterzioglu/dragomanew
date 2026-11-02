@@ -4,12 +4,12 @@ Site taleplerini ve panel kullanıcılarını yöneten personel paneli. `/panel/
 
 | Adres | İçerik |
 | --- | --- |
-| `/panel/giris` | Google ile giriş. Yerelde, açıksa e-posta ile giriş formu da görünür. |
-| `/panel/2fa` | TOTP: ilk girişte QR kodla kurulum, sonrasında 6 haneli kod. |
+| `/panel/giris` | Google ile ya da e-posta + şifreyle giriş (kayıt formu yoktur). Yerelde, açıksa e-posta bağlantısıyla geliştirme girişi de görünür. |
+| `/panel/sifre` | Giriş yapmış kişinin kendi şifresini belirlemesi / değiştirmesi (en az 12 karakter). Google ile girenler buradan şifre belirleyip sonra e-posta + şifreyle de girebilir. |
 | `/panel/` | Sekmeler: Bekliyor, İşleme Alındı, Bana Atananlar. Ayrıntıda form değerleri, etkinliğin talep anındaki hâli, tahmini fiyat ve geçmiş. İşlemler: İşleme Al, Devret, Sorumlu değiştir (yalnızca ana yönetici). |
 | `/panel/kullanicilar` | Yalnızca ana yönetici: liste, ekleme, rol değiştirme, pasifleştirme. |
 
-Girişten sonra panel `link_staff_account()` çağırır. Sonuç boşsa (adres etkin personele ait değil ya da e-posta doğrulanmamış) "Erişim yok" gösterilir. Veriler yalnızca AAL2 (TOTP) oturumla okunur; her yetkiyi veritabanı (RLS ve RPC'ler) denetler, paneldeki gizli düğmeler yalnızca kolaylıktır.
+Girişten sonra panel `link_staff_account()` çağırır. Sonuç boşsa (adres etkin personele ait değil ya da e-posta doğrulanmamış) "Erişim yok" gösterilir. İki adımlı doğrulama (TOTP) istenmez (2026-11-02 kararı): etkin bir personelin her oturumu (Google ya da e-posta + şifre, `aal1`) rolünün izin verdiği her şeye erişir; Google hesabının güvenliği Google'a bırakılmıştır. Her yetkiyi veritabanı (RLS ve RPC'ler) denetler, paneldeki gizli düğmeler yalnızca kolaylıktır.
 
 ## Yerelde çalıştırma
 
@@ -22,7 +22,7 @@ supabase db reset      # migration'lar ve seed
 supabase status        # "API URL" ve "Publishable" anahtarını not edin
 ```
 
-`config.toml` içindeki auth ayarları (site_url, TOTP, `before_user_created` kancası) yalnızca `supabase start` sırasında okunur. Dosya değiştiyse önce `supabase stop`, sonra `supabase start` çalıştırın.
+`config.toml` içindeki auth ayarları (site_url, şifre uzunluğu, `before_user_created` kancası) yalnızca `supabase start` sırasında okunur. Dosya değiştiyse önce `supabase stop`, sonra `supabase start` çalıştırın.
 
 ```powershell
 cd panel
@@ -55,9 +55,11 @@ Form yalnızca `npm run dev` ile ve `VITE_PANEL_DEV_EMAIL_LOGIN=true` iken gör�
 1. `/panel/giris` sayfasında adresinizi girip **Giriş bağlantısı gönder**'e basın.
 2. E-postayı Mailpit'te açın (<http://127.0.0.1:54324>) ve bağlantıya aynı tarayıcıda tıklayın. Yerel Supabase'in varsayılan şablonu yalnızca bağlantı içerir, kod göndermez.
 
-### İki adımlı doğrulama
+### E-posta + şifreyle giriş
 
-`/panel/2fa` sayfasında **Kurulumu başlat**'a basın, QR kodu bir doğrulama uygulamasıyla okutun (QR, Supabase'in döndürdüğü SVG'dir; dış servis kullanılmaz) ve 6 haneli kodu girin. Yerelde sıfırlamak için:
+Önce bir kez Google ile (yerelde e-posta bağlantısıyla) girip `/panel/sifre` sayfasından şifre belirleyin; sonra `/panel/giris` sayfasındaki e-posta + şifre formuyla girebilirsiniz. Hatalı adres ve hatalı şifre aynı uyarıyı verir. Personel olmayan adresler için hesap açılamaz (`before_user_created` kancası).
+
+Daha önce TOTP kurmuş bir hesap `insufficient_aal` hatası alırsa eski kaydı silin:
 
 ```sql
 delete from auth.mfa_factors
@@ -89,5 +91,5 @@ npm run build      # dist/ (base /panel/)
 - Panel yalnızca publishable anahtarla çalışır; secret ya da service-role anahtarı görmez.
 - `staff_members.extra_permissions` panelde gösterilmez ve ayarlanmaz: panel, kişinin kendi eklerini okuyamaz (istemci yalnızca `id, full_name, role, active` sütunlarını görür), bu yüzden menüleri ve düğmeleri yalnızca role göre gösterir. Veritabanı ise ekleri tanır (`private.role_can`). Ek yetkiyi elle SQL ile vermeyin; gerekirse önce kişinin kendi yetkilerini döndüren bir RPC (ör. `public.my_permissions()`) eklenmeli.
 - Pasifleştirilen ya da rolü değişen kişinin açık paneli, personel satırını her token yenilemesinde, sekmeye dönüldüğünde ve sekme açıkken 5 dakikada bir yeniden okur. Veritabanı erişimi ise hemen keser.
-- Yayın: repo kökündeki `Dockerfile` paneli ayrı bir aşamada build eder ve sitenin yanına `/panel/` altına koyar. `app/deploy/nginx/dragoman.conf` bu yolu kendi CSP başlığıyla verir (QR için `img-src data:`, Supabase adresi için `connect-src`); `index.html` saklanmaz, hash'li dosyalar bir yıl önbellekte kalır. Ayrıntılar ve Supabase tarafındaki tek seferlik ayarlar için `app/deploy/KURULUM.md`.
+- Yayın: repo kökündeki `Dockerfile` paneli ayrı bir aşamada build eder ve sitenin yanına `/panel/` altına koyar. `app/deploy/nginx/dragoman.conf` bu yolu kendi CSP başlığıyla verir (`img-src data:`, Supabase adresi için `connect-src`); `index.html` saklanmaz, hash'li dosyalar bir yıl önbellekte kalır. Ayrıntılar ve Supabase tarafındaki tek seferlik ayarlar için `app/deploy/KURULUM.md`.
 - Google sağlayıcısı barındırılan projede henüz açık değilken giriş düğmesi "Google girişi henüz açılmadı" uyarısıyla döner; sağlayıcı açılınca ek bir değişiklik gerekmez.

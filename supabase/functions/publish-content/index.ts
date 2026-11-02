@@ -5,7 +5,7 @@ import { createPublishStore } from './store.ts'
 
 /**
  * Thin Deno entry for publish-content. verify_jwt is off; handler.ts checks the staff session
- * (AAL2 + my_permissions) itself, after answering the CORS preflight.
+ * (signed-in token + my_permissions) itself, after answering the CORS preflight.
  */
 
 const url = requiredEnv('SUPABASE_URL')

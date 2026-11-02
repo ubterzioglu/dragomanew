@@ -2,10 +2,9 @@ import { describe, expect, it } from 'vitest'
 import { gateFor, gateNotice, redirectFor } from '../src/auth/gate'
 import { parseLinkedStaffId } from '../src/auth/linkedStaff'
 import { devEmailLoginEnabled, panelRedirectUrl, readPanelConfig } from '../src/lib/env'
-import { qrImageSrc } from '../src/lib/qr'
 
 describe('gateFor', () => {
-  const base = { loading: false, signedIn: true, aal: 'aal1', link: 'ready', staff: 'unknown' } as const
+  const base = { loading: false, signedIn: true, link: 'ready', staff: 'unknown' } as const
 
   it('waits while the session is loading', () => {
     expect(gateFor({ ...base, loading: true, signedIn: false })).toBe('loading')
@@ -15,22 +14,20 @@ describe('gateFor', () => {
     expect(gateFor({ ...base, signedIn: false, link: 'unknown' })).toBe('sign_in')
   })
 
-  it('links the account first and stops people who are not active staff before MFA', () => {
-    expect(gateFor({ ...base, link: 'unknown' })).toBe('loading')
-    expect(gateFor({ ...base, link: 'missing' })).toBe('not_staff')
-    expect(gateFor({ ...base, link: 'error' })).toBe('error')
+  it('links the account first and stops people who are not active staff before reading anything', () => {
+    expect(gateFor({ ...base, link: 'unknown', staff: 'ready' })).toBe('loading')
+    expect(gateFor({ ...base, link: 'missing', staff: 'ready' })).toBe('not_staff')
+    expect(gateFor({ ...base, link: 'error', staff: 'ready' })).toBe('error')
   })
 
-  it('asks for the second factor until the session is aal2', () => {
-    expect(gateFor(base)).toBe('mfa')
-    expect(gateFor({ ...base, aal: null })).toBe('mfa')
+  it('opens the panel for a linked, active staff member without asking for a second factor', () => {
+    expect(gateFor({ ...base, staff: 'ready' })).toBe('ready')
   })
 
-  it('waits for the staff row at aal2, then opens the panel or refuses', () => {
-    expect(gateFor({ ...base, aal: 'aal2' })).toBe('loading')
-    expect(gateFor({ ...base, aal: 'aal2', staff: 'ready' })).toBe('ready')
-    expect(gateFor({ ...base, aal: 'aal2', staff: 'missing' })).toBe('not_staff')
-    expect(gateFor({ ...base, aal: 'aal2', staff: 'error' })).toBe('error')
+  it('waits for the staff row, then refuses an inactive or missing row', () => {
+    expect(gateFor(base)).toBe('loading')
+    expect(gateFor({ ...base, staff: 'missing' })).toBe('not_staff')
+    expect(gateFor({ ...base, staff: 'error' })).toBe('error')
   })
 })
 
@@ -38,11 +35,11 @@ describe('redirectFor', () => {
   it('sends each gate to its page', () => {
     expect(redirectFor('sign_in', '/')).toBe('/giris')
     expect(redirectFor('sign_in', '/giris')).toBeNull()
-    expect(redirectFor('mfa', '/kullanicilar')).toBe('/2fa')
-    expect(redirectFor('mfa', '/2fa')).toBeNull()
+    expect(redirectFor('sign_in', '/sifre')).toBe('/giris')
     expect(redirectFor('ready', '/giris')).toBe('/')
-    expect(redirectFor('ready', '/2fa')).toBe('/')
     expect(redirectFor('ready', '/kullanicilar')).toBeNull()
+    expect(redirectFor('ready', '/sifre')).toBeNull()
+    expect(redirectFor('not_staff', '/kullanicilar')).toBeNull()
     expect(redirectFor('loading', '/')).toBeNull()
   })
 })
@@ -69,7 +66,6 @@ describe('gateNotice', () => {
     expect(gateNotice('ready', null)).toBeNull()
     expect(gateNotice('loading', null)).toBeNull()
     expect(gateNotice('sign_in', null)).toBeNull()
-    expect(gateNotice('mfa', null)).toBeNull()
   })
 })
 
@@ -113,19 +109,5 @@ describe('panel config', () => {
   it('builds the sign-in redirect from the origin and base', () => {
     expect(panelRedirectUrl('http://localhost:5175', '/panel/')).toBe('http://localhost:5175/panel/')
     expect(panelRedirectUrl('https://example.com', '/panel')).toBe('https://example.com/panel/')
-  })
-})
-
-describe('qrImageSrc', () => {
-  it('encodes a raw or loosely encoded SVG data URI so the image always loads', () => {
-    const svg = '<svg xmlns="http://www.w3.org/2000/svg"><path fill="#000"/></svg>'
-    const expected = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`
-    expect(qrImageSrc(svg)).toBe(expected)
-    expect(qrImageSrc(`data:image/svg+xml;utf-8,${svg}`)).toBe(expected)
-  })
-
-  it('keeps an already encoded data URI', () => {
-    const uri = 'data:image/png;base64,iVBORw0KGgo='
-    expect(qrImageSrc(uri)).toBe(uri)
   })
 })

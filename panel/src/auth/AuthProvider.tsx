@@ -5,7 +5,7 @@ import { db } from '../lib/supabase'
 import type { CurrentStaff } from '../lib/types'
 import { useKeyedPromise } from '../lib/useKeyedPromise'
 import { useRecheck } from '../lib/useRecheck'
-import { readTokenClaims, sessionScope } from './claims'
+import { sessionScope } from './claims'
 import { linkStaffAccount, loadStaffRow } from './currentStaff'
 import { gateFor, type Gate } from './gate'
 import { lookupOf, staffLookup } from './staffLookup'
@@ -26,8 +26,8 @@ const runLink = () => linkStaffAccount()
 const runStaff = (key: string) => loadStaffRow(key.split('#')[0] ?? '')
 
 /**
- * Holds the session, its assurance level and the staff row. The level is read from the current
- * token, so it can never lag behind or outlive it. Link and staff lookups are keyed by the sign-in
+ * Holds the session and the staff row. Any signed-in session (Google or e-mail + password) is
+ * enough; the database decides what it may do. Link and staff lookups are keyed by the sign-in
  * (user plus the token's session id), so a token refresh never blanks the open page, while a
  * sign-out and a new sign-in never reuse the last session's answers. The staff row is still read
  * again on every refresh and re-check (see staffLookup), so a deactivation reaches an open panel.
@@ -49,18 +49,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const token = session?.access_token ?? null
   const userId = session?.user.id ?? null
-  const level = token ? readTokenClaims(token).level : null
   const scope = token && userId ? sessionScope(userId, token) : null
 
   const link = useKeyedPromise(scope ? `${scope}#${retry}` : null, runLink)
   const staffId = link.status === 'ok' ? link.value : null
-  const lookup = staffLookup({ level, staffId, scope, retry, token, recheck })
+  const lookup = staffLookup({ staffId, scope, retry, token, recheck })
   const staffRow = useKeyedPromise(lookup?.key ?? null, runStaff, lookup?.revision)
 
   const gate = gateFor({
     loading: !initialised,
     signedIn: token !== null,
-    aal: level,
     link: lookupOf(link),
     staff: lookupOf(staffRow),
   })

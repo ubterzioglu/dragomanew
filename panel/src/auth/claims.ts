@@ -1,20 +1,15 @@
 /**
- * What the gate needs from an access token, read from the token itself. RLS checks the same
- * claim (`auth.jwt() ->> 'aal'`), so the gate agrees with the database at once, with no network
- * round trip, and a new token can never inherit an older token's level (a sign-out followed by a
- * fresh aal1 sign-in reads aal1 straight away). The signature is not checked here: this only
- * decides which screen to show, and every query is still checked by the database.
+ * What the panel needs from an access token, read from the token itself: the `session_id` that
+ * scopes cached lookups to one sign-in. The signature is not checked here: this only keys the
+ * panel's caches, and every query is still checked by the database.
  */
 
-export type Level = 'aal1' | 'aal2'
-
 export interface TokenClaims {
-  level: Level
   /** The `session_id` claim: the same across token refreshes, new on every sign-in. */
   sessionId: string | null
 }
 
-const UNKNOWN: TokenClaims = { level: 'aal1', sessionId: null }
+const UNKNOWN: TokenClaims = { sessionId: null }
 
 function decodeSegment(segment: string): unknown {
   const base64 = segment.replace(/-/g, '+').replace(/_/g, '/')
@@ -23,16 +18,13 @@ function decodeSegment(segment: string): unknown {
   return JSON.parse(new TextDecoder().decode(bytes))
 }
 
-/** An unreadable token counts as aal1, so the person lands on /2fa rather than past it. */
+/** An unreadable token has no session id; the token itself then serves as the scope. */
 export function readTokenClaims(token: string): TokenClaims {
   try {
     const payload = decodeSegment(token.split('.')[1] ?? '')
     if (typeof payload !== 'object' || payload === null) return UNKNOWN
-    const { aal, session_id: sessionId } = payload as Record<string, unknown>
-    return {
-      level: aal === 'aal2' ? 'aal2' : 'aal1',
-      sessionId: typeof sessionId === 'string' && sessionId !== '' ? sessionId : null,
-    }
+    const { session_id: sessionId } = payload as Record<string, unknown>
+    return { sessionId: typeof sessionId === 'string' && sessionId !== '' ? sessionId : null }
   } catch {
     return UNKNOWN
   }

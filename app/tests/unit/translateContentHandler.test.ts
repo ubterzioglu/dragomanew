@@ -80,10 +80,14 @@ const send = async (deps: TranslateDeps, body: unknown, options: Parameters<type
 }
 
 describe('translate-content: auth and input', () => {
-  it('401 without an AAL2 session, 403 without content.translate, 403 for a foreign origin', async () => {
+  it('401 without a valid session, 403 for non-staff or without content.translate, 403 for a foreign origin', async () => {
     const { deps } = setup()
     expect(await send(deps, { action: 'usage' }, { token: null })).toMatchObject({ status: 401, body: { error: 'unauthorized' } })
-    expect((await send(deps, { action: 'usage' }, { token: 'aal1' })).status).toBe(401)
+    expect((await send(deps, { action: 'usage' }, { token: 'bad' })).status).toBe(401)
+    expect((await send(deps, { action: 'usage' }, { token: 'outsider' })).status).toBe(403)
+    expect((await send(deps, { action: 'usage' }, { token: 'inactive' })).status).toBe(403)
+    // A plain sign-in of a translator is enough.
+    expect((await send(deps, { action: 'usage' }, { token: 'content' })).status).toBe(200)
     expect(await send(deps, { action: 'usage' }, { token: 'forms' })).toMatchObject({ status: 403, body: { error: 'forbidden' } })
     expect((await send(deps, { action: 'usage' }, { origin: 'https://evil.example' })).status).toBe(403)
   })

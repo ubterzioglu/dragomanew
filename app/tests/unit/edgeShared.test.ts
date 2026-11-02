@@ -43,7 +43,7 @@ describe('_shared/http', () => {
 describe('_shared/auth authorizeStaff', () => {
   const withToken = (token: string | null) => request(token ? { authorization: `Bearer ${token}` } : {})
 
-  it('accepts an AAL2 staff member with the permission', async () => {
+  it('accepts a signed-in (aal1) staff member with the permission, no second factor needed', async () => {
     expect(await authorizeStaff(withToken('content'), fakeVerifier(), 'content.translate')).toEqual({
       ok: true,
       caller: { userId: 'user-content', staffId: STAFF_ID, permissions: ['content.edit', 'content.translate'] },
@@ -51,11 +51,12 @@ describe('_shared/auth authorizeStaff', () => {
     expect((await authorizeStaff(withToken('forms'), fakeVerifier(), ['content.publish', 'forms.manage'])).ok).toBe(true)
   })
 
-  it('401 without a token, for an invalid token or an AAL1 session', async () => {
-    for (const token of [null, 'bad', 'aal1']) expect(await authorizeStaff(withToken(token), fakeVerifier(), 'content.edit')).toMatchObject({ ok: false, status: 401 })
+  it('401 without a token or for an invalid or expired token', async () => {
+    for (const token of [null, 'bad']) expect(await authorizeStaff(withToken(token), fakeVerifier(), 'content.edit')).toMatchObject({ ok: false, status: 401 })
   })
 
-  it('403 without the permission or without an active staff row', async () => {
+  it('403 without the permission, for non-staff, for inactive staff or without an active staff row', async () => {
+    for (const token of ['outsider', 'inactive']) expect(await authorizeStaff(withToken(token), fakeVerifier(), 'content.edit')).toMatchObject({ ok: false, status: 403, error: 'forbidden' })
     expect(await authorizeStaff(withToken('content'), fakeVerifier(), 'content.publish')).toMatchObject({ ok: false, status: 403, error: 'forbidden' })
     expect(await authorizeStaff(withToken('orphan'), fakeVerifier(), 'content.publish')).toMatchObject({ ok: false, status: 403 })
   })

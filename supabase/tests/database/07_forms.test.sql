@@ -9,7 +9,7 @@ create table tests.people (name text primary key, user_id uuid not null, email t
 grant usage on schema tests to authenticated;
 grant select on tests.people to authenticated;
 
-create function tests.sign_in(p_name text, p_aal text default 'aal2')
+create function tests.sign_in(p_name text, p_aal text default 'aal1')
 returns void
 language plpgsql
 as $$

@@ -3,8 +3,8 @@ import type { CurrentStaff } from '../lib/types'
 import { parseLinkedStaffId } from './linkedStaff'
 
 /**
- * Binds the auth user to their staff row on first sign-in. Needs no AAL2, so it runs right after
- * sign-in and a non-staff account is turned away before TOTP enrolment. Null: not active staff.
+ * Binds the auth user to their staff row on first sign-in, right after sign-in, so a non-staff
+ * account is turned away before anything else is read. Null: not active staff.
  */
 export async function linkStaffAccount(): Promise<string | null> {
   const { data, error } = await db().rpc('link_staff_account')
@@ -13,7 +13,7 @@ export async function linkStaffAccount(): Promise<string | null> {
 }
 
 /**
- * Reads the caller's own row (AAL2). Clients may read only id, full_name, role and active, so
+ * Reads the caller's own row. Clients may read only id, full_name, role and active, so
  * extra_permissions stay unknown here and the role alone decides which actions are offered.
  */
 export async function loadStaffRow(staffId: string): Promise<CurrentStaff | null> {

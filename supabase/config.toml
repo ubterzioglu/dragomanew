@@ -181,7 +181,7 @@ enable_anonymous_sign_ins = false
 # Allow/disallow testing manual linking of accounts
 enable_manual_linking = false
 # Passwords shorter than this value will be rejected as weak. Minimum 6, recommended 8 or more.
-minimum_password_length = 6
+minimum_password_length = 12
 # Passwords that do not meet the following requirements will be rejected as weak. Supported values
 # are: `letters_digits`, `lower_upper_letters_digits`, `lower_upper_letters_digits_symbols`
 password_requirements = ""
@@ -218,9 +218,9 @@ web3 = 30
 # provider = "hcaptcha"
 # secret = ""
 
-# LOCAL DEV ONLY: e-mail sign-in exists for the panel's dev magic link (VITE_PANEL_DEV_EMAIL_LOGIN)
-# against Mailpit. Production keeps the e-mail provider disabled; staff sign in with Google only.
-# The before_user_created hook still rejects any address without an active staff row.
+# Staff sign in with Google or e-mail + password (the panel has no sign-up form); locally the dev
+# magic link (VITE_PANEL_DEV_EMAIL_LOGIN) also goes through Mailpit. The before_user_created hook
+# still rejects any address without an active staff row.
 [auth.email]
 # Allow/disallow new user signups via email to your project.
 enable_signup = true
@@ -307,7 +307,8 @@ auth_token = "env(SUPABASE_AUTH_SMS_TWILIO_AUTH_TOKEN)"
 # Control how many MFA factors can be enrolled at once per user.
 max_enrolled_factors = 10
 
-# Control MFA via App Authenticator (TOTP). Every staff data access requires AAL2.
+# Control MFA via App Authenticator (TOTP). Not used: staff need no second factor since 2026-11-02
+# (an aal1 session of an active staff member is enough).
 [auth.mfa.totp]
 enroll_enabled = true
 verify_enabled = true
@@ -412,7 +413,7 @@ verify_jwt = false
 import_map = "./functions/submit-request/deno.json"
 entrypoint = "./functions/submit-request/index.ts"
 
-# Dalga 2 functions: each checks its own caller (staff Bearer + AAL2 + my_permissions(), the
+# Dalga 2 functions: each checks its own caller (staff Bearer + my_permissions(), the
 # publishable key, or the pg_net dispatch secret), so the platform JWT check is off.
 [functions.publish-content]
 enabled = true

@@ -12,7 +12,7 @@ grant usage on schema tests to anon, authenticated;
 grant select on tests.people to anon, authenticated;
 
 /** Act as a signed-in user: role authenticated plus the JWT claims Auth would issue. */
-create function tests.sign_in(p_name text, p_aal text default 'aal2')
+create function tests.sign_in(p_name text, p_aal text default 'aal1')
 returns void
 language plpgsql
 as $$
@@ -60,7 +60,7 @@ select is(
 );
 reset role;
 select tests.sign_in('editor');
-select is(public.my_permissions(), array['content.edit', 'content.translate'], 'content edits and translates, but does not publish');
+select is(public.my_permissions(), array['content.edit', 'content.translate'], 'content edits and translates (plain aal1 sign-in), but does not publish');
 reset role;
 select tests.sign_in('publisher');
 select is(
@@ -74,8 +74,8 @@ reset role;
 select tests.sign_in('acct');
 select is(public.my_permissions(), array['requests.read'], 'accounting reads requests only');
 reset role;
-select tests.sign_in('editor', 'aal1');
-select is(public.my_permissions(), '{}'::text[], 'without AAL2 my_permissions is empty');
+select tests.sign_in('editor', null);
+select is(public.my_permissions(), '{}'::text[], 'a token without an aal claim gets no permissions');
 reset role;
 select tests.sign_in('stranger');
 select is(public.my_permissions(), '{}'::text[], 'a stranger has no permissions');
@@ -111,16 +111,16 @@ select throws_ok('select 1 from public.translation_runs', '42501', null, 'anon c
 select throws_ok('select public.my_permissions()', '42501', null, 'anon cannot call my_permissions');
 select throws_ok('select public.request_site_deploy()', '42501', null, 'anon cannot call request_site_deploy');
 
--- Strangers, AAL1, reservations and accounting see no content ---------------------------------------
+-- Strangers, aal-less tokens, reservations and accounting see no content ---------------------------------------
 
 reset role;
 select tests.sign_in('stranger');
 select is_empty('select 1 from public.content_entries', 'a stranger sees no content');
 select is_empty('select 1 from public.media_assets', 'a stranger sees no media');
 reset role;
-select tests.sign_in('editor', 'aal1');
-select is_empty('select 1 from public.content_entries', 'content staff without AAL2 see no content');
-select is_empty('select 1 from public.content_entry_list', 'content staff without AAL2 see an empty list');
+select tests.sign_in('editor', null);
+select is_empty('select 1 from public.content_entries', 'content staff with a token without an aal claim see no content');
+select is_empty('select 1 from public.content_entry_list', 'content staff with a token without an aal claim see an empty list');
 reset role;
 select tests.sign_in('resv');
 select is_empty('select 1 from public.content_entries', 'reservations sees no content');

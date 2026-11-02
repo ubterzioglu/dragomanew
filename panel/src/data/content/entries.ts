@@ -111,7 +111,7 @@ export async function deeplUsage(): Promise<DeeplUsage> {
   return result.usage
 }
 
-/** `my_permissions()`: empty without active staff or AAL2. */
+/** `my_permissions()`: empty without an active staff row. */
 export async function loadMyPermissions(): Promise<Permission[]> {
   const { data, error } = await db().rpc('my_permissions')
   if (error) throw error

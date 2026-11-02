@@ -6,15 +6,24 @@ export const ORIGIN = 'http://127.0.0.1:5175'
 
 const ALL = ['content.edit', 'content.translate', 'content.publish', 'forms.manage', 'site.deploy']
 
-/** token → claims and permissions, as getClaims + my_permissions would answer. */
-const TOKENS: Readonly<Record<string, { sub: string; aal: string; permissions: string[] }>> = {
-  admin: { sub: 'user-admin', aal: 'aal2', permissions: ALL },
-  content: { sub: 'user-content', aal: 'aal2', permissions: ['content.edit', 'content.translate'] },
-  forms: { sub: 'user-forms', aal: 'aal2', permissions: ['forms.manage'] },
-  publisher: { sub: 'user-publisher', aal: 'aal2', permissions: ['content.edit', 'content.translate', 'content.publish'] },
-  aal1: { sub: 'user-admin', aal: 'aal1', permissions: [] },
-  orphan: { sub: 'user-orphan', aal: 'aal2', permissions: ALL },
+/**
+ * token → user and permissions, as getClaims + my_permissions would answer. Every session is a
+ * plain sign-in (Google or e-mail + password, aal1): staff need no second factor.
+ */
+const TOKENS: Readonly<Record<string, { sub: string; permissions: string[] }>> = {
+  admin: { sub: 'user-admin', permissions: ALL },
+  content: { sub: 'user-content', permissions: ['content.edit', 'content.translate'] },
+  forms: { sub: 'user-forms', permissions: ['forms.manage'] },
+  publisher: { sub: 'user-publisher', permissions: ['content.edit', 'content.translate', 'content.publish'] },
+  /** Signed in, but no staff row at all: my_permissions() is empty. */
+  outsider: { sub: 'user-outsider', permissions: [] },
+  /** A deactivated staff member: my_permissions() is empty and no active row is found. */
+  inactive: { sub: 'user-inactive', permissions: [] },
+  /** Permissions claimed, but no active staff row bound to the user. */
+  orphan: { sub: 'user-orphan', permissions: ALL },
 }
+
+const NO_ACTIVE_ROW: ReadonlySet<string> = new Set(['user-orphan', 'user-outsider', 'user-inactive'])
 
 export const STAFF_ID = '11111111-1111-4111-8111-111111111111'
 
@@ -22,10 +31,10 @@ export function fakeVerifier(): StaffVerifier {
   return {
     claims: async (token) => {
       const entry = TOKENS[token]
-      return entry ? { sub: entry.sub, aal: entry.aal } : null
+      return entry ? { sub: entry.sub } : null
     },
     permissions: async (token) => TOKENS[token]?.permissions ?? [],
-    staffId: async (userId) => (userId === 'user-orphan' ? null : STAFF_ID),
+    staffId: async (userId) => (NO_ACTIVE_ROW.has(userId) ? null : STAFF_ID),
   }
 }
 

@@ -100,6 +100,9 @@ function Header() {
             <span>
               {staff.full_name} <span className="text-ink-muted">({roleLabel(staff.role)})</span>
             </span>
+            <NavLink to="/sifre" className={navClass}>
+              Şifre
+            </NavLink>
             <Button variant="secondary" onClick={() => void signOut()}>
               Çıkış yap
             </Button>
@@ -146,7 +149,7 @@ export function Shell() {
   // A refused Google sign-in returns to /panel/ with error fields; keep them for the sign-in page.
   if (target === SIGN_IN_PATH) return <Navigate to={{ pathname: target, ...carryCallbackError(search, hash) }} replace />
   if (target) return <Navigate to={target} replace />
-  const open = gate === 'sign_in' || gate === 'mfa' || gate === 'ready'
+  const open = gate === 'sign_in' || gate === 'ready'
   const ready = gate === 'ready' && staff !== null
 
   return (

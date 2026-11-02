@@ -5,7 +5,6 @@ import { keyedView } from '../src/lib/useKeyedPromise'
 
 describe('staffLookup', () => {
   const base = {
-    level: 'aal2',
     staffId: 'staff-1',
     scope: 'user-1:session-1',
     retry: 0,
@@ -13,9 +12,8 @@ describe('staffLookup', () => {
     recheck: 0,
   } as const
 
-  it('waits for AAL2, the linked staff id and a session', () => {
-    expect(staffLookup({ ...base, level: 'aal1' })).toBeNull()
-    expect(staffLookup({ ...base, level: null })).toBeNull()
+  it('waits for the linked staff id and a session, and needs nothing more', () => {
+    expect(staffLookup(base)).not.toBeNull()
     expect(staffLookup({ ...base, staffId: null })).toBeNull()
     expect(staffLookup({ ...base, scope: null })).toBeNull()
     expect(staffLookup({ ...base, token: null })).toBeNull()
@@ -60,7 +58,7 @@ describe('a re-check that finds the person deactivated', () => {
   it('turns the open panel into the no-access screen', () => {
     const staff = lookupOf({ status: 'ok', value: null })
     expect(staff).toBe('missing')
-    expect(gateFor({ loading: false, signedIn: true, aal: 'aal2', link: 'ready', staff })).toBe('not_staff')
+    expect(gateFor({ loading: false, signedIn: true, link: 'ready', staff })).toBe('not_staff')
   })
 
   it('maps the other lookup states for the gate', () => {

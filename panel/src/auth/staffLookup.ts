@@ -1,9 +1,7 @@
 import type { Keyed } from '../lib/useKeyedPromise'
-import type { Level } from './claims'
 import type { Lookup } from './gate'
 
 export interface StaffLookupInput {
-  level: Level | null
   /** From link_staff_account(). */
   staffId: string | null
   /** sessionScope(): one sign-in. */
@@ -24,12 +22,12 @@ export interface StaffLookup {
 }
 
 /**
- * The staff row lookup at AAL2. RLS re-checks `active` on every query, so a deactivated person's
+ * The staff row lookup, once the account is linked. RLS re-checks `active` on every query, so a deactivated person's
  * reads quietly return nothing; re-reading the row on each token refresh and re-check lets the
  * open panel notice and switch to "Erişim yok" (or pick up a new role) without blanking meanwhile.
  */
-export function staffLookup({ level, staffId, scope, retry, token, recheck }: StaffLookupInput): StaffLookup | null {
-  if (level !== 'aal2' || !staffId || !scope || !token) return null
+export function staffLookup({ staffId, scope, retry, token, recheck }: StaffLookupInput): StaffLookup | null {
+  if (!staffId || !scope || !token) return null
   return { key: `${staffId}#${scope}#${retry}`, revision: `${recheck}:${token}` }
 }
 

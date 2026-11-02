@@ -1,4 +1,5 @@
--- Who sees what: anon, strangers, staff without AAL2, inactive staff and each role.
+-- Who sees what: anon, strangers, staff with a plain (aal1) sign-in, inactive staff and each role.
+-- Since 2026-11-02 an aal1 session (Google or e-mail + password) of active staff is enough.
 begin;
 create extension if not exists pgtap with schema extensions;
 
@@ -12,7 +13,7 @@ grant usage on schema tests to anon, authenticated;
 grant select on tests.people to anon, authenticated;
 
 /** Act as a signed-in user: role authenticated plus the JWT claims Auth would issue. */
-create function tests.sign_in(p_name text, p_aal text default 'aal2')
+create function tests.sign_in(p_name text, p_aal text default 'aal1')
 returns void
 language plpgsql
 as $$
@@ -93,10 +94,10 @@ select throws_ok($$ select public.claim_request(gen_random_uuid()) $$, '42501', 
 select throws_ok('select public.link_staff_account()', '42501', null, 'anon cannot call link_staff_account');
 select throws_ok('select * from public.list_staff_members()', '42501', null, 'anon cannot call list_staff_members');
 
--- A signed-in stranger (no staff row), even with AAL2 ------------------------------------------------
+-- A signed-in stranger (no staff row), whatever the level ------------------------------------------------
 
 reset role;
-select tests.sign_in('stranger');
+select tests.sign_in('stranger', 'aal2');
 
 select is_empty('select 1 from public.requests', 'a stranger sees no requests');
 select is_empty('select 1 from public.request_activity', 'a stranger sees no activity');
@@ -108,17 +109,21 @@ select throws_ok('select 1 from public.notifications', '42501', null, 'authentic
 select throws_ok('select 1 from public.submission_throttle', '42501', null, 'authenticated cannot read the throttle');
 select is(public.link_staff_account(), null::uuid, 'link_staff_account binds nothing for a stranger');
 
--- Staff without AAL2 ------------------------------------------------------------------------------
+-- Staff with a plain sign-in (aal1: Google or e-mail + password, no TOTP) ---------------------------
 
 reset role;
 select tests.sign_in('resv', 'aal1');
 
-select is_empty('select 1 from public.requests', 'staff without AAL2 see no requests');
-select is_empty('select 1 from public.request_activity', 'staff without AAL2 see no activity');
-select is_empty('select 1 from public.events', 'staff without AAL2 see no events');
-select is_empty('select 1 from public.event_options', 'staff without AAL2 see no event options');
-select is_empty('select 1 from public.app_settings', 'staff without AAL2 see no settings');
-select is_empty('select 1 from public.staff_members', 'staff without AAL2 see no staff');
+select is((select count(*) from public.requests), 2::bigint, 'reservations staff with an aal1 session read requests');
+select isnt_empty('select 1 from public.request_activity', 'staff with an aal1 session read request activity');
+select ok((select count(*) from public.events) > 0, 'staff with an aal1 session read events');
+select is((select count(*) from public.app_settings), 2::bigint, 'staff with an aal1 session read settings');
+select isnt_empty('select 1 from public.staff_members', 'staff with an aal1 session see the directory');
+
+-- A token without any assurance level is no sign-in Auth issues; it gets nothing.
+reset role;
+select tests.sign_in('resv', null);
+select is_empty('select 1 from public.requests', 'a token without an aal claim sees no requests');
 
 -- Inactive staff ------------------------------------------------------------------------------------
 
@@ -284,7 +289,7 @@ select is(public.link_staff_account(), null::uuid, 'a deactivated account is not
 
 reset role;
 select tests.sign_in('stranger', 'aal1');
-select is(public.link_staff_account(), null::uuid, 'link_staff_account binds nothing for a stranger without AAL2');
+select is(public.link_staff_account(), null::uuid, 'link_staff_account binds nothing for a stranger with an aal1 session either');
 
 reset role;
 select results_eq(
@@ -313,7 +318,7 @@ reset role;
 -- Deactivation cuts access at once ------------------------------------------------------------------
 
 select tests.sign_in('resv');
-select is((select count(*) from public.requests), 2::bigint, 'active reservations staff with AAL2 read requests');
+select is((select count(*) from public.requests), 2::bigint, 'active reservations staff read requests');
 
 reset role;
 update public.staff_members set active = false where id = '20000000-0000-4000-8000-000000000002';

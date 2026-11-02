@@ -24,11 +24,11 @@ const BY_CODE: Readonly<Record<string, string>> = {
   PGRST301: 'Oturumunuzun süresi doldu. Lütfen yeniden giriş yapın.',
   PGRST303: 'Oturumunuzun süresi doldu. Lütfen yeniden giriş yapın.',
   // Supabase Auth
-  mfa_verification_failed: 'Kod hatalı ya da süresi geçmiş. Uygulamadaki güncel kodu girin.',
-  mfa_challenge_expired: 'Doğrulama süresi doldu. Kodu yeniden girin.',
-  mfa_factor_not_found: 'Doğrulama uygulaması kaydı bulunamadı. Sayfayı yenileyip yeniden kurun.',
-  mfa_enroll_not_enabled: 'İki adımlı doğrulama sunucuda kapalı. Yöneticiye haber verin.',
-  mfa_verify_not_enabled: 'İki adımlı doğrulama sunucuda kapalı. Yöneticiye haber verin.',
+  invalid_credentials: 'E-posta adresi ya da şifre hatalı.',
+  email_not_confirmed: 'E-posta adresiniz henüz doğrulanmamış. Google ile giriş yapın ya da yöneticiye başvurun.',
+  weak_password: 'Şifre çok zayıf. En az 12 karakterli, tahmin edilmesi zor bir şifre seçin.',
+  same_password: 'Yeni şifre eskisiyle aynı olamaz.',
+  reauthentication_needed: 'Güvenlik için çıkış yapıp yeniden giriş yapın, sonra şifreyi tekrar belirleyin.',
   otp_expired: 'Kodun ya da bağlantının süresi dolmuş. Yeni bir tane isteyin.',
   over_email_send_rate_limit: 'Çok fazla deneme yapıldı. Birkaç dakika bekleyip tekrar deneyin.',
   over_request_rate_limit: 'Çok fazla deneme yapıldı. Birkaç dakika bekleyip tekrar deneyin.',
@@ -39,8 +39,8 @@ const BY_CODE: Readonly<Record<string, string>> = {
   validation_failed: 'Girilen değerlerden biri geçerli değil.',
   session_not_found: 'Oturumunuzun süresi doldu. Lütfen yeniden giriş yapın.',
   refresh_token_not_found: 'Oturumunuzun süresi doldu. Lütfen yeniden giriş yapın.',
-  // Auth refuses a second factor (or removing a verified one) from a session that has not passed TOTP.
-  insufficient_aal: 'Bu işlem için önce doğrulama kodunu girmeniz gerekir. Sayfayı yenileyip tekrar deneyin.',
+  // Auth may still ask for a second factor from an account that enrolled one before 2026-11-02.
+  insufficient_aal: 'Bu hesapta eski bir iki adımlı doğrulama kaydı var. Kaldırılması için ana yöneticiye başvurun.',
   // A broken hook is a setup fault; it must never read as "this address is not registered".
   hook_timeout: HOOK_FAULT,
   hook_timeout_after_retry: HOOK_FAULT,

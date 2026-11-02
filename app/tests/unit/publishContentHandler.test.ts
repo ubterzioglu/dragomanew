@@ -104,9 +104,9 @@ describe('publish-content: HTTP and auth', () => {
     expect((await send(deps, { action: 'publish', entries: [{ id: uuid(), draftRevision: 1 }], note: 'x'.repeat(201) })).status).toBe(400)
   })
 
-  it('401 unauthorized without a token, with a bad token or an AAL1 session', async () => {
+  it('401 unauthorized without a token or with a bad token', async () => {
     const { deps } = setup()
-    for (const token of [null, 'bad', 'aal1']) {
+    for (const token of [null, 'bad']) {
       expect(await send(deps, { action: 'reorder', type: 'team_member', keys: ['a'] }, { token })).toMatchObject({ status: 401, body: { ok: false, error: 'unauthorized' } })
     }
   })
@@ -117,6 +117,9 @@ describe('publish-content: HTTP and auth', () => {
     const publish = { action: 'publish', entries: [{ id: event.id, draftRevision: 3 }] }
     expect(await send(deps, publish, { token: 'content' })).toMatchObject({ status: 403, body: { error: 'forbidden' } })
     expect(await send(deps, publish, { token: 'forms' })).toMatchObject({ status: 403, body: { error: 'forbidden' } })
+    // Signed in but not (or no longer) active staff.
+    expect(await send(deps, publish, { token: 'outsider' })).toMatchObject({ status: 403, body: { error: 'forbidden' } })
+    expect(await send(deps, publish, { token: 'inactive' })).toMatchObject({ status: 403, body: { error: 'forbidden' } })
     expect(await send(deps, { action: 'publish_form', kind: 'contact', draftRevision: 2 }, { token: 'publisher' })).toMatchObject({ status: 403 })
     // A staff session without a bound active staff row.
     expect((await send(deps, publish, { token: 'orphan' })).status).toBe(403)

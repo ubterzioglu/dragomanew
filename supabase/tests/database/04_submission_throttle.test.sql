@@ -123,7 +123,7 @@ select throws_ok($$ select public.throttle_submission('hash-d', 5, 600) $$, '425
 
 reset role;
 set local role authenticated;
-select set_config('request.jwt.claims', '{"role": "authenticated", "aal": "aal2"}', true);
+select set_config('request.jwt.claims', '{"role": "authenticated", "aal": "aal1"}', true);
 select throws_ok($$ select public.throttle_submission('hash-d', 5, 600) $$, '42501', null, 'authenticated cannot call throttle_submission');
 
 reset role;

@@ -8,6 +8,7 @@ import { devEmailLoginEnabled } from '../lib/env'
 import { friendlyError } from '../lib/errors'
 import { db } from '../lib/supabase'
 import { DevEmailLogin } from './DevEmailLogin'
+import { PasswordSignIn } from './PasswordSignIn'
 
 /**
  * The literal `import.meta.env.DEV` is replaced with `false` in production builds, so the bundler
@@ -45,13 +46,18 @@ export function LoginPage() {
       <PageHeading title="Panel girişi" />
       <Card className="space-y-4">
         <p className="text-sm text-ink-muted">
-          Panel yalnızca Dragoman çalışanları içindir. Kayıtlı Google hesabınızla giriş yapın; ardından doğrulama
-          uygulamanızdaki kodu girmeniz istenir.
+          Panel yalnızca Dragoman çalışanları içindir. Kayıtlı Google hesabınızla ya da e-posta adresiniz ve şifrenizle
+          giriş yapın.
         </p>
         {error && <Notice tone="error">{error}</Notice>}
         <Button className="w-full" onClick={() => void signInWithGoogle()} disabled={busy}>
           {busy ? 'Google’a yönlendiriliyor…' : 'Google ile giriş yap'}
         </Button>
+        <p className="text-center text-sm text-ink-muted">ya da</p>
+        <PasswordSignIn disabled={busy} />
+        <p className="text-xs text-ink-muted">
+          Şifreniz yoksa Google ile girip üst menüdeki “Şifre” sayfasından belirleyebilirsiniz.
+        </p>
       </Card>
       {SHOW_DEV_EMAIL && <DevEmailLogin />}
     </div>

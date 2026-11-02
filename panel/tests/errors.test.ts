@@ -15,9 +15,12 @@ describe('friendlyError', () => {
   })
 
   it('maps auth error codes', () => {
-    expect(friendlyError({ name: 'AuthApiError', code: 'mfa_verification_failed', message: 'Invalid TOTP code' })).toBe(
-      'Kod hatalı ya da süresi geçmiş. Uygulamadaki güncel kodu girin.',
+    expect(friendlyError({ name: 'AuthApiError', code: 'invalid_credentials', message: 'Invalid login credentials' })).toBe(
+      'E-posta adresi ya da şifre hatalı.',
     )
+    expect(friendlyError({ name: 'AuthWeakPasswordError', code: 'weak_password', message: 'x' })).toContain('12 karakter')
+    expect(friendlyError({ code: 'same_password', message: 'x' })).toBe('Yeni şifre eskisiyle aynı olamaz.')
+    expect(friendlyError({ code: 'email_not_confirmed', message: 'x' })).toContain('doğrulanmamış')
     expect(friendlyError({ code: 'over_email_send_rate_limit', message: 'x' })).toContain('Çok fazla deneme')
     expect(friendlyError({ code: 'otp_expired', message: 'x' })).toContain('süresi')
   })
@@ -40,10 +43,8 @@ describe('friendlyError', () => {
     expect(friendlyError({ code: 'hook_payload_invalid_content_type', message: 'x' })).not.toContain('kayıtlı değil')
   })
 
-  it('explains the AAL2 guard on adding or removing a second factor', () => {
-    expect(friendlyError({ code: 'insufficient_aal', message: 'AAL2 required to enroll a new factor' })).toContain(
-      'doğrulama kodu',
-    )
+  it('explains a leftover second factor from before 2026-11-02', () => {
+    expect(friendlyError({ code: 'insufficient_aal', message: 'AAL2 required' })).toContain('ana yöneticiye')
   })
 
   it('maps network failures', () => {

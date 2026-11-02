@@ -112,7 +112,7 @@ select ok(
   and has_function_privilege('authenticated', 'public.reassign_request(uuid, uuid)', 'execute')
   and has_function_privilege('authenticated', 'public.link_staff_account()', 'execute')
   and has_function_privilege('authenticated', 'public.list_staff_members()', 'execute'),
-  'authenticated can call the RPCs (each body checks staff, AAL2 and permission)'
+  'authenticated can call the RPCs (each body checks active staff, a signed-in session and permission)'
 );
 
 select is_empty(

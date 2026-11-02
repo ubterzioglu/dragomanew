@@ -3,7 +3,7 @@ import { db } from '../lib/supabase'
 import type { ActivityRow, RequestDetail, RequestRow } from '../lib/types'
 
 /**
- * Requests are read through RLS (requests.read + AAL2) and never updated directly: every state
+ * Requests are read through RLS (active staff + requests.read) and never updated directly: every state
  * change goes through a security-definer RPC that also writes request_activity.
  */
 

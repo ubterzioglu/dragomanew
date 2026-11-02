@@ -6,7 +6,7 @@ import { LoginPage } from './routes/LoginPage'
 import { NotFoundPage, RouteErrorPage } from './routes/NotFoundPage'
 import { RequestsPage } from './routes/RequestsPage'
 import { StaffPage } from './routes/StaffPage'
-import { TwoFactorPage } from './routes/TwoFactorPage'
+import { PasswordPage } from './routes/PasswordPage'
 // Dalga 2 content (Lane F)
 import { ContentEditorPage } from './routes/content/ContentEditorPage'
 import { ContentListPage } from './routes/content/ContentListPage'
@@ -23,7 +23,7 @@ export const router = createBrowserRouter(
       children: [
         { index: true, element: <RequestsPage /> },
         { path: 'giris', element: <LoginPage /> },
-        { path: '2fa', element: <TwoFactorPage /> },
+        { path: 'sifre', element: <PasswordPage /> },
         { path: 'kullanicilar', element: <StaffPage /> },
         { path: 'formlar', element: <FormsPage /> },
         { path: 'formlar/:kind', element: <FormEditorPage /> },

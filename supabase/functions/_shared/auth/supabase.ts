@@ -4,7 +4,7 @@ import type { StaffVerifier } from './staff.ts'
 /**
  * supabase-js side of the staff check and the service client (Deno only). Claims are verified
  * with `auth.getClaims(token)`; permissions come from `public.my_permissions()` called with the
- * user's own token, so RLS and the AAL2 rule are the database's; the staff id is looked up with
+ * user's own token, so RLS and the staff rules are the database's; the staff id is looked up with
  * the service client.
  */
 
@@ -20,8 +20,8 @@ export function createStaffVerifier(url: string, publishableKey: string, service
     async claims(token) {
       const { data, error } = await anon.auth.getClaims(token)
       if (error || !data) return null
-      const { sub, aal } = data.claims as { sub?: unknown; aal?: unknown }
-      return typeof sub === 'string' ? { sub, aal: typeof aal === 'string' ? aal : null } : null
+      const { sub } = data.claims as { sub?: unknown }
+      return typeof sub === 'string' ? { sub } : null
     },
 
     async permissions(token) {
