@@ -22,6 +22,8 @@ export interface SubmitContext {
   website?: string
   eventId?: string
   pagePath?: string
+  /** The published form version the visitor filled in; absent for the built-in form. */
+  formVersion?: number
 }
 
 export interface FormSubmitter {
@@ -75,7 +77,7 @@ function timeoutSignal(): AbortSignal | undefined {
 }
 
 function buildEnvelope(kind: RequestKind, values: Record<string, unknown>, context: SubmitContext): SubmitEnvelope {
-  const { locale, idempotencyKey, website, eventId, pagePath } = context
+  const { locale, idempotencyKey, website, eventId, pagePath, formVersion } = context
   return {
     kind,
     locale,
@@ -84,6 +86,7 @@ function buildEnvelope(kind: RequestKind, values: Record<string, unknown>, conte
     ...(eventId ? { eventId } : {}),
     ...(website ? { website } : {}),
     ...(pagePath ? { pagePath: pagePath.slice(0, MAX_PAGE_PATH) } : {}),
+    ...(formVersion !== undefined ? { formVersion } : {}),
   }
 }
 
@@ -173,18 +176,20 @@ export type AttemptContext = Omit<SubmitContext, 'idempotencyKey'>
 interface ContextSource {
   locale: SiteLocale
   eventId?: string
+  formVersion?: number
   /** The HoneypotField input; null until it mounts. */
   honeypot: { readonly value: string } | null
   location: { readonly pathname: string }
 }
 
 /** What a submission sends besides the values, read from the page on submit (useFormSubmission). */
-export function attemptContext({ locale, eventId, honeypot, location }: ContextSource): AttemptContext {
+export function attemptContext({ locale, eventId, formVersion, honeypot, location }: ContextSource): AttemptContext {
   const website = honeypot?.value
   return {
     locale,
     ...(eventId ? { eventId } : {}),
     ...(website ? { website } : {}),
+    ...(formVersion !== undefined ? { formVersion } : {}),
     pagePath: location.pathname,
   }
 }
@@ -220,6 +225,8 @@ function useHydrated(): boolean {
 interface SubmissionOptions {
   /** The event an event-request form asks about. */
   eventId?: string
+  /** The published form version (useFormDefinition); absent for the built-in form. */
+  formVersion?: number
   submitter?: FormSubmitter
   /** Puts the form's fields back to their defaults (react-hook-form's reset) once a request is stored. */
   onSent?: () => void
@@ -243,7 +250,7 @@ type SubmitPhase = 'idle' | 'sending' | 'sent'
  * key. An edit after an error renews the key: the server may have stored the first attempt and
  * would otherwise answer its old reference for the changed values.
  */
-export function useFormSubmission(kind: FormKind, { eventId, submitter = siteSubmitter, onSent }: SubmissionOptions = {}) {
+export function useFormSubmission(kind: FormKind, { eventId, formVersion, submitter = siteSubmitter, onSent }: SubmissionOptions = {}) {
   const hydrated = useHydrated()
   const locale = useLocale()
   const [phase, setPhase] = useState<SubmitPhase>('idle')
@@ -280,7 +287,7 @@ export function useFormSubmission(kind: FormKind, { eventId, submitter = siteSub
     enter('sending')
     let next: SubmitPhase = 'idle'
     try {
-      const context = attemptContext({ locale, eventId, honeypot: honeypotRef.current, location: window.location })
+      const context = attemptContext({ locale, eventId, formVersion, honeypot: honeypotRef.current, location: window.location })
       // Edited values are a new request: a fresh key, so a stored earlier attempt is not answered for them.
       const key = editedRef.current ? null : keyRef.current
       editedRef.current = false

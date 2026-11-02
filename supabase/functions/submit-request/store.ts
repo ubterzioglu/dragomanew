@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { formDefinitionSchema } from '../_shared/requests/forms.ts'
 import type { Currency, PriceBasis } from '../_shared/requests/rules.ts'
 import { throttleSubmission } from './throttle.ts'
 import type { DeliveryResult, EventRecord, EventStatus, LocalizedText, RequestStore } from './types.ts'
@@ -27,6 +28,11 @@ interface EventRow {
   price_display: 'numeric' | 'on_request'
   status: EventStatus
   event_options: OptionRow[] | null
+}
+
+interface FormVersionRow {
+  version: number
+  definition: unknown
 }
 
 interface ReferenceRow {
@@ -75,6 +81,17 @@ export function createSupabaseStore(url: string, secretKey: string): RequestStor
       return data ? toEventRecord(data) : null
     },
 
+    async findFormVersion(kind, version) {
+      // Versions are immutable; the latest published one is simply the highest.
+      const base = db.from('form_versions').select('version, definition').eq('kind', kind)
+      const { data, error } = await (version === null ? base.order('version', { ascending: false }).limit(1) : base.eq('version', version))
+        .maybeSingle<FormVersionRow>()
+      if (error) throw error
+      if (!data) return null
+      // A stored definition that no longer parses is a server fault, not the visitor's.
+      return { version: data.version, definition: formDefinitionSchema.parse(data.definition) }
+    },
+
     async saveRequest(request) {
       const { data, error } = await db
         .from('requests')
@@ -89,6 +106,7 @@ export function createSupabaseStore(url: string, secretKey: string): RequestStor
           event_snapshot: request.eventSnapshot,
           price_summary: request.priceSummary,
           idempotency_key: request.idempotencyKey,
+          form_version: request.formVersion,
         })
         .select('id, reference')
         .single<ReferenceRow>()

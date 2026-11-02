@@ -1,4 +1,5 @@
 import { formatTemplate, type UiStrings } from '../../i18n/ui'
+import type { FormDefinition } from '../../shared/requests/forms.ts'
 import * as shared from '../../shared/requests/schemas.ts'
 
 /**
@@ -9,6 +10,7 @@ import * as shared from '../../shared/requests/schemas.ts'
 export { MAX_CHILDREN } from '../../shared/requests/schemas.ts'
 export type {
   ContactValues,
+  CustomValues,
   EventRequestValues,
   LodgingValues,
   TransportValues,
@@ -31,18 +33,18 @@ export function formMessages(ui: UiStrings): shared.FormMessages {
   }
 }
 
-export function eventRequestSchema(ui: UiStrings, options: readonly { id: string }[]) {
-  return shared.eventRequestSchema(formMessages(ui), options)
+export function eventRequestSchema(ui: UiStrings, options: readonly { id: string }[], definition?: FormDefinition) {
+  return shared.eventRequestSchema(formMessages(ui), options, definition)
 }
 
-export function transportSchema(ui: UiStrings) {
-  return shared.transportSchema(formMessages(ui))
+export function transportSchema(ui: UiStrings, definition?: FormDefinition) {
+  return shared.transportSchema(formMessages(ui), definition)
 }
 
-export function lodgingSchema(ui: UiStrings) {
-  return shared.lodgingSchema(formMessages(ui))
+export function lodgingSchema(ui: UiStrings, definition?: FormDefinition) {
+  return shared.lodgingSchema(formMessages(ui), definition)
 }
 
-export function contactSchema(ui: UiStrings) {
-  return shared.contactSchema(formMessages(ui))
+export function contactSchema(ui: UiStrings, definition?: FormDefinition) {
+  return shared.contactSchema(formMessages(ui), definition)
 }

@@ -1,5 +1,7 @@
 import { createBrowserRouter } from 'react-router'
 import { Shell } from './components/Shell'
+import { FormEditorPage } from './routes/forms/FormEditorPage'
+import { FormsPage } from './routes/forms/FormsPage'
 import { LoginPage } from './routes/LoginPage'
 import { NotFoundPage, RouteErrorPage } from './routes/NotFoundPage'
 import { RequestsPage } from './routes/RequestsPage'
@@ -17,6 +19,8 @@ export const router = createBrowserRouter(
         { path: 'giris', element: <LoginPage /> },
         { path: '2fa', element: <TwoFactorPage /> },
         { path: 'kullanicilar', element: <StaffPage /> },
+        { path: 'formlar', element: <FormsPage /> },
+        { path: 'formlar/:kind', element: <FormEditorPage /> },
         { path: '*', element: <NotFoundPage /> },
       ],
     },

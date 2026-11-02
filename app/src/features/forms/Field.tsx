@@ -3,7 +3,7 @@ import { useUi } from '../../i18n/LocaleContext'
 
 // Focus uses the site-wide orange outline (3:1 on white, distinct from the red error border).
 // scroll-mt keeps the label above the field clear of the sticky header when focus moves to an error.
-const inputClass =
+export const inputClass =
   'mt-1.5 block w-full scroll-mt-12 rounded-lg border border-line-strong bg-white px-3.5 py-2.5 text-base text-ink shadow-sm aria-[invalid=true]:border-red-700'
 
 interface FieldShellProps {
@@ -61,17 +61,17 @@ export function TextField({ id, label, optional, error, hint, ...input }: InputP
   )
 }
 
-type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & { id: string; label: string; optional?: boolean; error?: string }
+type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & { id: string; label: string; optional?: boolean; error?: string; hint?: string }
 
-export function TextAreaField({ id, label, optional, error, ...textarea }: TextAreaProps) {
+export function TextAreaField({ id, label, optional, error, hint, ...textarea }: TextAreaProps) {
   return (
-    <FieldShell id={id} label={label} optional={optional} error={error}>
+    <FieldShell id={id} label={label} optional={optional} error={error} hint={hint}>
       <textarea
         id={id}
         rows={4}
         className={inputClass}
         aria-invalid={error ? true : undefined}
-        aria-describedby={describedBy(id, error)}
+        aria-describedby={describedBy(id, error, hint)}
         aria-required={!optional || undefined}
         {...textarea}
       />
