@@ -60,10 +60,9 @@ describe('PageHead', () => {
     expect(metaContent(meta, 'article:modified_time')).toBe('2026-05-03')
   })
 
-  it('links the RSS feed when given', () => {
-    const feed = { href: `${ORIGIN}/tr/blog/feed.xml`, title: 'Blog | Dragoman' }
-    expect(renderHead({ ...base, feed }).link).toContain(`rel="alternate" type="application/rss+xml" title="Blog | Dragoman" href="${feed.href}"`)
-    expect(renderHead(base).link).not.toContain('application/rss+xml')
+  it('links the blog RSS feed of the page language on every page', () => {
+    expect(renderHead(base).link).toContain(`rel="alternate" type="application/rss+xml" title="Blog | Dragoman" href="${ORIGIN}/tr/blog/feed.xml"`)
+    expect(renderHead(base, 'en').link).toContain(`type="application/rss+xml" title="Blog | Dragoman" href="${ORIGIN}/blog/feed.xml"`)
   })
 
   it('writes one parseable JSON-LD graph only when the page has nodes', () => {

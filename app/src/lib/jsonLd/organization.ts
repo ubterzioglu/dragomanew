@@ -15,8 +15,9 @@ export function organization(): JsonLdNode {
   return {
     '@type': 'TravelAgency',
     '@id': ORGANIZATION_ID,
-    name: business.name,
-    alternateName: siteConfig.siteName,
+    // The brand as titles, og:site_name and WebSite name show it; the longer business name stays as an alias.
+    name: siteConfig.siteName,
+    alternateName: business.name,
     url: `${siteConfig.origin}/`,
     logo: { '@type': 'ImageObject', url: absoluteUrl(brand.logo.path), width: brand.logo.width, height: brand.logo.height },
     image: absoluteUrl(brand.shareImage.path),

@@ -12,7 +12,6 @@ import { pageSeo, shareImageId } from '../../content/seo'
 import { eventPath, postAlternates, postPath } from '../../content/urls'
 import { useLocale, useUi } from '../../i18n/LocaleContext'
 import { localePath } from '../../i18n/pages'
-import { blogFeed } from '../../lib/blogFeed'
 import { formatDate } from '../../lib/format'
 import { blogPosting } from '../../lib/jsonLd/blogPosting'
 import { pageNodes } from '../../lib/jsonLd/pageNodes'
@@ -53,7 +52,6 @@ export function PostPage({ post }: { post: Post }) {
         alternates={postAlternates(post)}
         image={image}
         article={dates}
-        feed={blogFeed(locale, ui.nav.blog)}
         jsonLd={jsonLd}
         untranslated={gaps}
       />

@@ -70,6 +70,8 @@ Yalnız içerik onayı ve yayın kararından sonra. Hepsi tek bayrakla olur; kod
    - `tmp/docs/tools/yayin-kontrol.ps1 -Release` (yerel araç) aynı başlık kurallarını yayın moduna göre denetler.
 4. **Google Search Console:** alan adını (Domain property, DNS TXT ile) doğrula, Sitemaps bölümüne `https://<alan-adı>/sitemap.xml` gönder, URL Inspection ile ana sayfayı ve bir dil ana sayfasını (`/tr/`) "Request indexing" ile iste. Bing Webmaster Tools'a da aynı sitemap'i ekle (Search Console'dan içe aktarılabilir).
 5. Alan adı değiştiyse eski adresten (`notyetbro.club`) yenisine kalıcı (301) yönlendirmeyi proxy'de kur; canonical adresler build'de `VITE_SITE_ORIGIN`'dan gelir.
+6. **Marka/varlık bağlantıları (alan adı taşındıktan sonra):** Dragoman için bir Wikidata kaydı (ve varsa Crunchbase sayfası) aç; adreslerini `src/lib/siteConfig.ts` içindeki `social` listesine ekle. Bu liste schema'daki `sameAs` alanını besler. 2 Kasım 2026'daki GEO denetiminde (`geo audit`) "Knowledge Graph pillars" 1/4 çıktı; o tarihte yalnız LinkedIn vardı. Wikipedia sayfası kod dışı ve isteğe bağlı bir iş.
+7. **GEO denetimini yeniden çalıştır:** `uvx --from geo-optimizer-skill geo audit --url https://<alan-adı> --verbose`. Araç localhost'u kabul etmez, bu yüzden yalnız yayından sonra ölçülebilir. Bilinçli olarak yapılmayanlar: ana sayfada FAQPage (görünür SSS yok), `/.well-known/ai.txt` ve `/ai/*.json` (standart değil, brief'te yayın şartı değil), ana sayfaya build tarihli `dateModified` (sahte tazelik sinyali olur).
 
 ## Düz nginx ile (Coolify olmadan)
 

@@ -5,7 +5,6 @@ import { useContent } from '../../content/ContentContext'
 import { postPath } from '../../content/urls'
 import { useLocale, useUi } from '../../i18n/LocaleContext'
 import { localePath, pageAlternates } from '../../i18n/pages'
-import { blogFeed } from '../../lib/blogFeed'
 import { pageNodes } from '../../lib/jsonLd/pageNodes'
 
 export function BlogPage() {
@@ -22,7 +21,6 @@ export function BlogPage() {
         title={ui.seo.blogTitle}
         description={description}
         alternates={pageAlternates('blog')}
-        feed={blogFeed(locale, ui.nav.blog)}
         jsonLd={jsonLd}
       />
       <PageHero title={ui.nav.blog} breadcrumbs={crumbs} />

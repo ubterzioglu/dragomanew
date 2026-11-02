@@ -30,6 +30,9 @@ describe('organization', () => {
     const node = organization()
     expect(node['@type']).toBe('TravelAgency')
     expect(node['@id']).toBe(`${ORIGIN}/#organization`)
+    // One brand name across schema, title and og:site_name.
+    expect(node.name).toBe(siteConfig.siteName)
+    expect(node.alternateName).toBe(siteConfig.business.name)
     expect(node.telephone).toBe(siteConfig.contact.phone)
     expect(node.identifier).toMatchObject({ propertyID: 'TÜRSAB', value: 'A4615' })
     expect(node.sameAs).toEqual(Object.values(siteConfig.social))

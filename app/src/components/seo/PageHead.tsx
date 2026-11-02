@@ -1,7 +1,8 @@
 import { Head } from 'vite-react-ssg'
 import { LOCALE_TAG, LOCALES, type Locale } from '../../i18n/locales'
 import type { LocalizedPaths } from '../../i18n/pages'
-import { useLocale } from '../../i18n/LocaleContext'
+import { useLocale, useUi } from '../../i18n/LocaleContext'
+import { blogFeed } from '../../lib/blogFeed'
 import { isPublicRelease } from '../../lib/env'
 import { pageGraph, serializeJsonLd, type JsonLdNode } from '../../lib/jsonLd/graph'
 import { siteConfig } from '../../lib/siteConfig'
@@ -17,8 +18,6 @@ interface PageHeadProps {
   image?: SocialImage
   /** Blog posts: og:type article with their dates. */
   article?: { published: string; modified: string }
-  /** RSS feed of the blog in this language (absolute URL). */
-  feed?: { href: string; title: string }
   /** Page-specific schema.org nodes; the organization and site nodes are added around them. */
   jsonLd?: readonly JsonLdNode[]
   /**
@@ -29,8 +28,10 @@ interface PageHeadProps {
   untranslated?: readonly Locale[]
 }
 
-export function PageHead({ title, description, alternates, alwaysNoindex = false, image, article, feed, jsonLd, untranslated = [] }: PageHeadProps) {
+export function PageHead({ title, description, alternates, alwaysNoindex = false, image, article, jsonLd, untranslated = [] }: PageHeadProps) {
   const locale = useLocale()
+  // Every page names the blog feed of its language, so readers and AI crawlers find it from any entry page.
+  const feed = blogFeed(locale, useUi().nav.blog)
   const pageUrl = `${siteConfig.origin}${alternates[locale]}`
   const noindex = alwaysNoindex || !isPublicRelease || untranslated.includes(locale)
   const hreflangs = LOCALES.filter((alt) => !untranslated.includes(alt))
@@ -51,7 +52,7 @@ export function PageHead({ title, description, alternates, alwaysNoindex = false
         <link key={alt} rel="alternate" hrefLang={LOCALE_TAG[alt]} href={`${siteConfig.origin}${alternates[alt]}`} />
       ))}
       <link rel="alternate" hrefLang="x-default" href={`${siteConfig.origin}${xDefault}`} />
-      {feed && <link rel="alternate" type="application/rss+xml" title={feed.title} href={feed.href} />}
+      <link rel="alternate" type="application/rss+xml" title={feed.title} href={feed.href} />
       <meta property="og:site_name" content={siteName} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
