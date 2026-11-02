@@ -16,8 +16,8 @@ import { cardPrice } from '../../lib/price'
  * Stage A only (never built for a public release): one screen linking every
  * page in all four languages, with where each record's text came from.
  */
-const ORIGIN_LABEL: Record<Origin, string> = { cloner: 'Eski site', 'kayak-site': 'dragomanseakayak.com', mockup: 'Örnek (mockup)' }
-const ORIGIN_TONE: Record<Origin, 'source' | 'green' | 'sample'> = { cloner: 'source', 'kayak-site': 'green', mockup: 'sample' }
+const ORIGIN_LABEL: Record<Origin, string> = { cloner: 'Eski site', 'kayak-site': 'dragomanseakayak.com', mockup: 'Örnek (mockup)', panel: 'Panel' }
+const ORIGIN_TONE: Record<Origin, 'source' | 'green' | 'sample'> = { cloner: 'source', 'kayak-site': 'green', mockup: 'sample', panel: 'green' }
 
 function LocaleLinks({ build }: { build: (locale: Locale) => string }) {
   return (

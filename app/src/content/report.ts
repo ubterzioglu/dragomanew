@@ -1,5 +1,5 @@
 import type { FullContentData } from './staticRepository'
-import type { Origin } from './schema'
+import type { Origin, TranslationSource } from './schema'
 
 /**
  * Source/sample report for the Stage A hand-over (plan §3.3 item 3, §8.5 item 2):
@@ -20,7 +20,7 @@ export interface RecordRow {
   title: string
   status: string
   origin: Origin
-  translationOrigin: Partial<Record<TargetLocale, Origin>>
+  translationOrigin: Partial<Record<TargetLocale, TranslationSource>>
   missing: MissingCounts
   sourceRefs: number
 }
@@ -72,7 +72,7 @@ export function missingTranslations(value: unknown): MissingCounts {
 
 interface Provenanced {
   origin: Origin
-  translationOrigin: Partial<Record<TargetLocale, Origin>>
+  translationOrigin: Partial<Record<TargetLocale, TranslationSource>>
   sourceRefs: string[]
 }
 
@@ -137,7 +137,7 @@ export function buildContentReport(data: FullContentData): ContentReport {
     }
   })
 
-  const byOrigin: Record<Origin, number> = { cloner: 0, 'kayak-site': 0, mockup: 0 }
+  const byOrigin: Record<Origin, number> = { cloner: 0, 'kayak-site': 0, mockup: 0, panel: 0 }
   const missing: MissingCounts = { en: 0, fr: 0, de: 0 }
   for (const record of records) {
     byOrigin[record.origin] += 1
@@ -147,10 +147,13 @@ export function buildContentReport(data: FullContentData): ContentReport {
   return { records, prices, media, testimonials: data.testimonials.length, totals: { byOrigin, missing } }
 }
 
-const ORIGIN_LABEL: Record<Origin, string> = {
+const ORIGIN_LABEL: Record<TranslationSource, string> = {
   cloner: 'eski site (cloner)',
   'kayak-site': 'dragomanseakayak.com',
   mockup: 'örnek (mockup)',
+  panel: 'panel',
+  deepl: 'DeepL',
+  manual: 'elle düzeltildi',
 }
 
 const KIND_LABEL: Record<RecordRow['kind'], string> = {

@@ -27,6 +27,8 @@ export const submitEnvelopeSchema = z.object({
   eventId: z.string().min(1).max(100).optional(),
   website: z.string().max(500).optional(),
   pagePath: z.string().max(300).optional(),
+  /** Published form version the visitor filled in (release builds); absent = latest published, else built-in. */
+  formVersion: z.number().int().nonnegative().optional(),
 })
 
 export type SubmitEnvelope = z.infer<typeof submitEnvelopeSchema>
