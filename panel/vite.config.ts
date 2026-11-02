@@ -1,6 +1,33 @@
-import { defineConfig } from 'vite'
+import { createReadStream, existsSync, statSync } from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+
+const SITE_MEDIA = fileURLToPath(new URL('../app/public/media/', import.meta.url))
+const MEDIA_TYPES: Readonly<Record<string, string>> = { '.webp': 'image/webp', '.avif': 'image/avif', '.jpg': 'image/jpeg' }
+
+/**
+ * In production nginx serves the site's /media next to /panel/. In dev the panel has no site
+ * beside it, so repo thumbnails (`/media/{id}-480.webp`) are read from the site's public folder.
+ */
+function siteMediaInDev(): Plugin {
+  return {
+    name: 'site-media-in-dev',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use('/media', (req, res, next) => {
+        const name = decodeURIComponent((req.url ?? '').split('?')[0] ?? '').replace(/^\/+/, '')
+        const type = MEDIA_TYPES[path.extname(name)]
+        const file = path.join(SITE_MEDIA, name)
+        if (!type || !/^[a-z0-9-]+\.[a-z]+$/.test(name) || !existsSync(file) || !statSync(file).isFile()) return next()
+        res.setHeader('content-type', type)
+        createReadStream(file).pipe(res)
+      })
+    },
+  }
+}
 
 /**
  * The panel lives under /panel/ on the same host as the site, so every asset and route is based
@@ -10,7 +37,7 @@ import tailwindcss from '@tailwindcss/vite'
  */
 export default defineConfig({
   base: '/panel/',
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), siteMediaInDev()],
   server: { host: '127.0.0.1', port: 5175, strictPort: true },
   preview: { host: '127.0.0.1', port: 4175, strictPort: true },
   build: {

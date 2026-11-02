@@ -135,7 +135,11 @@ async function translate(body: TranslateBody, caller: StaffCaller, deps: Transla
     const after = await currentUsage(deps, true).catch(() => ({ ...usage, count: usage.count + sourceChars }))
     return [200, { ok: true, draftRevision: revision, translated: results.length, skippedManual, sourceChars, usage: usageView(after) }]
   } catch (error) {
-    if (!(error instanceof DeeplError)) throw error
+    // Logged whatever failed: DeepL may already have counted the characters.
+    if (!(error instanceof DeeplError)) {
+      await logRun(deps, { ...run, status: 'failed', errorCode: 'server', deeplTraceId: traceId })
+      throw error
+    }
     await logRun(deps, { ...run, status: 'failed', errorCode: `deepl_${error.kind}`, deeplTraceId: error.traceId ?? traceId })
     // 456: the account is out of characters, whatever the cached count says.
     if (error.kind === 'quota') await deps.store.writeUsage({ count: usage.limit, limit: usage.limit, checkedAt: deps.clock().toISOString() }).catch(() => undefined)

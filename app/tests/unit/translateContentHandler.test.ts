@@ -209,10 +209,13 @@ describe('translate-content: translate', () => {
     expect(await send(bad.deps, translateBody())).toMatchObject({ status: 500, body: { error: 'server' } })
   })
 
-  it('500 server for a store failure', async () => {
-    const { deps, reportError } = setup({ save: async () => Promise.reject(new Error('db')) })
+  it('500 server for a store failure, still logged since DeepL already counted the characters', async () => {
+    const { deps, reportError, runs } = setup({ save: async () => Promise.reject(new Error('db')) })
     expect(await send(deps, translateBody())).toMatchObject({ status: 500, body: { error: 'server' } })
     expect(reportError).toHaveBeenCalled()
+    expect(runs).toHaveLength(1)
+    expect(runs[0]).toMatchObject({ status: 'failed', errorCode: 'server' })
+    expect(runs[0]?.sourceChars).toBeGreaterThan(0)
   })
 
   it('creates the glossary when none is stored and translates without one when that fails', async () => {
