@@ -1,27 +1,53 @@
 import type { RequestRow, StaffMember, StaffRole } from './types'
 
 /**
- * Mirrors `private.can()` so the panel only offers actions the database will allow. The database
- * still decides: hiding a button here is a convenience, never the protection.
+ * Mirrors the database's permission matrix (dalga2-sozlesme §5, `public.my_permissions()`) so the
+ * panel only offers actions the database will allow. The database still decides: hiding a button
+ * here is a convenience, never the protection.
  */
-export type Permission = 'requests.read' | 'requests.work' | 'requests.reassign' | 'staff.manage' | 'settings.manage'
+export const PERMISSIONS = [
+  'requests.read',
+  'requests.work',
+  'requests.reassign',
+  'staff.manage',
+  'settings.manage',
+  'content.edit',
+  'content.translate',
+  'content.publish',
+  'forms.manage',
+  'site.deploy',
+] as const
+
+export type Permission = (typeof PERMISSIONS)[number]
 
 const ROLE_PERMISSIONS: Readonly<Record<StaffRole, readonly Permission[]>> = {
-  main_admin: ['requests.read', 'requests.work', 'requests.reassign', 'staff.manage', 'settings.manage'],
+  main_admin: PERMISSIONS,
   reservations: ['requests.read', 'requests.work'],
   accounting: ['requests.read'],
-  content: [],
+  // Publishing is per person through extra_permissions (Q1).
+  content: ['content.edit', 'content.translate'],
 }
 
-interface PermissionSubject {
+export interface PermissionSubject {
   role: StaffRole
   active?: boolean
   extra_permissions?: readonly string[]
+  /** The answer of `my_permissions()`; when known it replaces the role mirror entirely. */
+  permissions?: readonly string[]
 }
 
 export function can(staff: PermissionSubject | null | undefined, permission: Permission): boolean {
   if (!staff || staff.active === false) return false
+  if (staff.permissions) return staff.permissions.includes(permission)
   return ROLE_PERMISSIONS[staff.role].includes(permission) || (staff.extra_permissions ?? []).includes(permission)
+}
+
+const isPermission = (value: unknown): value is Permission =>
+  typeof value === 'string' && (PERMISSIONS as readonly string[]).includes(value)
+
+/** `my_permissions()` returns text[]; anything else (or unknown names) is dropped, never trusted. */
+export function parsePermissions(value: unknown): Permission[] {
+  return Array.isArray(value) ? value.filter(isPermission) : []
 }
 
 type RequestState = Pick<RequestRow, 'status' | 'assignee_id'>

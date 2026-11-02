@@ -69,3 +69,85 @@ export interface ActivityRow {
 
 export const isStaffRole = (value: unknown): value is StaffRole =>
   typeof value === 'string' && (STAFF_ROLES as readonly string[]).includes(value)
+
+// ---------------------------------------------------------------------------------------------
+// Dalga 2 content (Lane F): rows of content_entries, content_entry_list, media_assets,
+// content_releases and site_deploys (dalga2-sozlesme §5).
+
+export type ContentStatusValue = 'draft' | 'published' | 'archived'
+export type SiteDeployStatus = 'queued' | 'sending' | 'triggered' | 'failed' | 'skipped'
+export type ReleaseAction = 'seed' | 'publish' | 'archive' | 'unpublish' | 'reorder' | 'publish_form'
+
+/** A row of the `content_entry_list` view. */
+export interface ContentEntryListRow {
+  id: string
+  type: string
+  key: string
+  status: ContentStatusValue
+  title_tr: string | null
+  has_changes: boolean
+  updated_at: string
+  updated_by_name: string | null
+}
+
+/** The readable columns of `content_entries` (RLS: content.edit or content.publish). */
+export interface ContentEntryRow {
+  id: string
+  type: string
+  key: string
+  draft: unknown
+  draft_revision: number
+  translation_meta: unknown
+  published: unknown
+  published_revision: number | null
+  status: ContentStatusValue
+  updated_at: string
+}
+
+export interface MediaAssetRow {
+  id: string
+  storage: 'repo' | 'upload'
+  object_path: string | null
+  sha256: string | null
+  widths: number[] | null
+  width: number
+  height: number
+  bytes: number | null
+  alt: unknown
+  topic: string
+  rights: 'unverified' | 'confirmed'
+  placeholder: boolean
+  translation_meta: unknown
+  revision: number
+  updated_at: string
+}
+
+/** `content_releases` without `snapshot` (no grant on it). */
+export interface ContentReleaseRow {
+  id: number
+  created_at: string
+  created_by: string | null
+  action: ReleaseAction
+  entry_ids: string[] | null
+  note: string | null
+  snapshot_sha256: string | null
+}
+
+export interface SiteDeployRow {
+  id: number
+  status: SiteDeployStatus
+  release_id: number | null
+  first_requested_at: string
+  not_before: string
+  sending_at: string | null
+  triggered_at: string | null
+  attempts: number
+  last_error: string | null
+}
+
+export interface DeeplUsage {
+  count: number
+  limit: number
+  ratio: number
+  level: 'ok' | 'warn' | 'critical'
+}
