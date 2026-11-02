@@ -4,6 +4,8 @@ Dragoman projesine yeni katılan geliştirici için tarifler. Her tarif "ne zama
 
 Komutlar Windows PowerShell için yazıldı. Supabase CLI projeye bağımlılık olarak eklenmedi; `npx supabase …` ile çalıştırılır.
 
+Proje sahibine ulaşılamıyorsa önce 18. bölümü okuyun.
+
 ## 1. Repo haritası
 
 | Klasör | Ne var |
@@ -20,7 +22,7 @@ Komutlar Windows PowerShell için yazıldı. Supabase CLI projeye bağımlılık
 | `supabase/functions/` | Edge Function'lar: `submit-request`, `publish-content`, `translate-content`, `content-release`, `site-deploy`. Ortak kod `_shared/`. |
 | `supabase/config.toml` | Yerel yığın ayarı; fonksiyonların `entrypoint`, `import_map`, `verify_jwt` ayarları da burada. |
 | `Dockerfile` | Site + panel build'i ve nginx imajı (Coolify bunu kullanır). |
-| `tmp/docs/` | Proje notları: `dalga2-sozlesme.md` (teknik sözleşme), `Handover_AsamaB_Dalga2.md` (son durum), `kalan-plan.md`. Repoda tutulmaz. |
+| `tmp/docs/` | Proje notları: `DURUM.md` (durum, verilmiş kararlar, çalışma notları), `PLAN.md` (açık işler), `dalga1-sozlesme.md` ve `dalga2-sozlesme.md` (teknik sözleşmeler), `tools/` (yayın sonrası kontrol betikleri). Repoda tutulmaz; kopyasını proje sahibinden alın. |
 
 ## 2. Yerel kurulum
 
@@ -319,3 +321,75 @@ Platformun kendisinin verdikleri (girilmez): `SUPABASE_URL`, `SUPABASE_PUBLISHAB
 - Ortak kodu değiştirdiyseniz kaynağı ve kopyaları aynı commit'e koyun.
 - Kullanıcıya dönük değişiklikte `panel/src/docs/guncellemeler.md` notu aynı commit'te olsun.
 - Kökteki `seo-analyzer.js` proje sahibinindir; commit etmeyin.
+
+## 18. Proje sahibi yokken
+
+Proje sahibine ulaşılamazken işi sürdüren geliştirici için. Kodu, testleri ve yayını kendiniz yürütürsünüz. Dragoman'ın ve proje sahibinin vereceği kararları vermezsiniz; onları not edip bekletirsiniz.
+
+### Devralınacaklar
+
+Proje sahibi ayrılmadan önce hepsi elinizde olmalı. Eksik olan varsa ona bağlı işi yapamazsınız; eksiği not edin.
+
+| Ne | Ne için |
+| --- | --- |
+| GitHub reposuna push yetkisi | Kod yayını |
+| Coolify hesabı (site uygulamasında Redeploy, Environment Variables, Logs) | Kod yayını, elle Redeploy, acil geri dönüş (11. bölüm) |
+| Supabase projesi `usyhwjboxjmjsxlwnqqr` üyeliği ve kendi `SUPABASE_ACCESS_TOKEN`'ınız | Migration, fonksiyon yükleme, loglar, Secrets |
+| Panelde `main_admin` hesabı | **Yayın** ekranı, **Siteyi şimdi yeniden kur**, **Kullanıcılar** |
+| `tmp/docs/DURUM.md` ve `tmp/docs/PLAN.md`'nin güncel kopyası | Son durum, verilmiş kararlar, açık işler |
+| Yerel ortam dosyalarının değerleri ya da nereden alınacakları | 2. bölüm |
+
+Claude Code ile çalışıyorsanız oturumu `tmp/docs/DURUM.md devam et` ile başlatın; belgenin 6. bölümü ilk adımları ve tuzakları anlatır.
+
+### Her iş günü
+
+1. **Site:** `https://notyetbro.club/` (alan adı değiştiyse yenisi) açılıyor mu? `/release.json`'daki `releaseId`, panelde **Yayın** → **Son yayınlar**'daki en yeni numarayla aynı olmalı.
+2. **Kurulumlar** (panel → **Yayın**):
+   - **Atlandı (kurulum ayarlı değil):** Coolify değerleri Secrets'ta yok. Coolify'da **Redeploy**'a siz basın. Basılmazsa içerik ekibinin yayınları siteye gitmez.
+   - **Tetiklenemedi** bir saatten uzun sürüyorsa: Supabase → Edge Functions → `site-deploy` → Logs, sonra elle Redeploy.
+   - **Kurulum gecikti, ana yöneticiye haber verin:** ana yönetici sizsiniz. Coolify'da build logunu açın. Build kırıldıysa ziyaretçiler eski siteyi görür (9. bölüm). Sebep içerikse 11. bölüm, kodsa sorunlu commit'i `git revert` edip push edin.
+3. **Formlar:** Supabase → Edge Functions → `submit-request` → Logs. 5xx ya da tekrarlayan hata varsa ilk iş budur; bozuk form talep kaybettirir.
+4. **E-posta:** SMTP Secrets'ı girilene kadar yeni talepler e-posta bildirimi göndermez (`smtp_not_configured`). Rezervasyon ekibi talepleri panelde **Talepler**'den takip etmeli; bildiklerinden emin olun.
+
+### Her hafta
+
+- Panel → **Yayın** → **DeepL kullanımı**: kota bitmek üzereyse içerik ekibine söyleyin. Ücretli plana geçmek proje sahibinin kararıdır.
+- Supabase Dashboard: proje duraklatılmış (**Paused**) görünüyorsa **Restore**; kota uyarısı varsa not edin.
+- `npm audit` (`app/` ve `panel/`): yeni yüksek ya da kritik bir açık varsa yükseltmeyi ayrı bir `fix:` commit'iyle yapın ve 3. bölümdeki komutları çalıştırın.
+
+### Tek başınıza yapabilecekleriniz
+
+- `PLAN.md`'deki kod işleri (karar bekleyenler hariç) ve hata düzeltmeleri.
+- Commit, push ve Coolify'da Redeploy; 3. bölümdeki komutlar yeşilse.
+- Uzak Supabase'e migration (`db push`) ve fonksiyon yükleme (5. ve 6. bölümler).
+- Acil geri dönüş: içerik için 11. bölüm; kod için Coolify'da önceki deploy ya da `git revert`.
+- Panelden içerik yayını, yalnız Dragoman'ın istediği değişiklik için.
+- Sızan bir anahtarı yenilemek (aşağıdaki tablo).
+
+### Proje sahibini bekleyecekler
+
+- Uzak veriyi ya da hesapları silmek veya sıfırlamak: uzak veritabanını sıfırlamak, tablo boşaltmak, yayın silmek, Auth kullanıcısı ya da personel satırı silmek.
+- Force-push, `main` geçmişini değiştirmek, repo ayarları (görünürlük, dal koruması, üyeler).
+- Arama motorlarına açmak (`VITE_PUBLIC_RELEASE=true`), alan adı, DNS ve `VITE_SITE_ORIGIN`.
+- Yeni panel kullanıcısı açmak, rol ya da yetki değiştirmek. Talepler kişisel veri içerir.
+- Dragoman'ın kararları: fiyatların teyidi (`priceVerified`), görsel hakları, yasal metinler, ekip bilgileri, sağlık formu kuralları. Bunlar örnek ya da taslak olarak kalır.
+- Ücretli hesap, plan yükseltme ya da yeni üçüncü taraf servis (GA4, Google Places API vb.).
+- `DURUM.md`'deki verilmiş kararları değiştirmek.
+
+### Sorun çıkarsa
+
+| Belirti | İlk bakılacak yer | Ne yapılır |
+| --- | --- | --- |
+| Site açılmıyor ya da 502 | Coolify → site uygulaması → Logs ve son deploy | Önceki sağlam deploy'a dönün. Sebep son commit'se `git revert`, push, Redeploy. |
+| Yanlış içerik yayında | Panel → **Yayın** → **Son yayınlar** | 11. bölüm |
+| Formlar hata veriyor | `submit-request` logları | Alan adı değiştiyse `ALLOWED_ORIGINS`. "Çok fazla istek" 10 dakikada 5 sınırıdır; hata değildir. Son fonksiyon yüklemesi bozduysa önceki commit'ten yeniden yükleyin. |
+| Panele kimse giremiyor | Supabase → Authentication → Logs | 16. bölüm; Auth `site_url` ve dönüş adresleri |
+| Çeviri çalışmıyor | **DeepL kullanımı**, `translate-content` logları | Kota bittiyse dönem başını bekleyin. |
+| Bir anahtar commit'e, log'a ya da sohbete düştü | 12. bölüm | Hemen yenileyin, eskisini iptal edin, Secrets'ı güncelleyin, not bırakın. Git geçmişinden silmek force-push ister; onu proje sahibine bırakın. |
+
+### Not bırakmak
+
+- Her iş günü sonunda `DURUM.md` 8. bölüme bir satır yazın: tarih, ne yapıldı, commit. Biten işin kutusunu `PLAN.md`'de işaretleyin.
+- Karar bekleyen her soruyu `PLAN.md`'nin 1. ve 2. bölümlerine yazın: seçenekler ve öneriniz.
+- Canlıda sorun yaşandıysa ne zaman başladığını, ne görüldüğünü, ne yaptığınızı ve şimdiki durumu yazın.
+- Dönüşte iki dosyayı proje sahibine geri verin.
