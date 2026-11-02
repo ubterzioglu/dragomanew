@@ -417,18 +417,26 @@ entrypoint = "./functions/submit-request/index.ts"
 [functions.publish-content]
 enabled = true
 verify_jwt = false
+import_map = "./functions/publish-content/deno.json"
+entrypoint = "./functions/publish-content/index.ts"
 
 [functions.translate-content]
 enabled = true
 verify_jwt = false
+import_map = "./functions/translate-content/deno.json"
+entrypoint = "./functions/translate-content/index.ts"
 
 [functions.content-release]
 enabled = true
 verify_jwt = false
+import_map = "./functions/content-release/deno.json"
+entrypoint = "./functions/content-release/index.ts"
 
 [functions.site-deploy]
 enabled = true
 verify_jwt = false
+import_map = "./functions/site-deploy/deno.json"
+entrypoint = "./functions/site-deploy/index.ts"
 
 [analytics]
 enabled = true
