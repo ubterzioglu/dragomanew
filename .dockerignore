@@ -19,3 +19,10 @@ panel/.omc
 panel/.env
 panel/.env.*
 panel/**/*.local
+
+# Release outputs and the media cache are made inside the image build, never copied from a checkout.
+app/src/content/release
+app/public/release.json
+app/build-meta
+app/.media-cache
+app/scripts/.media-cache.json

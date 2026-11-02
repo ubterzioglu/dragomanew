@@ -4,7 +4,8 @@
 // result. Values already in the environment win over the .env files, blank ones included.
 import { spawnSync } from 'node:child_process'
 
-const DEMO_ENV = { VITE_SUPABASE_URL: '', VITE_SUPABASE_PUBLISHABLE_KEY: '' }
+// The demo build always renders the fixture, never a published release (dalga2-sozlesme §7).
+const DEMO_ENV = { VITE_SUPABASE_URL: '', VITE_SUPABASE_PUBLISHABLE_KEY: '', CONTENT_SOURCE: 'fixture' }
 
 // npm sets npm_execpath for its scripts; running it with this Node avoids spawning npm.cmd through a shell on Windows.
 // Run directly (node scripts/build-demo.mjs), npm is found through the shell, given as one command line.

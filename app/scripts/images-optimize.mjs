@@ -13,12 +13,11 @@
  * sharp strips metadata unless withMetadata()/keepMetadata() is called, and this
  * script never calls them. Unchanged inputs are skipped via scripts/.media-cache.json.
  */
-import { createHash } from 'node:crypto'
 import { existsSync } from 'node:fs'
 import { mkdir, readFile, readdir, unlink, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import sharp from 'sharp'
+import { FORMATS, derivativesExist, placeholderBuffer, renderDerivatives, settingsHash, sha256 } from './lib/mediaPipeline.mjs'
 
 const APP_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const SOURCE_DIR = process.env.DRAGOMAN_IMAGES_DIR ?? 'C:\\temp_private\\dragoman\\cloner\\images'
@@ -27,28 +26,11 @@ const CACHE_FILE = path.join(APP_DIR, 'scripts', '.media-cache.json')
 const OUT_DIR = path.join(APP_DIR, 'public', 'media')
 const CATALOG_FILE = path.join(APP_DIR, 'src', 'content', 'data', 'media.ts')
 
-// 720 serves full-width phone images at DPR ~1.75–2 (e.g. 380 px × 1.75 = 665 px), which otherwise get 800.
-const WIDTHS = [480, 720, 800, 1280, 1920]
-// A 667 px source would otherwise stop at 480 and lose 28% of its detail; below 1920 such sources also get their own width.
-const MIN_SOURCE_GAIN = 1.15
-const FORMATS = ['avif', 'webp', 'jpg']
+// Widths and encoder settings live in scripts/lib/mediaPipeline.mjs (shared with fetch-content.mjs).
 const PLACEHOLDER_SOURCE = 'generated-placeholder'
-const SETTINGS = {
-  version: 1,
-  widths: WIDTHS,
-  minSourceGain: MIN_SOURCE_GAIN,
-  avif: { quality: 50, effort: 4 },
-  webp: { quality: 74, effort: 4 },
-  jpg: { quality: 78, mozjpeg: true, progressive: true },
-  background: '#ffffff',
-  placeholder: { width: 1920, height: 1280, background: '#f7f4ee', ink: '#006c50', text: 'Örnek görsel / Sample image' },
-}
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const LOCALES = ['tr', 'en', 'fr', 'de']
 const OUTPUT_NAME = /^([a-z0-9-]+)-(\d+)\.(avif|webp|jpg)$/
-
-const sha256 = (data) => createHash('sha256').update(data).digest('hex')
-const settingsHash = sha256(JSON.stringify(SETTINGS))
 
 function validateSelection(entries) {
   if (!Array.isArray(entries) || entries.length === 0) throw new Error('media-selection.json must be a non-empty array')
@@ -74,58 +56,9 @@ function validateSelection(entries) {
   if (errors.length > 0) throw new Error(`Invalid media selection:\n  ${errors.join('\n  ')}`)
 }
 
-const escapeXml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+const processEntry = (entry, input) => renderDerivatives(input, entry.id, OUT_DIR)
 
-/** Neutral sand/green placeholder, rendered once at full size and then treated like a photo. */
-async function placeholderBuffer() {
-  const { width, height, background, ink, text } = SETTINGS.placeholder
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
-  <rect width="100%" height="100%" fill="${background}"/>
-  <rect x="24" y="24" width="${width - 48}" height="${height - 48}" fill="none" stroke="${ink}" stroke-opacity="0.25" stroke-width="4"/>
-  <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="56" fill="${ink}">${escapeXml(text)}</text>
-</svg>`
-  return sharp(Buffer.from(svg)).png().toBuffer()
-}
-
-function targetWidths(sourceWidth) {
-  const fitting = WIDTHS.filter((w) => w <= sourceWidth)
-  if (fitting.length === 0) return [sourceWidth]
-  const last = fitting[fitting.length - 1]
-  const keepsSourceDetail = last < WIDTHS[WIDTHS.length - 1] && sourceWidth >= last * MIN_SOURCE_GAIN
-  return keepsSourceDetail ? [...fitting, sourceWidth] : fitting
-}
-
-function encode(pipeline, format) {
-  if (format === 'avif') return pipeline.avif(SETTINGS.avif)
-  if (format === 'webp') return pipeline.webp(SETTINGS.webp)
-  return pipeline.jpeg(SETTINGS.jpg)
-}
-
-async function processEntry(entry, input) {
-  // Orientation-corrected width of the source (EXIF orientations 5-8 swap the axes).
-  const meta = await sharp(input).metadata()
-  const sourceWidth = (meta.orientation ?? 1) >= 5 ? meta.height : meta.width
-  const widths = targetWidths(sourceWidth)
-  let largest = { width: 0, height: 0 }
-  for (const w of widths) {
-    const results = await Promise.all(
-      FORMATS.map((format) => {
-        const pipeline = sharp(input)
-          .rotate()
-          .resize({ width: w, withoutEnlargement: true })
-          .flatten({ background: SETTINGS.background })
-        return encode(pipeline, format).toFile(path.join(OUT_DIR, `${entry.id}-${w}.${format}`))
-      }),
-    )
-    const info = results[2]
-    if (info.width > largest.width) largest = { width: info.width, height: info.height }
-  }
-  return { widths, width: largest.width, height: largest.height }
-}
-
-const outputsExist = (id, widths) =>
-  widths.every((w) => FORMATS.every((f) => existsSync(path.join(OUT_DIR, `${id}-${w}.${f}`))))
-
+const outputsExist = (id, widths) => derivativesExist(OUT_DIR, id, widths)
 async function readCache() {
   try {
     return JSON.parse(await readFile(CACHE_FILE, 'utf8'))

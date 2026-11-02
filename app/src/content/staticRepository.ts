@@ -1,5 +1,8 @@
 import type { Locale } from '../i18n/locales'
-import type { ContentRepository } from './repository'
+// Types only: this module is in the browser bundle, and the shared request modules pull in zod.
+import type { FormDefinition } from '../shared/requests/forms.ts'
+import type { RequestKind } from '../shared/requests/payload.ts'
+import type { ContentRepository, TranslationGapKind } from './repository'
 import type {
   CategoryPage,
   DragomanEvent,
@@ -27,10 +30,23 @@ export interface ContentData {
   team: readonly TeamMember[]
   testimonials: readonly Testimonial[]
   richPages: readonly RichPage[]
+  /** Published form definitions; a page slice carries only the forms it renders. */
+  forms: Readonly<Partial<Record<RequestKind, FormRelease>>>
+  /**
+   * Languages whose title, summary or body of a detail record would show the Turkish fallback, keyed
+   * `{kind}:{id}` (only records with a gap). Computed before a slice drops the other languages.
+   */
+  translationGaps: Readonly<Record<string, readonly Locale[]>>
+}
+
+/** A published form: its version (0 = the built-in default) and definition. */
+export interface FormRelease {
+  version: number
+  definition: FormDefinition
 }
 
 /** The complete content set (build time only); unlike a page slice it always has the home page. */
-export type FullContentData = ContentData & { home: HomeContent }
+export type FullContentData = ContentData & { home: HomeContent; forms: Readonly<Record<RequestKind, FormRelease>> }
 
 /** Content of a page that renders no records (participant form, 404). */
 export const EMPTY_CONTENT: ContentData = {
@@ -45,13 +61,16 @@ export const EMPTY_CONTENT: ContentData = {
   team: [],
   testimonials: [],
   richPages: [],
+  forms: {},
+  translationGaps: {},
 }
 
 /** Loader data is untrusted JSON until it has the slice's shape. */
 export function isContentData(value: unknown): value is ContentData {
   if (typeof value !== 'object' || value === null) return false
   const record = value as Record<string, unknown>
-  return Object.keys(EMPTY_CONTENT).every((key) => (key === 'home' ? typeof record.home === 'object' : Array.isArray(record[key])))
+  const objects = new Set(['home', 'forms', 'translationGaps'])
+  return Object.keys(EMPTY_CONTENT).every((key) => (objects.has(key) ? typeof record[key] === 'object' && (key === 'home' || record[key] !== null) : Array.isArray(record[key])))
 }
 
 const byOrder =<T extends { order: number }>(a: T, b: T): number => a.order - b.order
@@ -88,5 +107,7 @@ export function createStaticRepository(data: ContentData): ContentRepository {
     team: () => data.team.toSorted(byOrder),
     testimonials: () => [...data.testimonials],
     richPage: (key) => required(data.richPages.find((page) => page.key === key), `page "${key}"`),
+    form: (kind) => required(data.forms[kind], `form "${kind}"`),
+    translationGaps: (kind: TranslationGapKind, id) => data.translationGaps[`${kind}:${id}`] ?? [],
   }
 }

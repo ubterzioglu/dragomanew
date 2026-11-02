@@ -8,8 +8,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vitest run tests/unit/content.test.ts && vite-react-ssg build && node scripts/postbuild.mjs",
+    "build": "node scripts/fetch-content.mjs && vitest run tests/unit/content.test.ts && vite-react-ssg build && node scripts/postbuild.mjs",
     "build:demo": "node scripts/build-demo.mjs",
+    "fetch-content": "node scripts/fetch-content.mjs",
     "preview": "vite preview --port 4173 --strictPort",
     "demo": "npm run build && npm run preview",
     "postinstall": "npm install --prefix tools/lint --no-audit --no-fund",

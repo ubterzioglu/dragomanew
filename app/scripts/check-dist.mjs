@@ -13,12 +13,13 @@
 //  - content data is not in the JS bundle; per-page loader JSON carries no source details
 //  - the app script starts after the first paint (no blocking module script left)
 //  - one Content-Security-Policy meta tag ahead of every script, allowing exactly the page's inline scripts
+//  - a release build serves /release.json with the release it was built from (scripts/fetch-content.mjs)
 // Exit code 1 when anything fails.  Usage: node scripts/check-dist.mjs
 import { createHash } from 'node:crypto'
 import { existsSync } from 'node:fs'
 import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
-import { DIST, ORIGIN, PUBLIC_RELEASE, isNoindex, listHtml, pageUrl } from './lib/dist.mjs'
+import { APP, DIST, ORIGIN, PUBLIC_RELEASE, isNoindex, isTranslationFallback, listHtml, pageUrl } from './lib/dist.mjs'
 import { checkFeeds, checkLlmsTxt, checkPageSeo, checkRobotsForCrawlers, checkSitemap } from './lib/seoChecks.mjs'
 
 const STATIC_PREFIXES = ['/assets/', '/brand/', '/media/', '/fonts/']
@@ -83,7 +84,8 @@ function checkHead(url, html, fail) {
     else if (!targetExists(href.slice(ORIGIN.length))) fail(`hreflang ${hreflang} points at a missing page ${href}`)
   }
   if (!alternates.some((link) => link.hreflang === 'x-default')) fail('hreflang set has no x-default')
-  if (!NOT_SELF_REFERENCING.has(url) && !alternates.some((link) => link.href === `${ORIGIN}${url}`)) fail('hreflang set does not include the page itself')
+  // A Turkish-fallback page leaves the hreflang set of its own record, itself included.
+  if (!NOT_SELF_REFERENCING.has(url) && !isTranslationFallback(html) && !alternates.some((link) => link.href === `${ORIGIN}${url}`)) fail('hreflang set does not include the page itself')
 }
 
 // Recomputed here rather than imported from src/lib/contentSecurityPolicy.ts, so a bug there or an
@@ -123,6 +125,20 @@ function targetExists(href) {
     return existsSync(path.join(DIST, clean))
   }
   return existsSync(path.join(DIST, clean, 'index.html'))
+}
+
+// The panel reads the live release from /release.json; it must name the release this build rendered.
+async function checkReleaseFile(fail) {
+  const source = path.join(APP, 'src', 'content', 'release', 'release.json')
+  const served = path.join(DIST, 'release.json')
+  if (!existsSync(source)) {
+    if (existsSync(served)) fail('release.json: present in a fixture build')
+    return
+  }
+  if (!existsSync(served)) return fail('release.json: missing from a release build')
+  const built = JSON.parse(await readFile(source, 'utf8'))
+  const live = JSON.parse(await readFile(served, 'utf8'))
+  if (live.releaseId !== built.releaseId) fail(`release.json: names release ${live.releaseId}, the pages are release ${built.releaseId}`)
 }
 
 async function main() {
@@ -173,6 +189,7 @@ async function main() {
   await checkLlmsTxt(siteFail)
   await checkStylesheets(siteFail)
   await checkContentStaysServerSide(siteFail)
+  await checkReleaseFile(siteFail)
 
   console.log(`Checked ${files.length} pages and ${linkCount} internal links.`)
   if (failures.length > 0) {

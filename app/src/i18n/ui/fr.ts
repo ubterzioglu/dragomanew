@@ -206,6 +206,7 @@ export const fr = {
     backHome: 'Retour à l’accueil',
   },
   seo: {
+    translationFallback: 'Cette page n’est pas encore traduite : une partie du texte s’affiche en turc.',
     blogTitle: 'Blog : actualités plongée et kayak de mer à Kaş',
     blogDescription: 'Actualités et annonces de Kaş : itinéraires de kayak de mer à Kekova, voyages plongée à l’étranger et articles de l’équipe Dragoman sur la côte lycienne.',
     notFoundTitle: 'Page introuvable : elle a peut-être été déplacée',

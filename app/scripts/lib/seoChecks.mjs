@@ -4,7 +4,7 @@ import { existsSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { JSDOM } from 'jsdom'
-import { DIST, ORIGIN, PUBLIC_RELEASE, distFile, isNoindex, metaContent } from './dist.mjs'
+import { DIST, ORIGIN, PUBLIC_RELEASE, distFile, isNoindex, isTranslationFallback, metaContent } from './dist.mjs'
 
 // Kept apart from src/lib/crawl/robotsTxt.ts on purpose: an edit there that drops a crawler shows up here.
 const NAMED_CRAWLERS = ['GPTBot', 'OAI-SearchBot', 'ClaudeBot', 'Claude-Web', 'anthropic-ai', 'PerplexityBot', 'Google-Extended', 'Bingbot', 'Applebot']
@@ -48,7 +48,7 @@ export function checkPageSeo(url, html, indexable, fail) {
   if (BLOG_POST.test(url) && !metaContent(html, 'article:published_time')) fail('blog post without article:published_time')
   if (!indexable) return
   checkJsonLd(html, fail)
-  if (PUBLIC_RELEASE && isNoindex(html)) fail('noindex on a public page of a public release')
+  if (PUBLIC_RELEASE && isNoindex(html) && !isTranslationFallback(html)) fail('noindex on a public page of a public release')
 }
 
 export async function checkFeeds(fail) {

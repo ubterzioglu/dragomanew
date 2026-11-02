@@ -206,6 +206,7 @@ export const tr = {
   },
   /** Search titles (PageHead adds " | Dragoman") and descriptions for pages without a content record. */
   seo: {
+    translationFallback: 'Bu sayfanın çevirisi henüz hazır değil; metnin bir kısmı Türkçe gösteriliyor.',
     blogTitle: 'Blog: Kaş’tan Dalış ve Deniz Kayağı Haberleri',
     blogDescription: 'Kaş’tan haberler ve duyurular: Kekova’da deniz kayağı rotaları, yurt dışı dalış gezileri ve Dragoman ekibinden dalışa ve Likya kıyısına dair yazılar.',
     notFoundTitle: 'Sayfa Bulunamadı: Adres Taşınmış Olabilir',

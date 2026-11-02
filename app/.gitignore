@@ -10,3 +10,9 @@ playwright-report/
 !.env.example
 *.tsbuildinfo
 scripts/.media-cache.json
+
+# Release build outputs of scripts/fetch-content.mjs (dalga2-sozlesme §7); rebuilt by every build.
+src/content/release/
+public/release.json
+build-meta/
+.media-cache/

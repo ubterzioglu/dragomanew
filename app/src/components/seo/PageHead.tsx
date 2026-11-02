@@ -1,5 +1,5 @@
 import { Head } from 'vite-react-ssg'
-import { LOCALE_TAG, LOCALES } from '../../i18n/locales'
+import { LOCALE_TAG, LOCALES, type Locale } from '../../i18n/locales'
 import type { LocalizedPaths } from '../../i18n/pages'
 import { useLocale } from '../../i18n/LocaleContext'
 import { isPublicRelease } from '../../lib/env'
@@ -21,12 +21,21 @@ interface PageHeadProps {
   feed?: { href: string; title: string }
   /** Page-specific schema.org nodes; the organization and site nodes are added around them. */
   jsonLd?: readonly JsonLdNode[]
+  /**
+   * Languages in which the page shows the Turkish fallback in its title, summary or body
+   * (repository.translationGaps). Such a page is noindex and every page of the set leaves it out of
+   * hreflang, so it also stays out of the sitemap (dalga2-sozlesme §7, Q2).
+   */
+  untranslated?: readonly Locale[]
 }
 
-export function PageHead({ title, description, alternates, alwaysNoindex = false, image, article, feed, jsonLd }: PageHeadProps) {
+export function PageHead({ title, description, alternates, alwaysNoindex = false, image, article, feed, jsonLd, untranslated = [] }: PageHeadProps) {
   const locale = useLocale()
   const pageUrl = `${siteConfig.origin}${alternates[locale]}`
-  const noindex = alwaysNoindex || !isPublicRelease
+  const noindex = alwaysNoindex || !isPublicRelease || untranslated.includes(locale)
+  const hreflangs = LOCALES.filter((alt) => !untranslated.includes(alt))
+  // x-default is the English page; Turkish (the source, never a fallback) when English is untranslated.
+  const xDefault = untranslated.includes('en') ? alternates.tr : alternates.en
   const share = image ?? socialImage(null, locale)
   const { siteName } = siteConfig
 
@@ -38,10 +47,10 @@ export function PageHead({ title, description, alternates, alwaysNoindex = false
       {noindex && <meta name="robots" content="noindex,nofollow" />}
       {/* A page kept out of the index for good (404, participant forms) claims no canonical URL. */}
       {!alwaysNoindex && <link rel="canonical" href={pageUrl} />}
-      {LOCALES.map((alt) => (
+      {hreflangs.map((alt) => (
         <link key={alt} rel="alternate" hrefLang={LOCALE_TAG[alt]} href={`${siteConfig.origin}${alternates[alt]}`} />
       ))}
-      <link rel="alternate" hrefLang="x-default" href={`${siteConfig.origin}${alternates.en}`} />
+      <link rel="alternate" hrefLang="x-default" href={`${siteConfig.origin}${xDefault}`} />
       {feed && <link rel="alternate" type="application/rss+xml" title={feed.title} href={feed.href} />}
       <meta property="og:site_name" content={siteName} />
       <meta property="og:title" content={title} />

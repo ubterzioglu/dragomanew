@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Check, MapPin, X } from 'lucide-react'
 import { PageHead } from '../../components/seo/PageHead'
+import { TranslationNote } from '../../components/seo/TranslationNote'
 import { Breadcrumbs } from '../../components/ui/Breadcrumbs'
 import { FaqList } from '../../components/ui/FaqList'
 import { RichText } from '../../components/ui/RichText'
@@ -51,6 +52,7 @@ export function EventDetailPage({ event }: { event: DragomanEvent }) {
   const locale = useLocale()
   const ui = useUi()
   const content = useContent()
+  const gaps = content.translationGaps('event', event.id)
   const title = pick(event.title, locale).value
   const summary = pick(event.summary, locale).value
   const images = [event.cover, ...event.gallery.filter((id) => id !== event.cover)].map((id) => content.media(id))
@@ -72,10 +74,11 @@ export function EventDetailPage({ event }: { event: DragomanEvent }) {
 
   return (
     <>
-      <PageHead title={seo.title} description={seo.description} alternates={eventAlternates(event)} image={image} jsonLd={jsonLd} />
+      <PageHead title={seo.title} description={seo.description} alternates={eventAlternates(event)} image={image} jsonLd={jsonLd} untranslated={gaps} />
       <div>
         <div className="container-page py-8 md:py-10">
           <Breadcrumbs items={crumbs} />
+          <TranslationNote untranslated={gaps} className="mt-4" />
           <h1 className="mt-4 text-4xl font-bold md:text-5xl">{title}</h1>
           <p className="mt-3 max-w-3xl text-lg text-ink-muted md:text-xl">{summary}</p>
         </div>

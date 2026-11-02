@@ -206,6 +206,7 @@ export const en = {
     backHome: 'Back to the home page',
   },
   seo: {
+    translationFallback: 'This page has not been translated yet, so some of the text is shown in Turkish.',
     blogTitle: 'Blog: Diving and Sea Kayaking News from Kaş',
     blogDescription: 'News and announcements from Kaş: sea kayak routes in Kekova, dive trips abroad and articles from the Dragoman team about diving and the Lycian coast.',
     notFoundTitle: 'Page Not Found: It May Have Moved or Been Removed',

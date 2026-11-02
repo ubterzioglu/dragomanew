@@ -1,5 +1,6 @@
 import { EventCard } from '../../components/cards/EventCard'
 import { PageHead } from '../../components/seo/PageHead'
+import { TranslationNote } from '../../components/seo/TranslationNote'
 import { Breadcrumbs } from '../../components/ui/Breadcrumbs'
 import { ButtonLink } from '../../components/ui/Button'
 import { PHONE_CONTENT_WIDTH, Picture } from '../../components/ui/Picture'
@@ -21,6 +22,7 @@ export function PostPage({ post }: { post: Post }) {
   const locale = useLocale()
   const ui = useUi()
   const content = useContent()
+  const gaps = content.translationGaps('post', post.id)
   const title = pick(post.title, locale).value
   const excerpt = pick(post.excerpt, locale).value
   const path = postPath(locale, post)
@@ -53,10 +55,12 @@ export function PostPage({ post }: { post: Post }) {
         article={dates}
         feed={blogFeed(locale, ui.nav.blog)}
         jsonLd={jsonLd}
+        untranslated={gaps}
       />
       <article>
         <header className="container-page max-w-4xl pt-8 md:pt-12">
           <Breadcrumbs items={crumbs} />
+          <TranslationNote untranslated={gaps} className="mt-4" />
           <time dateTime={post.date} className="mt-6 block text-ink-muted">
             {formatDate(post.date, locale)}
           </time>

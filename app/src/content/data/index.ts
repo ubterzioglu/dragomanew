@@ -1,6 +1,7 @@
 import type { FullContentData } from '../staticRepository'
 import { categoryPages } from './categories'
 import { divingEvents } from './events/diving'
+import { DEFAULT_FORMS } from './forms'
 import { outdoorEvents } from './events/outdoor'
 import { seaKayakEvents } from './events/seaKayak'
 import { homeContent } from './home'
@@ -33,4 +34,6 @@ export const contentData: FullContentData = {
   team,
   testimonials,
   richPages: withSeo(richPages, (page) => page.key, richPageSeo),
+  forms: DEFAULT_FORMS,
+  translationGaps: {},
 }
