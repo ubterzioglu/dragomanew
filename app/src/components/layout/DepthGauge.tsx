@@ -15,7 +15,7 @@ export function DepthGauge() {
   return (
     <div
       aria-hidden="true"
-      className="dive-gauge pointer-events-none fixed right-3 bottom-24 z-20 flex items-center gap-1.5 rounded-full px-3 py-1.5 font-display text-sm font-semibold text-white tabular-nums md:right-6 md:bottom-6"
+      className="dive-gauge pointer-events-none fixed right-3 bottom-24 z-20 flex items-center gap-1.5 rounded-full px-3 py-1.5 font-display text-sm font-semibold tabular-nums md:right-6 md:bottom-6"
     >
       <Gauge className="size-4" />
       <span>{depth} m</span>

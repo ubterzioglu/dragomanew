@@ -27,7 +27,7 @@ export function AscendButton() {
       onClick={ascend}
       aria-label={ui.a11y.ascend}
       title={ui.a11y.ascend}
-      className="dive-ascend group fixed right-3 bottom-36 z-20 flex size-12 items-center justify-center rounded-full text-white md:right-6 md:bottom-16"
+      className="dive-ascend group fixed right-3 bottom-36 z-20 flex size-12 items-center justify-center rounded-full md:right-6 md:bottom-16"
     >
       <ThumbsUp aria-hidden="true" className="size-6 transition-transform group-hover:-translate-y-1" />
     </button>
