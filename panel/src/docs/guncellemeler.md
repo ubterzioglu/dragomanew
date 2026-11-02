@@ -2,6 +2,7 @@
 
 ## 2026-11-02
 
+- Ana sayfadaki **Google yorumları** bölümünde artık örnek yorumlar görünmüyor. Yerine iki düğme var: **Google’daki yorumları okuyun** ve **Yorum yazın**; ikisi de Dragoman’ın Google kaydını açıyor.
 - Sitedeki derinlik ölçeği, derinlik göstergesi ve **yukarı çık** düğmesi artık sitenin renklerinde: beyaz zemin, yeşil yazı, turuncu ibre.
 - Yeni **Beni Oku!** sayfası (Genel bakışın altında): site, çeviri, talepler, fotoğraflar ve hesaplarla ilgili bilinmesi gerekenler ve şu anki durum.
 - Panelin menüsü artık solda; ekranlar Genel, İçerik, Ayarlar ve Yardım başlıkları altında toplandı.

@@ -32,6 +32,11 @@ export const siteConfig = {
     email: 'info@dragoman-turkey.com',
     mapsUrl: 'https://maps.app.goo.gl/8CHPeMSWYjqhSYJe6',
   },
+  // Same Google listing as mapsUrl ("Dragoman Diving and Outdoor"): cid opens its reviews, placeid the review form.
+  googleReviews: {
+    readUrl: 'https://www.google.com/maps?cid=3535741115566083687',
+    writeUrl: 'https://search.google.com/local/writereview?placeid=ChIJ13s8_VfawRQRZ04Pu895ETE',
+  },
   social: {
     instagram: 'https://www.instagram.com/dragomandivingandoutdoors/',
     facebook: 'https://www.facebook.com/dragomandivingandoutdoor',

@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom'
 import { EventCard } from '../../components/cards/EventCard'
 import { PostCard } from '../../components/cards/PostCard'
 import { PageHead } from '../../components/seo/PageHead'
-import { Badge } from '../../components/ui/Badge'
-import { ButtonLink } from '../../components/ui/Button'
+import { ButtonLink, buttonClass } from '../../components/ui/Button'
 import { PHONE_CONTENT_WIDTH, Picture } from '../../components/ui/Picture'
 import { Section } from '../../components/ui/Section'
 import { useContent } from '../../content/ContentContext'
@@ -14,6 +13,7 @@ import { eventPath, postPath } from '../../content/urls'
 import { useLocale, useUi } from '../../i18n/LocaleContext'
 import { localePath, pageAlternates } from '../../i18n/pages'
 import { pageNodes } from '../../lib/jsonLd/pageNodes'
+import { siteConfig } from '../../lib/siteConfig'
 import { socialImage } from '../../lib/socialImage'
 import { HeroTriptych } from './HeroTriptych'
 
@@ -36,6 +36,7 @@ export function HomePage() {
       : []
   })
   const latestPosts = content.posts().slice(0, 3)
+  const realReviews = content.testimonials().filter((review) => !review.sample)
   const { title, description } = pageSeo(home.seo, locale, { title: ui.titles.home, description: pick(home.hero.subheading, locale).value })
   const imageId = shareImageId(home.seo, home.hero.tiles[0]?.media)
   const image = socialImage(imageId ? content.media(imageId) : null, locale)
@@ -99,24 +100,33 @@ export function HomePage() {
         </ul>
       </Section>
 
-      {/* 5. Google reviews (sample until the real source is connected) */}
+      {/* 5. Google reviews: links to the listing; sample cards never show, real ones appear once added */}
       <Section id="reviews" title={ui.pages.reviewsTitle}>
-        <Badge tone="sample" className="mb-6">
-          {ui.pages.reviewsNote}
-        </Badge>
-        <ul className="grid gap-6 md:grid-cols-3">
-          {content.testimonials().map((review) => (
-            <li key={review.id} className="rounded-card border border-line bg-white p-6 shadow-sm">
-              <p role="img" className="flex gap-0.5 text-brand-orange" aria-label={`${review.rating}/5`}>
-                {Array.from({ length: review.rating }, (_, i) => (
-                  <Star key={i} aria-hidden="true" className="size-4 fill-current" />
-                ))}
-              </p>
-              <blockquote className="mt-3 text-ink">{ui.typography.quoteOpen}{pick(review.text, locale).value}{ui.typography.quoteClose}</blockquote>
-              <p className="mt-3 text-sm font-semibold text-ink-muted">{review.author}</p>
-            </li>
-          ))}
-        </ul>
+        <p className="max-w-2xl text-ink-muted">{ui.pages.reviewsIntro}</p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <a href={siteConfig.googleReviews.readUrl} target="_blank" rel="noopener noreferrer" className={buttonClass('primary')}>
+            <Star aria-hidden="true" className="size-5" />
+            {ui.pages.reviewsRead}
+          </a>
+          <a href={siteConfig.googleReviews.writeUrl} target="_blank" rel="noopener noreferrer" className={buttonClass('secondary')}>
+            {ui.pages.reviewsWrite}
+          </a>
+        </div>
+        {realReviews.length > 0 && (
+          <ul className="mt-8 grid gap-6 md:grid-cols-3">
+            {realReviews.map((review) => (
+              <li key={review.id} className="rounded-card border border-line bg-white p-6 shadow-sm">
+                <p role="img" className="flex gap-0.5 text-brand-orange" aria-label={`${review.rating}/5`}>
+                  {Array.from({ length: review.rating }, (_, i) => (
+                    <Star key={i} aria-hidden="true" className="size-4 fill-current" />
+                  ))}
+                </p>
+                <blockquote className="mt-3 text-ink">{ui.typography.quoteOpen}{pick(review.text, locale).value}{ui.typography.quoteClose}</blockquote>
+                <p className="mt-3 text-sm font-semibold text-ink-muted">{review.author}</p>
+              </li>
+            ))}
+          </ul>
+        )}
       </Section>
 
       {/* 6. Latest blog posts */}
