@@ -165,7 +165,7 @@ export function EventDetailPage({ event }: { event: DragomanEvent }) {
               {ui.pages.requestTitle}
             </h2>
             <div className="mt-6">
-              <EventRequestForm event={event} />
+              <EventRequestForm event={event} form={content.form('event')} />
             </div>
           </section>
         </div>

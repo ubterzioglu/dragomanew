@@ -87,7 +87,7 @@ export function ContactPage() {
           <h2 id="contact-form" className="mb-5 text-3xl font-bold">
             {ui.pages.contactFormTitle}
           </h2>
-          <ContactForm />
+          <ContactForm form={content.form('contact')} />
         </section>
       </div>
     </>

@@ -63,8 +63,8 @@ export function TransportPage() {
   const crumbs = [{ label: ui.nav.home, href: localePath(locale, 'home') }, { label: ui.nav.transport }]
   const jsonLd = pageNodes({ type: 'CollectionPage', path: localePath(locale, 'transport'), name: ui.nav.transport, description, locale, image, crumbs })
   const sections = [
-    { id: 'transport', title: ui.pages.transferTitle, offers: content.serviceOffers('transfer'), form: <TransportForm /> },
-    { id: 'lodging', title: ui.pages.lodgingTitle, offers: content.serviceOffers('lodging'), form: <LodgingForm /> },
+    { id: 'transport', title: ui.pages.transferTitle, offers: content.serviceOffers('transfer'), form: <TransportForm form={content.form('transport')} /> },
+    { id: 'lodging', title: ui.pages.lodgingTitle, offers: content.serviceOffers('lodging'), form: <LodgingForm form={content.form('lodging')} /> },
   ]
 
   return (
