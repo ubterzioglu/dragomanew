@@ -15,9 +15,9 @@ ARG VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_FClV5BfaPresWIUTgfDdIg_2Iq0d5eT
 ARG VITE_PUBLIC_RELEASE=
 # Content source (dalga2-sozlesme §7, §10): "fixture" renders the typed sample data in app/src/content/data;
 # "release" fetches the published release from the content-release function of VITE_SUPABASE_URL and fails
-# the build (the running container stays) if it is missing or invalid. Flipped to release at cut-over.
+# the build (the running container stays) if it is missing or invalid. Release since the cut-over (2026-11-02).
 # CONTENT_RELEASE_ID pins one release (emergency rollback); empty = the latest.
-ARG CONTENT_SOURCE=fixture
+ARG CONTENT_SOURCE=release
 ARG CONTENT_RELEASE_ID=
 
 # ---- Site build stage ----
