@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { can, canClaim, canHandOver, canReassign, handoverCandidates } from '../src/lib/permissions'
+import { can, canClaim, canHandOver, canReassign, handoverCandidates, parsePermissions } from '../src/lib/permissions'
 import type { RequestRow, StaffMember } from '../src/lib/types'
 
 const staff = (id: string, role: StaffMember['role'], active = true): StaffMember => ({
@@ -43,6 +43,37 @@ describe('can', () => {
   it('grants nothing to an inactive or missing staff member', () => {
     expect(can({ role: 'main_admin', active: false }, 'requests.read')).toBe(false)
     expect(can(null, 'requests.read')).toBe(false)
+  })
+})
+
+describe('content permissions (dalga2-sozlesme §5)', () => {
+  it('mirrors the matrix: main_admin all, content edits and translates but does not publish', () => {
+    for (const permission of ['content.edit', 'content.translate', 'content.publish', 'forms.manage', 'site.deploy'] as const) {
+      expect(can(staff('a', 'main_admin'), permission)).toBe(true)
+    }
+    expect(can(staff('c', 'content'), 'content.edit')).toBe(true)
+    expect(can(staff('c', 'content'), 'content.translate')).toBe(true)
+    expect(can(staff('c', 'content'), 'content.publish')).toBe(false)
+    expect(can(staff('c', 'content'), 'site.deploy')).toBe(false)
+    for (const role of ['reservations', 'accounting'] as const) {
+      expect(can(staff('r', role), 'content.edit')).toBe(false)
+      expect(can(staff('r', role), 'content.translate')).toBe(false)
+    }
+  })
+
+  it('opens publishing per person through extra_permissions (Q1)', () => {
+    expect(can({ role: 'content', extra_permissions: ['content.publish'] }, 'content.publish')).toBe(true)
+  })
+
+  it('lets my_permissions() decide once it has answered', () => {
+    expect(can({ role: 'content', permissions: ['content.edit', 'content.publish'] }, 'content.publish')).toBe(true)
+    expect(can({ role: 'main_admin', permissions: [] }, 'staff.manage')).toBe(false)
+    expect(can({ role: 'content', active: false, permissions: ['content.edit'] }, 'content.edit')).toBe(false)
+  })
+
+  it('parses the RPC answer defensively', () => {
+    expect(parsePermissions(['content.edit', 'x', 3, 'site.deploy'])).toEqual(['content.edit', 'site.deploy'])
+    expect(parsePermissions(null)).toEqual([])
   })
 })
 
