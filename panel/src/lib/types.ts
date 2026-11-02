@@ -55,6 +55,8 @@ export interface RequestDetail extends RequestRow {
   event_snapshot: unknown
   price_summary: unknown
   updated_at: string
+  /** Published form version the request was sent with (Dalga 2); null or absent for the built-in form. */
+  form_version?: number | null
 }
 
 export interface ActivityRow {

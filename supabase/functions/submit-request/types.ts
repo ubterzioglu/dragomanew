@@ -1,3 +1,4 @@
+import type { FormDefinition } from '../_shared/requests/forms.ts'
 import type { RequestKind, SiteLocale } from '../_shared/requests/payload.ts'
 import type { Currency, PriceBasis, RequestSummary } from '../_shared/requests/rules.ts'
 import type { Mailer } from '../_shared/mail/types.ts'
@@ -59,6 +60,8 @@ export interface NewRequest {
   eventSnapshot: EventSnapshot | null
   priceSummary: RequestSummary | null
   idempotencyKey: string
+  /** Published form version the values were checked against; null for the built-in form. */
+  formVersion: number | null
 }
 
 /** `created` is false when the idempotency key was already used: a replay, not a new request. */
@@ -66,6 +69,12 @@ export interface SavedRequest {
   id: string
   reference: string
   created: boolean
+}
+
+/** A published, immutable form version (form_versions). */
+export interface FormVersionRecord {
+  version: number
+  definition: FormDefinition
 }
 
 export type NotificationKind = 'customer_receipt' | 'business_new_request'
@@ -91,6 +100,11 @@ export interface RequestStore {
    */
   throttleSubmission(ipHash: string, limit: RateLimit): Promise<boolean>
   findEvent(id: string): Promise<EventRecord | null>
+  /**
+   * A published form version of `kind`: the given one, or the latest when `version` is null;
+   * null when there is none. A store without it only knows the built-in forms.
+   */
+  findFormVersion?(kind: RequestKind, version: number | null): Promise<FormVersionRecord | null>
   /** Inserts the request; on an idempotency-key conflict returns the existing one instead. */
   saveRequest(request: NewRequest): Promise<SavedRequest>
   /** Writes outbox rows as `pending` and returns their ids in the same order. */

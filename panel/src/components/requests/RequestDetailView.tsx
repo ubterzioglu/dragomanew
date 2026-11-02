@@ -7,6 +7,7 @@ import type { RequestDetail, StaffMember } from '../../lib/types'
 import { useAsyncData } from '../../lib/useAsyncData'
 import { Card, Loading, Notice } from '../ui'
 import { RequestActions } from './RequestActions'
+import { CustomAnswers } from '../forms/CustomAnswers'
 
 interface RequestDetailViewProps {
   requestId: string
@@ -90,7 +91,8 @@ export function RequestDetailView({ requestId, people, name, onChanged }: Reques
   if (!state.value) return <Loading label="Talep yükleniyor…" />
 
   const [request, activity] = state.value
-  const fields = payloadEntries(request.payload)
+  // Custom answers get their own section, labelled by the request's form version.
+  const fields = payloadEntries(request.payload).filter((entry) => entry.key !== 'custom')
 
   return (
     <Card className="space-y-5">
@@ -128,6 +130,8 @@ export function RequestDetailView({ requestId, people, name, onChanged }: Reques
           <p className="text-sm text-ink-muted">Ek bilgi yok.</p>
         )}
       </section>
+
+      <CustomAnswers requestId={request.id} payload={request.payload} />
 
       <EventSection request={request} />
 

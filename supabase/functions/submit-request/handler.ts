@@ -7,6 +7,7 @@ import {
   type SubmitErrorCode,
   type SubmitResponse,
 } from '../_shared/requests/payload.ts'
+import { DEFAULT_FORM_DEFINITIONS, type FormDefinition } from '../_shared/requests/forms.ts'
 import { optionCounts, requestSummary, validateDistribution, type RequestSummary } from '../_shared/requests/rules.ts'
 import {
   CODE_MESSAGES,
@@ -27,6 +28,7 @@ import type {
   Deps,
   EventRecord,
   EventSnapshot,
+  FormVersionRecord,
   LocalizedText,
   MailMessage,
   NewNotification,
@@ -89,7 +91,9 @@ async function accept(input: unknown, request: Request, deps: Deps): Promise<Out
 
   const envelope = submitEnvelopeSchema.safeParse(input)
   if (!envelope.success) return reject('invalid', issuePaths(envelope.error.issues, ''))
-  const parsed = parseValues(envelope.data)
+  const form = await resolveForm(envelope.data, deps)
+  if (!form) return reject('invalid', ['formVersion'])
+  const parsed = parseValues(envelope.data, form.definition)
   if ('fields' in parsed) return reject('invalid', parsed.fields)
 
   let priced: PricedEvent | null = null
@@ -111,6 +115,7 @@ async function accept(input: unknown, request: Request, deps: Deps): Promise<Out
     eventSnapshot: priced?.snapshot ?? null,
     priceSummary: priced?.summary ?? null,
     idempotencyKey: envelope.data.idempotencyKey,
+    formVersion: form.version,
   })
   // A replayed key normally had its mails already and only gets the same reference back. But the
   // insert and the outbox are two writes: when the first attempt died between them, nobody was
@@ -121,6 +126,7 @@ async function accept(input: unknown, request: Request, deps: Deps): Promise<Out
       locale: envelope.data.locale,
       event: priced?.snapshot ?? null,
       summary: priced?.summary ?? null,
+      form: form.definition,
       ...parsed,
     }
     await notify(saved, mail, deps).catch((error: unknown) => deps.reportError?.('submit-request: mail', error))
@@ -138,25 +144,42 @@ async function outboxMissing(requestId: string, deps: Deps): Promise<boolean> {
   }
 }
 
-function parseValues(envelope: SubmitEnvelope): KindValues | { fields: string[] } {
+interface ResolvedForm {
+  /** null: the built-in form, stored as no version. */
+  version: number | null
+  definition: FormDefinition
+}
+
+/**
+ * Step 6 of the contract (dalga2-sozlesme §8): a given version must exist, else the request is
+ * refused on `formVersion`; without one the latest published version applies, else the built-in form.
+ */
+async function resolveForm(envelope: SubmitEnvelope, deps: Deps): Promise<ResolvedForm | null> {
+  const find = (version: number | null): Promise<FormVersionRecord | null> =>
+    deps.store.findFormVersion ? deps.store.findFormVersion(envelope.kind, version) : Promise.resolve(null)
+  if (envelope.formVersion !== undefined) return find(envelope.formVersion)
+  return (await find(null)) ?? { version: null, definition: DEFAULT_FORM_DEFINITIONS[envelope.kind] }
+}
+
+function parseValues(envelope: SubmitEnvelope, definition: FormDefinition): KindValues | { fields: string[] } {
   const m = CODE_MESSAGES
   const values = envelope.values
   switch (envelope.kind) {
     case 'event': {
       // Options are not known yet; the distribution is checked against the database below.
-      const result = eventRequestSchema(m, []).safeParse(values)
+      const result = eventRequestSchema(m, [], definition).safeParse(values)
       return result.success ? { kind: 'event', values: result.data } : { fields: issuePaths(result.error.issues, 'values') }
     }
     case 'transport': {
-      const result = transportSchema(m).safeParse(values)
+      const result = transportSchema(m, definition).safeParse(values)
       return result.success ? { kind: 'transport', values: result.data } : { fields: issuePaths(result.error.issues, 'values') }
     }
     case 'lodging': {
-      const result = lodgingSchema(m).safeParse(values)
+      const result = lodgingSchema(m, definition).safeParse(values)
       return result.success ? { kind: 'lodging', values: result.data } : { fields: issuePaths(result.error.issues, 'values') }
     }
     case 'contact': {
-      const result = contactSchema(m).safeParse(values)
+      const result = contactSchema(m, definition).safeParse(values)
       return result.success ? { kind: 'contact', values: result.data } : { fields: issuePaths(result.error.issues, 'values') }
     }
   }

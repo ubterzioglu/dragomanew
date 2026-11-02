@@ -4,7 +4,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { buttonClass } from '../../components/ui/Button'
 import { useUi } from '../../i18n/LocaleContext'
 import { formatTemplate } from '../../i18n/ui'
+import { customDefaults, customError, CustomField, customRegisterOptions, isWideCustom } from './CustomField'
 import { TextAreaField, TextField } from './Field'
+import { FieldFlow, useFormDefinition, type FieldItem, type SiteForm } from './formDefinition'
 import { FormResult } from './FormResult'
 import { HoneypotField } from './HoneypotField'
 import { transportSchema } from './schemas'
@@ -27,11 +29,16 @@ const TRANSPORT_DEFAULTS = {
   note: '',
 }
 
-/** Transfer request (guide §1): its own form and its own request record. */
-export function TransportForm() {
+/**
+ * Transfer request (guide §1): its own form and its own request record.
+ * `form` is the page's published transport form; without it the built-in form is shown.
+ */
+export function TransportForm({ form }: { form?: SiteForm } = {}) {
   const ui = useUi()
   const idPrefix = useId()
-  const schema = useMemo(() => transportSchema(ui), [ui])
+  const definition = useFormDefinition('transport', form)
+  const schema = useMemo(() => transportSchema(ui, definition.definition), [ui, definition.definition])
+  const custom = customDefaults(definition.definition)
   const [seatCount, setSeatCount] = useState(1)
   const {
     register,
@@ -41,13 +48,20 @@ export function TransportForm() {
     setValue,
     reset,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(schema), shouldUnregister: true, defaultValues: TRANSPORT_DEFAULTS })
+  } = useForm({
+    resolver: zodResolver(schema),
+    shouldUnregister: true,
+    defaultValues: { ...TRANSPORT_DEFAULTS, ...(Object.keys(custom).length > 0 ? { custom } : {}) },
+  })
   // The seat count lives outside react-hook-form, so a new request also starts with one seat.
   const startOver = () => {
     reset()
     setSeatCount(1)
   }
-  const { ready, sending, canSubmit, result, submissions, submit, edited, honeypotRef } = useFormSubmission('transport', { onSent: startOver })
+  const { ready, sending, canSubmit, result, submissions, submit, edited, honeypotRef } = useFormSubmission('transport', {
+    onSent: startOver,
+    formVersion: definition.formVersion,
+  })
   const roundTrip = useWatch({ control, name: 'tripType' }) === 'roundTrip'
   const childSeat = useWatch({ control, name: 'childSeat' })
   const field = (name: string) => `${idPrefix}-${name}`
@@ -58,93 +72,149 @@ export function TransportForm() {
     setValue('childSeatAges', (getValues('childSeatAges') ?? []).slice(0, seatCount - 1))
     setSeatCount((n) => n - 1)
   }
+  const { label, hint, core } = definition
+
+  const items = definition.fields.map((entry): FieldItem => {
+    if (entry.kind === 'custom') {
+      return {
+        key: entry.key,
+        wide: isWideCustom(entry),
+        node: (
+          <CustomField
+            field={entry}
+            id={field(entry.key)}
+            label={label(entry.key, entry.label.tr)}
+            hint={hint(entry.key)}
+            error={customError(errors, entry.key)}
+            registration={register(`custom.${entry.key}`, customRegisterOptions(entry.type))}
+          />
+        ),
+      }
+    }
+    switch (entry.key) {
+      case 'tripType':
+        return {
+          key: entry.key,
+          wide: true,
+          node: (
+            <fieldset>
+              <legend className="font-semibold">{label('tripType', ui.forms.tripType)}</legend>
+              <div className="mt-2 flex flex-wrap gap-3">
+                {(['oneWay', 'roundTrip'] as const).map((type) => (
+                  <label key={type} className="flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border border-line-strong bg-white px-4 has-[:checked]:border-brand-green has-[:checked]:bg-brand-green-soft">
+                    <input type="radio" value={type} className="size-4 accent-brand-green" defaultChecked={type === TRANSPORT_DEFAULTS.tripType} {...register('tripType')} />
+                    {ui.forms[type]}
+                  </label>
+                ))}
+              </div>
+              {hint('tripType') && <p className="mt-1 text-sm text-ink-muted">{hint('tripType')}</p>}
+            </fieldset>
+          ),
+        }
+      case 'from':
+        return { key: entry.key, node: <TextField id={field('from')} label={label('from', ui.forms.from)} hint={hint('from')} error={errors.from?.message} {...register('from')} /> }
+      case 'to':
+        return { key: entry.key, node: <TextField id={field('to')} label={label('to', ui.forms.to)} hint={hint('to')} error={errors.to?.message} {...register('to')} /> }
+      case 'dateTime':
+        // The return time is part of the trip time and appears right after it.
+        return {
+          key: entry.key,
+          node: (
+            <>
+              <TextField id={field('when')} label={label('dateTime', ui.forms.dateTime)} hint={hint('dateTime')} type="datetime-local" error={errors.dateTime?.message} {...register('dateTime')} />
+              {roundTrip && (
+                <TextField
+                  id={field('return')}
+                  label={ui.forms.returnDateTime}
+                  type="datetime-local"
+                  error={errors.returnDateTime?.message}
+                  {...register('returnDateTime')}
+                />
+              )}
+            </>
+          ),
+        }
+      case 'partySize':
+        return {
+          key: entry.key,
+          node: (
+            <TextField
+              id={field('party')}
+              label={label('partySize', ui.forms.partySize)}
+              hint={hint('partySize')}
+              type="number"
+              min={1}
+              step={1}
+              inputMode="numeric"
+              error={errors.partySize?.message}
+              defaultValue={TRANSPORT_DEFAULTS.partySize}
+              {...register('partySize', { valueAsNumber: true })}
+            />
+          ),
+        }
+      case 'childSeat':
+        return {
+          key: entry.key,
+          wide: true,
+          node: (
+            <div className="rounded-card border border-line p-4">
+              <label className="flex min-h-11 cursor-pointer items-center gap-3 font-semibold">
+                <input type="checkbox" className="size-5 accent-brand-green" {...register('childSeat')} />
+                {label('childSeat', ui.forms.childSeat)}
+              </label>
+              {hint('childSeat') && <p className="mt-1 text-sm text-ink-muted">{hint('childSeat')}</p>}
+              {childSeat && (
+                <fieldset className="mt-3">
+                  <legend className="text-sm font-semibold text-ink-muted">{ui.forms.childSeatAges}</legend>
+                  <div className="mt-2 grid gap-4 sm:grid-cols-3">
+                    {Array.from({ length: seatCount }, (_, index) => (
+                      <TextField
+                        key={index}
+                        id={field(`seat-${index}`)}
+                        label={formatTemplate(ui.forms.childAge, { n: index + 1 })}
+                        type="number"
+                        min={0}
+                        max={17}
+                        inputMode="numeric"
+                        error={errors.childSeatAges?.[index]?.message}
+                        {...register(`childSeatAges.${index}`, { valueAsNumber: true })}
+                      />
+                    ))}
+                  </div>
+                  <div className="mt-3 flex gap-3">
+                    <button type="button" className={buttonClass('ghost', 'min-h-10 px-3 text-sm')} onClick={() => setSeatCount((n) => n + 1)}>
+                      + {ui.forms.addChild}
+                    </button>
+                    {seatCount > 1 && (
+                      <button type="button" className={buttonClass('ghost', 'min-h-10 px-3 text-sm')} onClick={removeSeat}>
+                        − {ui.forms.removeChild}
+                      </button>
+                    )}
+                  </div>
+                  {childSeatAgesError && <p className="mt-2 text-sm font-semibold text-red-700">{childSeatAgesError}</p>}
+                  <p className="mt-2 text-sm text-ink-muted">{ui.forms.childSeatNote}</p>
+                </fieldset>
+              )}
+            </div>
+          ),
+        }
+      case 'fullName':
+        return { key: entry.key, node: <TextField id={field('name')} label={label('fullName', ui.forms.fullName)} hint={hint('fullName')} autoComplete="name" error={errors.fullName?.message} {...register('fullName')} /> }
+      case 'email':
+        return { key: entry.key, node: <TextField id={field('email')} label={label('email', ui.forms.email)} hint={hint('email')} type="email" autoComplete="email" error={errors.email?.message} {...register('email')} /> }
+      case 'phone':
+        return { key: entry.key, node: <TextField id={field('phone')} label={label('phone', ui.forms.phone)} hint={hint('phone')} type="tel" autoComplete="tel" optional={!core('phone').required} error={errors.phone?.message} {...register('phone')} /> }
+      case 'note':
+        return { key: entry.key, wide: true, node: <TextAreaField id={field('note')} label={label('note', ui.forms.message)} hint={hint('note')} optional={!core('note').required} error={errors.note?.message} {...register('note')} /> }
+      default:
+        return { key: entry.key, node: null }
+    }
+  })
 
   return (
     <form method="post" noValidate aria-busy={sending || undefined} onSubmit={handleSubmit(submit)} onChange={edited}>
       <DemoFormFields ready={ready} className="space-y-5">
-        <fieldset>
-          <legend className="font-semibold">{ui.forms.tripType}</legend>
-          <div className="mt-2 flex flex-wrap gap-3">
-            {(['oneWay', 'roundTrip'] as const).map((type) => (
-              <label key={type} className="flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border border-line-strong bg-white px-4 has-[:checked]:border-brand-green has-[:checked]:bg-brand-green-soft">
-                <input type="radio" value={type} className="size-4 accent-brand-green" defaultChecked={type === TRANSPORT_DEFAULTS.tripType} {...register('tripType')} />
-                {ui.forms[type]}
-              </label>
-            ))}
-          </div>
-        </fieldset>
-
-        <div className="grid gap-5 sm:grid-cols-2">
-          <TextField id={field('from')} label={ui.forms.from} error={errors.from?.message} {...register('from')} />
-          <TextField id={field('to')} label={ui.forms.to} error={errors.to?.message} {...register('to')} />
-          <TextField id={field('when')} label={ui.forms.dateTime} type="datetime-local" error={errors.dateTime?.message} {...register('dateTime')} />
-          {roundTrip && (
-            <TextField
-              id={field('return')}
-              label={ui.forms.returnDateTime}
-              type="datetime-local"
-              error={errors.returnDateTime?.message}
-              {...register('returnDateTime')}
-            />
-          )}
-          <TextField
-            id={field('party')}
-            label={ui.forms.partySize}
-            type="number"
-            min={1}
-            step={1}
-            inputMode="numeric"
-            error={errors.partySize?.message}
-            defaultValue={TRANSPORT_DEFAULTS.partySize}
-            {...register('partySize', { valueAsNumber: true })}
-          />
-        </div>
-
-        <div className="rounded-card border border-line p-4">
-          <label className="flex min-h-11 cursor-pointer items-center gap-3 font-semibold">
-            <input type="checkbox" className="size-5 accent-brand-green" {...register('childSeat')} />
-            {ui.forms.childSeat}
-          </label>
-          {childSeat && (
-            <fieldset className="mt-3">
-              <legend className="text-sm font-semibold text-ink-muted">{ui.forms.childSeatAges}</legend>
-              <div className="mt-2 grid gap-4 sm:grid-cols-3">
-                {Array.from({ length: seatCount }, (_, index) => (
-                  <TextField
-                    key={index}
-                    id={field(`seat-${index}`)}
-                    label={formatTemplate(ui.forms.childAge, { n: index + 1 })}
-                    type="number"
-                    min={0}
-                    max={17}
-                    inputMode="numeric"
-                    error={errors.childSeatAges?.[index]?.message}
-                    {...register(`childSeatAges.${index}`, { valueAsNumber: true })}
-                  />
-                ))}
-              </div>
-              <div className="mt-3 flex gap-3">
-                <button type="button" className={buttonClass('ghost', 'min-h-10 px-3 text-sm')} onClick={() => setSeatCount((n) => n + 1)}>
-                  + {ui.forms.addChild}
-                </button>
-                {seatCount > 1 && (
-                  <button type="button" className={buttonClass('ghost', 'min-h-10 px-3 text-sm')} onClick={removeSeat}>
-                    − {ui.forms.removeChild}
-                  </button>
-                )}
-              </div>
-              {childSeatAgesError && <p className="mt-2 text-sm font-semibold text-red-700">{childSeatAgesError}</p>}
-              <p className="mt-2 text-sm text-ink-muted">{ui.forms.childSeatNote}</p>
-            </fieldset>
-          )}
-        </div>
-
-        <div className="grid gap-5 sm:grid-cols-2">
-          <TextField id={field('name')} label={ui.forms.fullName} autoComplete="name" error={errors.fullName?.message} {...register('fullName')} />
-          <TextField id={field('email')} label={ui.forms.email} type="email" autoComplete="email" error={errors.email?.message} {...register('email')} />
-          <TextField id={field('phone')} label={ui.forms.phone} type="tel" autoComplete="tel" optional {...register('phone')} />
-        </div>
-        <TextAreaField id={field('note')} label={ui.forms.message} optional {...register('note')} />
+        <FieldFlow items={items} />
         <HoneypotField ref={honeypotRef} />
 
         <button type="submit" disabled={!canSubmit} className={buttonClass('primary', 'w-full sm:w-auto')}>

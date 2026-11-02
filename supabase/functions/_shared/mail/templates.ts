@@ -1,3 +1,4 @@
+import type { FormDefinition } from '../requests/forms.ts'
 import type { SiteLocale } from '../requests/payload.ts'
 import type { Currency, RequestSummary } from '../requests/rules.ts'
 import type { ContactValues, EventRequestValues, LodgingValues, TransportValues } from '../requests/schemas.ts'
@@ -21,6 +22,8 @@ interface MailBase {
   locale: SiteLocale
   event: MailEvent | null
   summary: RequestSummary | null
+  /** The form version the request was checked against; its custom answers go into the business mail. */
+  form?: FormDefinition
 }
 
 export type MailRequest = MailBase &
@@ -94,6 +97,23 @@ function detailRows(request: MailRequest, s: MailStrings): Row[] {
         [l.message, request.values.message],
       ])
   }
+}
+
+/**
+ * Custom answers (dalga2-sozlesme §8) with the definition's Turkish labels, in display order.
+ * Only fields the definition shows are listed: schemas.ts already dropped the rest.
+ */
+export function customAnswerRows(form: FormDefinition | undefined, answers: unknown, s: MailStrings): Row[] {
+  if (!form || typeof answers !== 'object' || answers === null) return []
+  const values = answers as Readonly<Record<string, unknown>>
+  return form.fields.flatMap((field): Row[] => {
+    if (field.kind !== 'custom' || field.hidden) return []
+    const value = values[field.key]
+    if (value === undefined || value === null || value === '') return []
+    if (typeof value === 'boolean') return [[field.label.tr, value ? s.labels.yes : s.labels.no]]
+    const option = field.type === 'select' ? field.options?.find((candidate) => candidate.value === value) : undefined
+    return [[field.label.tr, option ? option.label.tr : String(value)]]
+  })
 }
 
 /** What `<input type="date">` and `datetime-local` send; anything else is free text. */
@@ -202,6 +222,7 @@ export function businessNotice(request: MailRequest, panelUrl: string | null): M
     [s.labels.email, email],
     [s.labels.phone, phone ?? ''],
     ...detailRows(request, s),
+    ...customAnswerRows(request.form, request.values.custom, s),
   ])
   const price = priceLine(request, s, 'tr')
   const link = panelUrl ? `${BUSINESS_STRINGS.openPanel}: ${panelUrl}` : null
