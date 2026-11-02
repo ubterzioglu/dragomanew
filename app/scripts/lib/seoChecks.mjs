@@ -121,3 +121,16 @@ export async function checkLlmsTxt(fail) {
   if (links.length === 0) fail('llms.txt: no links')
   for (const link of links) if (!existsSync(path.join(distFile(link), 'index.html'))) fail(`llms.txt: ${link} is not a page of this build`)
 }
+
+// public/.well-known/security.txt (RFC 9116) is static too; an expired one tells reporters nobody reads it.
+const SECURITY_TXT_MIN_DAYS = 30
+export async function checkSecurityTxt(fail) {
+  const file = path.join(DIST, '.well-known', 'security.txt')
+  if (!existsSync(file)) return fail('security.txt: missing')
+  const text = await readFile(file, 'utf8')
+  if (!/^Contact: (mailto:|https:\/\/)\S+$/m.test(text)) fail('security.txt: no Contact line')
+  const expires = Date.parse(text.match(/^Expires: (\S+)$/m)?.[1] ?? '')
+  if (Number.isNaN(expires)) return fail('security.txt: no valid Expires line')
+  const daysLeft = (expires - Date.now()) / 86_400_000
+  if (daysLeft < SECURITY_TXT_MIN_DAYS) fail(`security.txt: Expires is ${Math.floor(daysLeft)} days away; move it a year ahead`)
+}

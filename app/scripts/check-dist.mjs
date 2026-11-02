@@ -20,7 +20,7 @@ import { existsSync } from 'node:fs'
 import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { APP, DIST, ORIGIN, PUBLIC_RELEASE, isNoindex, isTranslationFallback, listHtml, pageUrl } from './lib/dist.mjs'
-import { checkFeeds, checkLlmsTxt, checkPageSeo, checkRobotsForCrawlers, checkSitemap } from './lib/seoChecks.mjs'
+import { checkFeeds, checkLlmsTxt, checkPageSeo, checkRobotsForCrawlers, checkSecurityTxt, checkSitemap } from './lib/seoChecks.mjs'
 
 const STATIC_PREFIXES = ['/assets/', '/brand/', '/media/', '/fonts/']
 // The 404 pages (one per language, served by the host under that prefix) point hreflang at the home pages.
@@ -187,6 +187,7 @@ async function main() {
   await checkSitemap(indexable, siteFail)
   await checkFeeds(siteFail)
   await checkLlmsTxt(siteFail)
+await checkSecurityTxt(siteFail)
   await checkStylesheets(siteFail)
   await checkContentStaysServerSide(siteFail)
   await checkReleaseFile(siteFail)
