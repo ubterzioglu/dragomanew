@@ -2,10 +2,11 @@
 //  - robots.txt: Stage A shuts everything out; a public release (VITE_PUBLIC_RELEASE=true) opens it
 //  - sitemap.xml: every indexable page (no noindex, has a canonical), read from the prerendered HTML;
 //    Stage A has none, so no file is written there
-//  - feed.xml per language (/blog/feed.xml, /tr/blog/feed.xml, …), from the posts content
+//  - feed.xml per language (/blog/feed.xml, /tr/blog/feed.xml, …), from the active posts content (release or fixture)
+//  - media/: derivatives of the release's panel uploads (build-meta/media, made by fetch-content.mjs)
 // The file builders are in src/lib/crawl/ (unit tested); this script only gathers their input.
 import { existsSync } from 'node:fs'
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { runnerImport } from 'vite'
 import { APP, DIST, ORIGIN, PUBLIC_RELEASE, distFile, isNoindex, linkTags, listHtml, metaContent, pageUrl } from './lib/dist.mjs'
@@ -43,7 +44,8 @@ async function writeSitemap(pages, buildSitemap) {
 async function writeFeeds(pages) {
   const { LOCALES, LOCALE_TAG } = await load('src/i18n/locales.ts')
   const { localePath } = await load('src/i18n/pages.ts')
-  const { contentData } = await load('src/content/data/index.ts')
+  // server.ts picks the release (src/content/release/release.json) when fetch-content wrote one.
+  const { contentData } = await load('src/content/server.ts')
   const { createStaticRepository } = await load('src/content/staticRepository.ts')
   const { buildRssFeed, postFeedItems } = await load('src/lib/crawl/rssFeed.ts')
   const posts = createStaticRepository(contentData).posts()
@@ -69,13 +71,22 @@ async function writeFeeds(pages) {
   return lines
 }
 
+// Upload derivatives are kept out of public/ (and git); they join the repo images only in dist/.
+async function copyUploadMedia() {
+  const source = path.join(APP, 'build-meta', 'media')
+  if (!existsSync(source)) return 'media uploads: none'
+  const files = await readdir(source)
+  await cp(source, path.join(DIST, 'media'), { recursive: true, force: true })
+  return `media uploads: ${files.length} files`
+}
+
 async function main() {
   if (!existsSync(path.join(DIST, 'index.html'))) throw new Error('dist/ has no build; run vite-react-ssg build first')
   const pages = await readPages()
   const { buildRobotsTxt } = await load('src/lib/crawl/robotsTxt.ts')
   const { buildSitemap } = await load('src/lib/crawl/sitemap.ts')
   await writeFile(path.join(DIST, 'robots.txt'), buildRobotsTxt({ publicRelease: PUBLIC_RELEASE, origin: ORIGIN }), 'utf8')
-  const report = [`robots.txt: ${PUBLIC_RELEASE ? 'public release' : 'Stage A, disallow all'}`, await writeSitemap(pages, buildSitemap), ...(await writeFeeds(pages))]
+  const report = [await copyUploadMedia(),`robots.txt: ${PUBLIC_RELEASE ? 'public release' : 'Stage A, disallow all'}`, await writeSitemap(pages, buildSitemap), ...(await writeFeeds(pages))]
   console.log(`postbuild (${ORIGIN}):\n  ${report.join('\n  ')}`)
 }
 

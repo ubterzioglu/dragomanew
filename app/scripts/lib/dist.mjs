@@ -58,3 +58,6 @@ export function metaContent(html, key) {
 }
 
 export const isNoindex = (html) => html.includes('name="robots" content="noindex,nofollow"')
+
+/** A page showing the Turkish fallback (TranslationNote): noindex and outside hreflang on purpose (dalga2-sozlesme §7, Q2). */
+export const isTranslationFallback = (html) => html.includes('data-translation-fallback')

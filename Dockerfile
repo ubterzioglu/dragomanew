@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 # Builds the site in app/ and the staff panel in panel/, and serves both with nginx
 # (Coolify: base directory /, Dockerfile /Dockerfile).
 # Kept outside app/ so the stylesheet build, which reads every text file there, never sees these comments.
@@ -12,6 +13,12 @@ ARG VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_FClV5BfaPresWIUTgfDdIg_2Iq0d5eT
 # Empty until the launch decision: Stage A pages, robots.txt and the X-Robots-Tag header keep search
 # engines out. "true" opens all three at once (deploy/KURULUM.md, release checklist).
 ARG VITE_PUBLIC_RELEASE=
+# Content source (dalga2-sozlesme §7, §10): "fixture" renders the typed sample data in app/src/content/data;
+# "release" fetches the published release from the content-release function of VITE_SUPABASE_URL and fails
+# the build (the running container stays) if it is missing or invalid. Flipped to release at cut-over.
+# CONTENT_RELEASE_ID pins one release (emergency rollback); empty = the latest.
+ARG CONTENT_SOURCE=fixture
+ARG CONTENT_RELEASE_ID=
 
 # ---- Site build stage ----
 FROM node:24-alpine AS build
@@ -20,18 +27,26 @@ ARG VITE_SITE_ORIGIN=https://notyetbro.club
 ARG VITE_SUPABASE_URL
 ARG VITE_SUPABASE_PUBLISHABLE_KEY
 ARG VITE_PUBLIC_RELEASE
+ARG CONTENT_SOURCE
+ARG CONTENT_RELEASE_ID
 # The build writes the Supabase origin into each page's connect-src and switches the forms to it.
 ENV VITE_SITE_ORIGIN=$VITE_SITE_ORIGIN \
     VITE_SUPABASE_URL=$VITE_SUPABASE_URL \
     VITE_SUPABASE_PUBLISHABLE_KEY=$VITE_SUPABASE_PUBLISHABLE_KEY \
-    VITE_PUBLIC_RELEASE=$VITE_PUBLIC_RELEASE
+    VITE_PUBLIC_RELEASE=$VITE_PUBLIC_RELEASE \
+    CONTENT_SOURCE=$CONTENT_SOURCE \
+    CONTENT_RELEASE_ID=$CONTENT_RELEASE_ID \
+    MEDIA_CACHE_DIR=/cache/media
 COPY app/package.json app/package-lock.json ./
 # No install scripts: postinstall only sets up the lint tools, and the build needs no native compile.
 RUN npm ci --ignore-scripts --no-audit --no-fund
 COPY app/ ./
 # Only an sb_publishable_ key may reach the bundles: a secret key would leak, a legacy JWT (eyJ…)
 # is not accepted by the function, and anything else is a typo. The panel stage repeats this check.
-RUN case "$VITE_SUPABASE_PUBLISHABLE_KEY" in \
+# The cache mount keeps derivatives of uploaded photos between builds (keyed by the photo's sha256 and the
+# image settings); without BuildKit, drop --mount: builds only get slower.
+RUN --mount=type=cache,id=dragoman-media,target=/cache/media \
+    case "$VITE_SUPABASE_PUBLISHABLE_KEY" in \
       sb_publishable_*) ;; \
       sb_secret_*) echo "VITE_SUPABASE_PUBLISHABLE_KEY is a secret key (sb_secret_); it would be published in the bundles. Use the sb_publishable_ key." >&2; exit 1;; \
       eyJ*) echo "VITE_SUPABASE_PUBLISHABLE_KEY is a legacy JWT (anon/service_role). Use the sb_publishable_ key." >&2; exit 1;; \
@@ -65,6 +80,9 @@ FROM nginx:1.27-alpine
 ARG VITE_SUPABASE_URL
 ARG VITE_PUBLIC_RELEASE
 COPY app/deploy/nginx/dragoman.conf /etc/nginx/conf.d/default.conf
+# Slug-change 301s of the release this image was built from (comment-only for a fixture build); the config
+# includes it, so it is in place before nginx -t below.
+COPY --from=build /app/build-meta/nginx-redirects.map /etc/nginx/dragoman-redirects.map
 # The proxy in front connects over IPv4, and IPv6 may be unavailable in the container.
 # The panel's connect-src gets the Supabase origin; an empty or malformed URL stops the build here
 # (https only, http just for a local stack), and so does a placeholder left in the file.

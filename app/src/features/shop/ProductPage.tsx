@@ -1,5 +1,6 @@
 import { Mail, MessageCircle } from 'lucide-react'
 import { PageHead } from '../../components/seo/PageHead'
+import { TranslationNote } from '../../components/seo/TranslationNote'
 import { Badge } from '../../components/ui/Badge'
 import { Breadcrumbs } from '../../components/ui/Breadcrumbs'
 import { buttonClass } from '../../components/ui/Button'
@@ -24,6 +25,7 @@ export function ProductPage({ product }: { product: Product }) {
   const locale = useLocale()
   const ui = useUi()
   const content = useContent()
+  const gaps = content.translationGaps('product', product.id)
   const title = pick(product.title, locale).value
   const images = [product.cover, ...product.gallery.filter((id) => id !== product.cover)].map((id) => content.media(id))
 
@@ -46,9 +48,10 @@ export function ProductPage({ product }: { product: Product }) {
 
   return (
     <>
-      <PageHead title={seo.title} description={seo.description} alternates={productAlternates(product)} image={image} jsonLd={jsonLd} />
+      <PageHead title={seo.title} description={seo.description} alternates={productAlternates(product)} image={image} jsonLd={jsonLd} untranslated={gaps} />
       <div className="container-page py-8 md:py-12">
         <Breadcrumbs items={crumbs} />
+        <TranslationNote untranslated={gaps} className="mt-4" />
         <div className="mt-6 grid gap-10 lg:grid-cols-2">
           <Gallery images={images} label={title} sizes={`(min-width: 64rem) 50vw, ${PHONE_CONTENT_WIDTH}`} />
           <div>

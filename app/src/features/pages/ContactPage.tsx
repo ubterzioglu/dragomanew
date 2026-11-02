@@ -2,6 +2,7 @@ import { Mail, MapPin, MessageCircle, Phone, Smartphone } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { PageHero } from '../../components/layout/PageHero'
 import { PageHead } from '../../components/seo/PageHead'
+import { TranslationNote } from '../../components/seo/TranslationNote'
 import { RichText } from '../../components/ui/RichText'
 import { useContent } from '../../content/ContentContext'
 import { pick } from '../../content/localize'
@@ -31,6 +32,7 @@ export function ContactPage() {
   const ui = useUi()
   const content = useContent()
   const page = content.richPage('contact')
+  const gaps = content.translationGaps('rich', 'contact')
   const { business, contact } = siteConfig
   const link = 'text-brand-green hover:underline'
   const icon = 'size-5'
@@ -41,12 +43,13 @@ export function ContactPage() {
 
   return (
     <>
-      <PageHead title={seo.title} description={seo.description} alternates={pageAlternates('contact')} jsonLd={jsonLd} />
+      <PageHead title={seo.title} description={seo.description} alternates={pageAlternates('contact')} jsonLd={jsonLd} untranslated={gaps} />
       <PageHero title={ui.nav.contact} breadcrumbs={crumbs}>
         <p>{summary}</p>
       </PageHero>
       <div className="container-page grid gap-10 py-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <section aria-labelledby="contact-details">
+          <TranslationNote untranslated={gaps} className="mb-6" />
           <h2 id="contact-details" className="text-3xl font-bold">
             {ui.pages.contactDetails}
           </h2>

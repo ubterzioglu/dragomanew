@@ -1,6 +1,7 @@
 import { Info, UserRound } from 'lucide-react'
 import { PageHero } from '../../components/layout/PageHero'
 import { PageHead } from '../../components/seo/PageHead'
+import { TranslationNote } from '../../components/seo/TranslationNote'
 import type { Crumb } from '../../components/ui/Breadcrumbs'
 import { Badge } from '../../components/ui/Badge'
 import { PHONE_CONTENT_WIDTH, Picture } from '../../components/ui/Picture'
@@ -65,6 +66,7 @@ export function RichContentPage({ pageKey }: { pageKey: RichKey }) {
   const ui = useUi()
   const content = useContent()
   const page = content.richPage(pageKey)
+  const gaps = content.translationGaps('rich', pageKey)
   const title = pick(page.title, locale).value
   const summary = pick(page.summary, locale).value
 
@@ -84,11 +86,12 @@ export function RichContentPage({ pageKey }: { pageKey: RichKey }) {
 
   return (
     <>
-      <PageHead title={seo.title} description={seo.description} alternates={pageAlternates(pageKey)} image={image} jsonLd={jsonLd} />
+      <PageHead title={seo.title} description={seo.description} alternates={pageAlternates(pageKey)} image={image} jsonLd={jsonLd} untranslated={gaps} />
       <PageHero title={title} breadcrumbs={crumbs} cover={cover}>
         <p>{summary}</p>
       </PageHero>
       <div className="container-page max-w-3xl py-12">
+        <TranslationNote untranslated={gaps} className="mb-8" />
         {notice && (
           <p role="note" className="mb-8 flex gap-3 rounded-card border border-brand-orange bg-brand-orange-soft p-4 text-brand-orange-ink">
             <Info aria-hidden="true" className="mt-0.5 size-5 shrink-0" />

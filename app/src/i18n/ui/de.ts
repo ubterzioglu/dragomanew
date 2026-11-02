@@ -206,6 +206,7 @@ export const de = {
     backHome: 'Zur Startseite',
   },
   seo: {
+    translationFallback: 'Diese Seite ist noch nicht übersetzt, daher wird ein Teil des Textes auf Türkisch angezeigt.',
     blogTitle: 'Blog: Neues zu Tauchen und Seekajak aus Kaş',
     blogDescription: 'Neuigkeiten und Ankündigungen aus Kaş: Seekajak-Routen bei Kekova, Tauchreisen ins Ausland und Beiträge des Dragoman-Teams über Tauchen und die lykische Küste.',
     notFoundTitle: 'Seite nicht gefunden: verschoben oder entfernt',
