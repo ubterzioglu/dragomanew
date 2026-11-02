@@ -5,6 +5,7 @@ import { Card, Loading, Notice } from '../../components/ui'
 import { listForms } from '../../data/forms/forms'
 import { formatDateTime } from '../../lib/format'
 import { canManageForms, hasUnpublishedChanges } from '../../lib/forms/editor'
+import { functionErrorMessage } from '../../lib/forms/messages'
 import { kindLabel } from '../../lib/labels'
 import { useAsyncData } from '../../lib/useAsyncData'
 
@@ -16,7 +17,7 @@ export function FormsPage() {
 }
 
 function FormList() {
-  const { state } = useAsyncData('forms', listForms)
+  const { state } = useAsyncData('forms', listForms, functionErrorMessage)
 
   return (
     <div className="space-y-5">

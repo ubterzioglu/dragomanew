@@ -49,7 +49,7 @@ export function OrderingPage() {
 }
 
 function Ordering() {
-  const { state, reload } = useAsyncData('content-order', loadOrder)
+  const { state, reload } = useAsyncData('content-order', loadOrder, contentErrorMessage)
   if (state.status === 'error') return <Notice tone="error">{state.message}</Notice>
   if (!state.value) return <Loading label="Sıralama yükleniyor…" />
   return <OrderEditor key={JSON.stringify(state.value)} saved={state.value} onSaved={reload} />

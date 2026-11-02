@@ -5,6 +5,7 @@ import { PageHeading } from '../../components/PageHeading'
 import { Button, fieldClass, labelClass, Loading, Notice } from '../../components/ui'
 import { listDrafts, listEntries } from '../../data/content/entries'
 import { EDITABLE_TYPES, isEditableType, TYPE_CONFIG, type EditableType } from '../../lib/content/editorConfig'
+import { contentErrorMessage } from '../../lib/content/messages'
 import { CHIP_LABELS, filterRows, statusChip, type StatusChip } from '../../lib/content/listView'
 import { needsTranslationUpdate, parseMeta } from '../../lib/content/translationView'
 import { formatDateTime } from '../../lib/format'
@@ -49,7 +50,7 @@ function ContentList({ canEdit, canOrder }: { canEdit: boolean; canOrder: boolea
   const [chip, setChip] = useState<StatusChip | null>(null)
 
   const load = useCallback(() => loadList(type), [type])
-  const { state, reload } = useAsyncData(`content-list:${type}`, load)
+  const { state, reload } = useAsyncData(`content-list:${type}`, load, contentErrorMessage)
   const current = state.value && state.value.type === type ? state.value : null
   const rows = useMemo(() => (current ? filterRows(current.rows, type, search, chip) : []), [current, type, search, chip])
   const config = TYPE_CONFIG[type]

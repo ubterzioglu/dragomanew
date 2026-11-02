@@ -50,7 +50,7 @@ export function PublishPage() {
 }
 
 function Publish({ canDeploy, canTranslate }: { canDeploy: boolean; canTranslate: boolean }) {
-  const { state, reload } = useAsyncData('publish', loadPublish)
+  const { state, reload } = useAsyncData('publish', loadPublish, contentErrorMessage)
   const [releases, deploys, live, people] = state.value ?? [[], [], null, []]
   const name = useMemo(() => staffNamer(people), [people])
   const now = useNow(deploys.some((row) => row.status === 'queued'))
@@ -171,7 +171,7 @@ function Publish({ canDeploy, canTranslate }: { canDeploy: boolean; canTranslate
 }
 
 function DeeplUsageCard() {
-  const { state } = useAsyncData('deepl-usage', deeplUsage)
+  const { state } = useAsyncData('deepl-usage', deeplUsage, contentErrorMessage)
   return (
     <Card className="space-y-1">
       <h2 className="text-lg font-semibold">DeepL kullanımı</h2>

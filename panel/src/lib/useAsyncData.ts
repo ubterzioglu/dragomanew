@@ -11,9 +11,14 @@ type Settled<T> = { token: string; ok: true; value: T } | { token: string; ok: f
 /**
  * Loads data for a key and reloads on demand. `load` must be stable for the key (a module-level
  * function, or useCallback). Loading is derived from the key, so a new key never shows the old key's result as
- * current, while the last value stays visible during a reload.
+ * current, while the last value stays visible during a reload. `describe` turns a failure into the
+ * message shown (stable, like `load`); screens that call Edge Functions pass their own mapper.
  */
-export function useAsyncData<T>(key: string, load: () => Promise<T>): { state: AsyncState<T>; reload: () => void } {
+export function useAsyncData<T>(
+  key: string,
+  load: () => Promise<T>,
+  describe: (error: unknown) => string = friendlyError,
+): { state: AsyncState<T>; reload: () => void } {
   const [version, setVersion] = useState(0)
   const [settled, setSettled] = useState<Settled<T> | null>(null)
   const [last, setLast] = useState<T | undefined>(undefined)
@@ -28,13 +33,13 @@ export function useAsyncData<T>(key: string, load: () => Promise<T>): { state: A
         setLast(value)
       },
       (error: unknown) => {
-        if (alive) setSettled({ token, ok: false, message: friendlyError(error) })
+        if (alive) setSettled({ token, ok: false, message: describe(error) })
       },
     )
     return () => {
       alive = false
     }
-  }, [token, load])
+  }, [token, load, describe])
 
   const reload = useCallback(() => setVersion((current) => current + 1), [])
 

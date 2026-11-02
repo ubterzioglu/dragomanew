@@ -61,7 +61,16 @@ export function ContentEditorPage() {
   const { type: typeParam = '', id = '' } = useParams()
   const allowed = useCan()
   const load = useCallback(() => loadEditor(id), [id])
-  const { state, reload } = useAsyncData(`content-editor:${id}`, load)
+  const { state, reload } = useAsyncData(`content-editor:${id}`, load, contentErrorMessage)
+  // Publish/archive results outlive the Editor: the reload changes its key and remounts it.
+  const [remoteNotice, setRemoteNotice] = useState<{ id: string; message: string } | null>(null)
+  const afterRemote = useCallback(
+    (message: string) => {
+      setRemoteNotice({ id, message })
+      reload()
+    },
+    [id, reload],
+  )
 
   if (!isEditableType(typeParam)) return <Missing text="Bu içerik türü panelde düzenlenmiyor." />
   const type = typeParam
@@ -91,7 +100,8 @@ export function ContentEditorPage() {
       type={type}
       entry={entry}
       context={value.context}
-      onReload={reload}
+      notice={remoteNotice?.id === id ? remoteNotice.message : null}
+      onRemoteDone={afterRemote}
     />
   )
 }
@@ -118,10 +128,13 @@ interface EditorProps {
   type: EditableType
   entry: ContentEntryRow | null
   context: EditorContext
-  onReload: () => void
+  /** The last publish/archive result for this entry, shown after the remount. */
+  notice: string | null
+  /** Called after a publish, archive or unpublish: shows the message and reloads the entry. */
+  onRemoteDone: (message: string) => void
 }
 
-function Editor({ type, entry, context, onReload }: EditorProps) {
+function Editor({ type, entry, context, notice, onRemoteDone }: EditorProps) {
   const navigate = useNavigate()
   const allowed = useCan()
   const config = TYPE_CONFIG[type]
@@ -134,7 +147,7 @@ function Editor({ type, entry, context, onReload }: EditorProps) {
   const [locale, setLocale] = useState<EditorLocale>('tr')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [announcement, setAnnouncement] = useState<string | null>(null)
+  const [announcement, setAnnouncement] = useState<string | null>(notice)
 
   const dirty = entry === null || canonicalJson(draft) !== canonicalJson(saved.draft)
   const issues = useMemo(() => draftIssues(type, draft), [type, draft])
@@ -192,7 +205,7 @@ function Editor({ type, entry, context, onReload }: EditorProps) {
 
   const afterRemote = (message: string) => {
     setAnnouncement(message)
-    onReload()
+    onRemoteDone(message)
   }
 
   const title = draftTitle(type, draft) || (entry ? entry.key : `Yeni ${config.singular}`)

@@ -41,7 +41,7 @@ export function FormEditorPage() {
 
 function FormEditorLoader({ kind }: { kind: RequestKind }) {
   const load = useCallback(() => getForm(kind), [kind])
-  const { state, reload } = useAsyncData(`form:${kind}`, load)
+  const { state, reload } = useAsyncData(`form:${kind}`, load, functionErrorMessage)
   // Kept here: a save or translation remounts the editor below, and the result must stay visible.
   const [message, setMessage] = useState<Message | null>(null)
 

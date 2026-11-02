@@ -41,6 +41,13 @@ describe('DeepL client: requests', () => {
     expect(bodies[0]).not.toHaveProperty('formality')
   })
 
+  it('fails as auth without sending a request when no key is configured', async () => {
+    const fetchMock = vi.fn(async (_url: string | URL | Request) => json(200, { character_count: 0, character_limit: 500000 }))
+    const client = createDeeplClient({ apiKey: '', fetch: fetchMock as unknown as typeof fetch })
+    await expect(client.usage()).rejects.toMatchObject({ kind: 'auth' })
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
   it('reads /v2/usage', async () => {
     const fetchMock = vi.fn(async (_url: string | URL | Request) => json(200, { character_count: 1200, character_limit: 500000 }))
     const client = createDeeplClient({ apiKey: 'pro-key', fetch: fetchMock as unknown as typeof fetch })

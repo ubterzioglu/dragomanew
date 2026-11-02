@@ -91,6 +91,8 @@ export function createDeeplClient(options: DeeplClientOptions): DeeplClient {
 
   /** One attempt with a timeout; a timeout or a network failure returns null. */
   async function attempt(path: string, init: RequestInit): Promise<Response | null> {
+    // No key configured (the local default): answer as DeepL would, without sending anything.
+    if (options.apiKey.trim() === '') return new Response(null, { status: 403 })
     const controller = new AbortController()
     const timer = setTimeout(() => controller.abort(), timeoutMs)
     try {

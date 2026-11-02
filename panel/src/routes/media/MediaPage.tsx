@@ -6,6 +6,7 @@ import { useCan } from '../../components/Shell'
 import { Button, fieldClass, labelClass, Loading, Notice } from '../../components/ui'
 import { listDrafts } from '../../data/content/entries'
 import { listMedia, repoThumbnail, signedUrls } from '../../data/media/media'
+import { contentErrorMessage } from '../../lib/content/messages'
 import { mediaUsage } from '../../lib/media/whereUsed'
 import { CONTENT_TYPES } from '../../shared/content/schema.ts'
 import { useAsyncData } from '../../lib/useAsyncData'
@@ -33,7 +34,7 @@ export function MediaPage() {
 }
 
 function Library({ canEdit, canTranslate }: { canEdit: boolean; canTranslate: boolean }) {
-  const { state, reload } = useAsyncData('media-library', loadLibrary)
+  const { state, reload } = useAsyncData('media-library', loadLibrary, contentErrorMessage)
   const [search, setSearch] = useState('')
   const [onlyUnconfirmed, setOnlyUnconfirmed] = useState(false)
   const [announcement, setAnnouncement] = useState<string | null>(null)
