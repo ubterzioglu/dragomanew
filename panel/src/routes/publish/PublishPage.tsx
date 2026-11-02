@@ -41,7 +41,7 @@ export function PublishPage() {
   if (!allowed('content.edit') && !allowed('content.publish') && !allowed('site.deploy')) {
     return (
       <div className="space-y-4">
-        <PageHeading title="Yayın" />
+        <PageHeading title="Yayın" description="Yayın geçmişi, sitenin kurulum durumu ve DeepL kullanımı." help="yayin" />
         <Notice tone="info">Rolünüz yayın durumunu görmeyi kapsamıyor.</Notice>
       </div>
     )
@@ -74,7 +74,7 @@ function Publish({ canDeploy, canTranslate }: { canDeploy: boolean; canTranslate
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <PageHeading title="Yayın" />
+        <PageHeading title="Yayın" description="Yayın geçmişi, sitenin kurulum durumu ve DeepL kullanımı." help="yayin" />
         <div className="flex gap-2">
           {canDeploy && (
             <Button onClick={() => void redeploy()} disabled={busy}>
@@ -120,7 +120,7 @@ function Publish({ canDeploy, canTranslate }: { canDeploy: boolean; canTranslate
                         {row.attempts > 1 && <span className="text-ink-muted">· {row.attempts}. deneme</span>}
                       </div>
                       {view.delayed && <Notice tone="error">{DELAY_MESSAGE}</Notice>}
-                      {view.tone === 'failed' && <p className="text-red-800">Kurulum tetiklenemedi; otomatik olarak yeniden denenir. Sürerse UBT’ye haber verin.</p>}
+                      {view.tone === 'failed' && <p className="text-red-800">Kurulum tetiklenemedi; otomatik olarak yeniden denenir. Sürerse ana yöneticiye haber verin.</p>}
                     </li>
                   )
                 })}

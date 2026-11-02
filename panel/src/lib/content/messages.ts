@@ -48,7 +48,7 @@ const FUNCTION_MESSAGES: Readonly<Record<string, string>> = {
   conflict: 'Bu sırada başka bir yayın yapıldı. Birkaç saniye sonra tekrar deneyin.',
   invalid: 'İçerik yayınlanamadı; aşağıdaki sorunları düzeltin.',
   quota_insufficient: 'DeepL kotası bu çeviri için yetmiyor.',
-  deepl_auth: 'DeepL anahtarı geçersiz. UBT’ye haber verin.',
+  deepl_auth: 'DeepL anahtarı geçersiz. ana yöneticiye haber verin.',
   deepl_quota: 'DeepL kotası doldu. Paket yükseltmeyi Dragoman onaylamalı.',
   deepl_unavailable: 'DeepL şu anda yanıt vermiyor. Biraz sonra tekrar deneyin.',
   network: 'Sunucuya ulaşılamadı. İnternet bağlantınızı kontrol edip tekrar deneyin.',

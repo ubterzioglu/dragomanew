@@ -27,7 +27,7 @@ function StaffAdmin({ myId }: { myId: string }) {
 
   return (
     <div className="space-y-5">
-      <PageHeading title="Kullanıcılar" />
+      <PageHeading title="Kullanıcılar" description="Panel kullanıcılarını ekleyin, rollerini ve yetkilerini değiştirin." help="kullanicilar" />
       <p className="max-w-3xl text-sm text-ink-muted">
         Panele yalnızca burada etkin olan Google adresleri girebilir. Pasifleştirilen kişinin erişimi hemen kapanır.
       </p>

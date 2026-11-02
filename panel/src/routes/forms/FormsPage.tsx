@@ -21,7 +21,7 @@ function FormList() {
 
   return (
     <div className="space-y-5">
-      <PageHeading title="Formlar" />
+      <PageHeading title="Formlar" description="Sitedeki talep formlarının alanlarını yönetin." help="formlar" />
       <p className="max-w-3xl text-sm text-ink-muted">
         Sitedeki talep formlarının alanları, sırası ve metinleri. Değişiklikler taslakta kalır; Yayınla ile yeni bir form sürümü olur
         ve site yeniden kurulunca görünür. Gelen her talep, doldurulduğu sürümü saklar.

@@ -7,7 +7,7 @@ import type { SiteDeployRow } from '../types'
  */
 
 export const DELAY_AFTER_TRIGGER_MS = 15 * 60 * 1000
-export const DELAY_MESSAGE = 'Kurulum gecikti, UBT’ye haber verin'
+export const DELAY_MESSAGE = 'Kurulum gecikti, ana yöneticiye haber verin'
 
 export type DeployTone = 'waiting' | 'running' | 'done' | 'failed' | 'skipped'
 

@@ -25,7 +25,7 @@ export function MediaPage() {
   if (!allowed('content.edit') && !allowed('content.publish')) {
     return (
       <div className="space-y-4">
-        <PageHeading title="Medya" />
+        <PageHeading title="Medya" description="Görselleri yükleyin, açıklamalarını yazın ve nerede kullanıldığını görün." help="medya" />
         <Notice tone="info">Rolünüz medya kitaplığını kapsamıyor.</Notice>
       </div>
     )
@@ -58,13 +58,13 @@ function Library({ canEdit, canTranslate }: { canEdit: boolean; canTranslate: bo
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <PageHeading title="Medya" />
+        <PageHeading title="Medya" description="Görselleri yükleyin, açıklamalarını yazın ve nerede kullanıldığını görün." help="medya" />
         <Button variant="secondary" onClick={reload} disabled={state.status === 'loading'}>
           {state.status === 'loading' ? 'Yenileniyor…' : 'Listeyi yenile'}
         </Button>
       </div>
       <p className="max-w-3xl text-sm text-ink-muted">
-        Fotoğraf değişiklikleri bir sonraki yayınla siteye gider. Fotoğraf silme Dalga 2’de yok.
+        Fotoğraf değişiklikleri bir sonraki yayınla siteye gider. Fotoğraf silme henüz yok.
       </p>
       {announcement && <Notice tone="success">{announcement}</Notice>}
       {canEdit && value && <UploadForm takenIds={value.media.map((item) => item.id)} onUploaded={changed} />}

@@ -29,6 +29,16 @@ describe.each(copies)('shared %s copy of %s', (_where, _folder, source, target) 
   })
 })
 
+/** Same pairs as SHARED_SINGLE_FILES in scripts/sync-shared.mjs: the panel's Docker stage copies only panel/. */
+const repoRoot = fileURLToPath(new URL('../../../', import.meta.url))
+const singleFiles = [['docs/gelistirici-cookbook.md', 'panel/src/docs/gelistirici-cookbook.md']] as const
+
+describe.each(singleFiles)('%s', (source, target) => {
+  it(`is copied byte for byte to ${target} (run \`npm run sync:shared\` when this fails)`, () => {
+    expect(readFileSync(join(repoRoot, target)).equals(readFileSync(join(repoRoot, source)))).toBe(true)
+  })
+})
+
 describe('shared files run unchanged in Deno, the browser and Node', () => {
   it.each(sources)('%s/%s imports nothing but zod and sibling shared .ts files', (_folder, _name, code) => {
     const specifiers = [...code.matchAll(/from\s+'([^']+)'/g)].map((match) => match[1] ?? '')

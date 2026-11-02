@@ -80,7 +80,7 @@ export function ContentEditorPage() {
   if (state.status === 'error') {
     return (
       <div className="space-y-4">
-        <PageHeading title="İçerik" />
+        <PageHeading title="İçerik" help="icerik" />
         <Notice tone="error">{state.message}</Notice>
         <Button variant="secondary" onClick={reload}>
           Tekrar dene
@@ -109,7 +109,7 @@ export function ContentEditorPage() {
 function Missing({ text }: { text: string }) {
   return (
     <div className="space-y-4">
-      <PageHeading title="İçerik" />
+      <PageHeading title="İçerik" help="icerik" />
       <Notice tone="info">{text}</Notice>
       <Link to="/icerik" className="text-sm font-semibold text-brand-green-dark underline">
         İçerik listesine dön
@@ -217,7 +217,7 @@ function Editor({ type, entry, context, notice, onRemoteDone }: EditorProps) {
         ← {config.tab}
       </Link>
       <div className="flex flex-wrap items-center gap-3">
-        <PageHeading title={title} />
+        <PageHeading title={title} help="icerik" />
         {entry && (
           <span className="rounded bg-line px-2 py-0.5 text-xs font-semibold">
             {STATUS_LABELS[entry.status]}

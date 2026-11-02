@@ -6,7 +6,7 @@ export function NotFoundPage() {
     <div className="space-y-4">
       <PageHeading title="Sayfa bulunamadı" />
       <Link to="/" className="text-sea underline">
-        Taleplere dön
+        Genel bakışa dön
       </Link>
     </div>
   )

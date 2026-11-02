@@ -52,7 +52,7 @@ function FormEditorLoader({ kind }: { kind: RequestKind }) {
           ← Formlar
         </Link>
       </p>
-      <PageHeading title={`${kindLabel(kind)} formu`} />
+      <PageHeading title={`${kindLabel(kind)} formu`} help="formlar" />
       {state.status === 'error' && <Notice tone="error">{state.message}</Notice>}
       {state.status === 'ready' && state.value === null && <Notice tone="error">Form bulunamadı ya da görme yetkiniz yok.</Notice>}
       {!state.value && state.status === 'loading' && <Loading label="Form yükleniyor…" />}

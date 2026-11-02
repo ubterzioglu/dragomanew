@@ -34,7 +34,7 @@ export function ContentListPage() {
   if (!allowed('content.edit') && !allowed('content.publish')) {
     return (
       <div className="space-y-4">
-        <PageHeading title="İçerik" />
+        <PageHeading title="İçerik" description="Sitedeki sayfa ve kayıtları düzenleyin, çevirin ve yayınlayın." help="icerik" />
         <Notice tone="info">Rolünüz içerik düzenlemeyi kapsamıyor.</Notice>
       </div>
     )
@@ -58,7 +58,7 @@ function ContentList({ canEdit, canOrder }: { canEdit: boolean; canOrder: boolea
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <PageHeading title="İçerik" />
+        <PageHeading title="İçerik" description="Sitedeki sayfa ve kayıtları düzenleyin, çevirin ve yayınlayın." help="icerik" />
         <div className="flex flex-wrap gap-2">
           {canOrder && (
             <Link to="/icerik/siralama" className="rounded-md border border-line-strong bg-white px-4 py-2 text-sm font-semibold">

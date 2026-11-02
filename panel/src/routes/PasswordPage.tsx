@@ -47,7 +47,7 @@ export function PasswordPage() {
 
   return (
     <div className="mx-auto max-w-md space-y-6">
-      <PageHeading title="Şifre belirle / değiştir" />
+      <PageHeading title="Şifre belirle / değiştir" description="E-posta ve şifreyle giriş için şifrenizi belirleyin." help="giris-ve-sifre" />
       <Card className="space-y-4">
         <p className="text-sm text-ink-muted">
           Bu şifreyle giriş sayfasında {session?.user.email ?? 'e-posta adresiniz'} ile de giriş yapabilirsiniz. En az{' '}

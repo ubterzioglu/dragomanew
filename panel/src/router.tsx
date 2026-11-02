@@ -4,7 +4,11 @@ import { FormEditorPage } from './routes/forms/FormEditorPage'
 import { FormsPage } from './routes/forms/FormsPage'
 import { LoginPage } from './routes/LoginPage'
 import { NotFoundPage, RouteErrorPage } from './routes/NotFoundPage'
+import { OverviewPage } from './routes/OverviewPage'
 import { RequestsPage } from './routes/RequestsPage'
+import { ChangelogPage } from './routes/help/ChangelogPage'
+import { DeveloperPage } from './routes/help/DeveloperPage'
+import { GuidePage } from './routes/help/GuidePage'
 import { StaffPage } from './routes/StaffPage'
 import { PasswordPage } from './routes/PasswordPage'
 // Dalga 2 content (Lane F)
@@ -21,7 +25,8 @@ export const router = createBrowserRouter(
       element: <Shell />,
       errorElement: <RouteErrorPage />,
       children: [
-        { index: true, element: <RequestsPage /> },
+        { index: true, element: <OverviewPage /> },
+        { path: 'talepler', element: <RequestsPage /> },
         { path: 'giris', element: <LoginPage /> },
         { path: 'sifre', element: <PasswordPage /> },
         { path: 'kullanicilar', element: <StaffPage /> },
@@ -33,6 +38,9 @@ export const router = createBrowserRouter(
         { path: 'icerik/:type/:id', element: <ContentEditorPage /> },
         { path: 'medya', element: <MediaPage /> },
         { path: 'yayin', element: <PublishPage /> },
+        { path: 'kilavuz', element: <GuidePage /> },
+        { path: 'guncellemeler', element: <ChangelogPage /> },
+        { path: 'gelistirici', element: <DeveloperPage /> },
         { path: '*', element: <NotFoundPage /> },
       ],
     },

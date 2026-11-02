@@ -40,7 +40,7 @@ export function OrderingPage() {
   if (!allowed('content.publish')) {
     return (
       <div className="space-y-4">
-        <PageHeading title="Sıralama" />
+        <PageHeading title="Sıralama" description="Kayıtların sitede hangi sırayla görüneceğini belirleyin." help="siralama" />
         <Notice tone="info">Sıralamayı yayın yetkisi olan kişiler değiştirir.</Notice>
       </div>
     )
@@ -100,7 +100,7 @@ function OrderEditor({ saved, onSaved }: { saved: Lists; onSaved: () => void }) 
       <Link to="/icerik" className="text-sm font-semibold text-brand-green-dark underline">
         ← İçerik
       </Link>
-      <PageHeading title="Sıralama" />
+      <PageHeading title="Sıralama" description="Kayıtların sitede hangi sırayla görüneceğini belirleyin." help="siralama" />
       <p className="max-w-3xl text-sm text-ink-muted">
         Sıra her dilde aynıdır. Kaydet, sırayı hemen yayınlar; yeni sıra birkaç dakika içinde sitede görünür.
       </p>

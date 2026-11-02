@@ -14,7 +14,7 @@ const MESSAGES: Readonly<Record<string, string>> = {
   conflict: 'Aynı anda başka bir yayın yapıldı. Birkaç saniye sonra tekrar deneyin.',
   invalid: 'Form yayınlanamadı; aşağıdaki sorunları düzeltin.',
   quota_insufficient: 'DeepL kotası bu çeviri için yetmiyor.',
-  deepl_auth: 'DeepL anahtarı geçersiz. UBT’ye haber verin.',
+  deepl_auth: 'DeepL anahtarı geçersiz. ana yöneticiye haber verin.',
   deepl_quota: 'DeepL kotası doldu. Çeviri yapılamıyor.',
   deepl_unavailable: 'DeepL şu anda yanıt vermiyor. Biraz sonra tekrar deneyin.',
   server: 'Sunucuda bir hata oluştu. Lütfen tekrar deneyin.',

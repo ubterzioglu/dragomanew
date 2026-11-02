@@ -118,7 +118,7 @@ describe('deploy rows', () => {
     expect(deployView(late, 6, NOW).delayed).toBe(true)
     expect(deployView(late, 7, NOW).delayed).toBe(false)
     expect(deployView(deploy({ status: 'triggered', triggered_at: '2026-11-02T11:46:00Z' }), 6, NOW).delayed).toBe(false)
-    expect(DELAY_MESSAGE).toBe('Kurulum gecikti, UBT’ye haber verin')
+    expect(DELAY_MESSAGE).toBe('Kurulum gecikti, ana yöneticiye haber verin')
   })
 
   it('names failed and skipped rows', () => {

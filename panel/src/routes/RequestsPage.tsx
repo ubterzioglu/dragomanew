@@ -22,7 +22,7 @@ export function RequestsPage() {
   if (!can(me, 'requests.read')) {
     return (
       <div className="space-y-4">
-        <PageHeading title="Talepler" />
+        <PageHeading title="Talepler" description="Siteden gelen talepleri işleme alın, devredin ve takip edin." help="talepler" />
         <Notice tone="info">Rolünüz talepleri görmeyi kapsamıyor.</Notice>
       </div>
     )
@@ -68,7 +68,7 @@ function Inbox({ myId }: { myId: string }) {
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <PageHeading title="Talepler" />
+        <PageHeading title="Talepler" description="Siteden gelen talepleri işleme alın, devredin ve takip edin." help="talepler" />
         <Button variant="secondary" onClick={reload} disabled={state.status === 'loading'}>
           {state.status === 'loading' ? 'Yenileniyor…' : 'Listeyi yenile'}
         </Button>

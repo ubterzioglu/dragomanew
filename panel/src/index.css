@@ -17,6 +17,14 @@
   --color-line-strong: #7d8a84;
   --color-sea: #0b4f6c;
 
+  /* Panel surfaces: a light sand canvas under white cards. */
+  --color-canvas: #f6f4ee;
+  --color-sand-deep: #efebe1;
+  --color-sidebar: #fbfaf6;
+
+  --shadow-soft: 0 1px 2px rgb(20 34 29 / 0.04), 0 6px 20px -8px rgb(20 34 29 / 0.1);
+  --shadow-lift: 0 2px 4px rgb(20 34 29 / 0.05), 0 12px 32px -12px rgb(20 34 29 / 0.18);
+
   --font-sans: ui-sans-serif, system-ui, sans-serif;
 
   --radius-card: 0.75rem;
@@ -25,7 +33,7 @@
 @layer base {
   html {
     color: var(--color-ink);
-    background: #f6f5f1;
+    background: var(--color-canvas);
     -webkit-text-size-adjust: 100%;
   }
 
