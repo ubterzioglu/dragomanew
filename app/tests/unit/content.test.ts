@@ -11,9 +11,11 @@ import {
   subgroupSchema,
   teamMemberSchema,
   testimonialSchema,
+  type SeoFields,
 } from '../../src/content/schema'
 import { cardPrice } from '../../src/lib/price'
 import { LOCALES } from '../../src/i18n/locales'
+import { siteConfig } from '../../src/lib/siteConfig'
 
 /**
  * Acceptance test for the Stage A sample content (plan Batch 3). It encodes the
@@ -212,5 +214,45 @@ describe('languages and safety', () => {
     expect(strings.filter((s) => /<[a-z!/][^>]*>/i.test(s))).toEqual([])
     const emails = strings.flatMap((s) => s.match(/[\w.+-]+@[\w-]+\.[\w.]+/g) ?? [])
     expect(emails.filter((e) => e !== 'info@dragoman-turkey.com')).toEqual([])
+  })
+})
+
+describe('search titles and descriptions (seo-geo-plan §3)', () => {
+  // PageHead renders "<seo title> | Dragoman"; SEO-09 makes 60/160 a target, so the bounds carry a tolerance.
+  const suffix = ` | ${siteConfig.siteName}`
+  const TITLE = { min: 45, max: 65 }
+  const DESCRIPTION = { min: 120, max: 165 }
+  const withSeo: [string, { seo?: SeoFields }][] = [
+    ['home', d.home],
+    ...[...d.events, ...d.products, ...d.posts].map((r): [string, { seo?: SeoFields }] => [r.id, r]),
+    ...[...d.richPages, ...d.categoryPages].map((r): [string, { seo?: SeoFields }] => [r.key, r]),
+  ]
+
+  it('fills title and description in all four languages, within tolerance', () => {
+    const problems = withSeo.flatMap(([name, { seo }]) =>
+      seo
+        ? LOCALES.flatMap((locale) => {
+            const title = seo.title?.[locale]
+            const description = seo.description?.[locale]
+            const issues: string[] = []
+            if (!title) issues.push(`${name}.${locale}: no title`)
+            else if (title.length + suffix.length < TITLE.min || title.length + suffix.length > TITLE.max) issues.push(`${name}.${locale}: title ${title.length + suffix.length}`)
+            if (!description) issues.push(`${name}.${locale}: no description`)
+            else if (description.length < DESCRIPTION.min || description.length > DESCRIPTION.max) issues.push(`${name}.${locale}: description ${description.length}`)
+            return issues
+          })
+        : [],
+    )
+    expect(problems).toEqual([])
+  })
+
+  it('never repeats the site name the head already appends', () => {
+    const doubled = withSeo.flatMap(([name, { seo }]) => LOCALES.filter((l) => seo?.title?.[l]?.endsWith(suffix.trim())).map((l) => `${name}.${l}`))
+    expect(doubled).toEqual([])
+  })
+
+  it('points share-image overrides at real, non-placeholder photos', () => {
+    const images = withSeo.flatMap(([name, { seo }]) => (seo?.ogImage ? [[name, seo.ogImage] as const] : []))
+    expect(images.filter(([, id]) => !d.media.some((m) => m.id === id && !m.placeholder))).toEqual([])
   })
 })

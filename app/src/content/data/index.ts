@@ -8,22 +8,29 @@ import { media } from './media'
 import { richPages } from './pages'
 import { posts } from './posts'
 import { products } from './products'
+import { withSeo } from './seo/build'
+import { postSeo, productSeo } from './seo/catalog'
+import { eventSeo } from './seo/events'
+import { categoryPageSeo, homeSeo, richPageSeo } from './seo/pages'
 import { serviceOffers } from './services'
 import { subgroups } from './subgroups'
 import { team } from './team'
 import { testimonials } from './testimonials'
 
-/** Stage A sample content. Every record carries its origin (cloner / kayak-site / mockup). */
+/**
+ * Stage A sample content. Every record carries its origin (cloner / kayak-site / mockup).
+ * Search titles/descriptions live in ./seo and are attached here to keep the record files readable.
+ */
 export const contentData: FullContentData = {
   media,
-  home: homeContent,
-  categoryPages,
+  home: { ...homeContent, seo: { ...homeSeo, ...homeContent.seo } },
+  categoryPages: withSeo(categoryPages, (page) => page.key, categoryPageSeo),
   subgroups,
-  events: [...divingEvents, ...seaKayakEvents, ...outdoorEvents],
+  events: withSeo([...divingEvents, ...seaKayakEvents, ...outdoorEvents], (event) => event.id, eventSeo),
   serviceOffers,
-  products,
-  posts,
+  products: withSeo(products, (product) => product.id, productSeo),
+  posts: withSeo(posts, (post) => post.id, postSeo),
   team,
   testimonials,
-  richPages,
+  richPages: withSeo(richPages, (page) => page.key, richPageSeo),
 }

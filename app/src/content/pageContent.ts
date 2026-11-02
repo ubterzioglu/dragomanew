@@ -22,7 +22,8 @@ export type PageContentRequest =
 /**
  * List pages render records as cards (title, summary, cover, price, duration). Their detail
  * fields are emptied so a category or the blog does not ship every full text; the record's
- * own page gets it complete. tests/unit/pageContent.test.ts proves no list page renders them.
+ * own page gets it complete, search texts (seo) included: only the record's own head uses them.
+ * tests/unit/pageContent.test.ts proves no list page renders them.
  */
 const asEventCard = (event: DragomanEvent): DragomanEvent => ({
   ...event,
@@ -34,8 +35,9 @@ const asEventCard = (event: DragomanEvent): DragomanEvent => ({
   meetingPoint: undefined,
   faq: [],
   itinerary: [],
+  seo: undefined,
 })
-const asPostCard = (post: Post): Post => ({ ...post, body: { tr: [] } })
+const asPostCard = (post: Post): Post => ({ ...post, body: { tr: [] }, seo: undefined })
 
 const byId =<T extends { id: string }>(records: readonly T[], ids: ReadonlySet<string>): T[] => records.filter((record) => ids.has(record.id))
 

@@ -45,6 +45,10 @@ const provenance = {
 
 export const mediaRef = id
 
+/** Search/share overrides (dalga2-sozlesme seoTitle/seoDescription/ogImage); the page title, summary and cover are the fallback. */
+export const seoSchema = z.object({ title: text.optional(), description: text.optional(), ogImage: mediaRef.optional() })
+const seo = { seo: seoSchema.optional() }
+
 export const mediaAssetSchema = z.object({
   id,
   /** File name inside C:\temp_private\dragoman\cloner\images (read-only source). */
@@ -113,6 +117,7 @@ export const eventSchema = z.object({
   healthForm: z.enum(['diving', 'outdoor']).nullable(),
   featured: z.boolean().default(false),
   status: statusSchema,
+  ...seo,
   ...provenance,
 })
 
@@ -120,6 +125,7 @@ export const categoryPageSchema = z.object({
   key: z.enum(['diving', 'seaKayak', 'outdoor', 'transport', 'shop']),
   intro: blocks,
   cover: mediaRef,
+  ...seo,
   ...provenance,
 })
 
@@ -151,6 +157,7 @@ export const productSchema = z.object({
   cover: mediaRef,
   gallery: z.array(mediaRef),
   status: statusSchema,
+  ...seo,
   ...provenance,
 })
 
@@ -158,6 +165,8 @@ export const postSchema = z.object({
   id,
   slug: localeSlugs,
   date: z.iso.date(),
+  /** Last real content update (article:modified_time, BlogPosting dateModified); absent = date. */
+  updated: z.iso.date().optional(),
   title: text,
   excerpt: text,
   body: blocks,
@@ -165,6 +174,7 @@ export const postSchema = z.object({
   /** Events this post talks about (shown as related links). */
   relatedEvents: z.array(id),
   status: statusSchema,
+  ...seo,
   ...provenance,
 })
 
@@ -195,6 +205,7 @@ export const richPageSchema = z.object({
   cover: mediaRef.optional(),
   /** Legal placeholders and the provisional lifeguard scope carry a visible note. */
   notice: z.enum(['placeholder-legal', 'provisional-scope']).optional(),
+  ...seo,
   ...provenance,
 })
 
@@ -209,9 +220,11 @@ export const homeContentSchema = z.object({
   quickLinks: z.array(z.object({ page: z.enum(['transport', 'shop']), media: mediaRef, text })).length(2),
   featured: z.array(z.object({ kind: z.enum(['event', 'post']), id })).min(1),
   why: z.array(z.object({ title: text, text })).min(3),
+  ...seo,
   ...provenance,
 })
 
+export type SeoFields = z.infer<typeof seoSchema>
 export type MediaAsset = z.infer<typeof mediaAssetSchema>
 export type EventOption = z.infer<typeof eventOptionSchema>
 export type DragomanEvent = z.infer<typeof eventSchema>

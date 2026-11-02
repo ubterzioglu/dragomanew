@@ -9,6 +9,9 @@
 # when the project changes. BuildKit's SecretsUsedInArgOrEnv warning comes from the word KEY in the name.
 ARG VITE_SUPABASE_URL=https://usyhwjboxjmjsxlwnqqr.supabase.co
 ARG VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_FClV5BfaPresWIUTgfDdIg_2Iq0d5eT
+# Empty until the launch decision: Stage A pages, robots.txt and the X-Robots-Tag header keep search
+# engines out. "true" opens all three at once (deploy/KURULUM.md, release checklist).
+ARG VITE_PUBLIC_RELEASE=
 
 # ---- Site build stage ----
 FROM node:24-alpine AS build
@@ -16,10 +19,12 @@ WORKDIR /app
 ARG VITE_SITE_ORIGIN=https://notyetbro.club
 ARG VITE_SUPABASE_URL
 ARG VITE_SUPABASE_PUBLISHABLE_KEY
+ARG VITE_PUBLIC_RELEASE
 # The build writes the Supabase origin into each page's connect-src and switches the forms to it.
 ENV VITE_SITE_ORIGIN=$VITE_SITE_ORIGIN \
     VITE_SUPABASE_URL=$VITE_SUPABASE_URL \
-    VITE_SUPABASE_PUBLISHABLE_KEY=$VITE_SUPABASE_PUBLISHABLE_KEY
+    VITE_SUPABASE_PUBLISHABLE_KEY=$VITE_SUPABASE_PUBLISHABLE_KEY \
+    VITE_PUBLIC_RELEASE=$VITE_PUBLIC_RELEASE
 COPY app/package.json app/package-lock.json ./
 # No install scripts: postinstall only sets up the lint tools, and the build needs no native compile.
 RUN npm ci --ignore-scripts --no-audit --no-fund
@@ -58,18 +63,22 @@ RUN { test -n "$VITE_SUPABASE_URL" && test -n "$VITE_SUPABASE_PUBLISHABLE_KEY"; 
 # ---- Runtime stage ----
 FROM nginx:1.27-alpine
 ARG VITE_SUPABASE_URL
+ARG VITE_PUBLIC_RELEASE
 COPY app/deploy/nginx/dragoman.conf /etc/nginx/conf.d/default.conf
 # The proxy in front connects over IPv4, and IPv6 may be unavailable in the container.
 # The panel's connect-src gets the Supabase origin; an empty or malformed URL stops the build here
 # (https only, http just for a local stack), and so does a placeholder left in the file.
+# X-Robots-Tag follows the same flag as the site build: none for a public release (an empty map value
+# makes nginx skip the header), noindex for Stage A. The panel's own noindex line is not a placeholder.
 RUN set -eu; \
     conf=/etc/nginx/conf.d/default.conf; \
     origin=$(printf '%s' "$VITE_SUPABASE_URL" | sed -E 's|^(https?://[^/?#]+).*$|\1|'); \
     if ! printf '%s' "$origin" | grep -Eq '^(https://[A-Za-z0-9.-]+|http://(localhost|127\.0\.0\.1))(:[0-9]+)?$'; then \
       echo "VITE_SUPABASE_URL must be https://<project>.supabase.co (http only for localhost)" >&2; exit 1; \
     fi; \
-    sed -i -e '/listen \[::\]:80;/d' -e "s|__SUPABASE_ORIGIN__|$origin|g" "$conf"; \
-    if grep -q '__SUPABASE_ORIGIN__' "$conf"; then echo "Supabase origin placeholder left in $conf" >&2; exit 1; fi; \
+    if [ "$VITE_PUBLIC_RELEASE" = "true" ]; then robots=''; else robots='noindex, nofollow'; fi; \
+    sed -i -e '/listen \[::\]:80;/d' -e "s|__SUPABASE_ORIGIN__|$origin|g" -e "s|__ROBOTS_DEFAULT__|$robots|g" "$conf"; \
+    if grep -qE '__(SUPABASE_ORIGIN|ROBOTS_DEFAULT)__' "$conf"; then echo "Placeholder left in $conf" >&2; exit 1; fi; \
     nginx -t
 COPY --from=build /app/dist /var/www/dragoman
 COPY --from=panel /panel/dist /var/www/dragoman/panel

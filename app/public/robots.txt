@@ -1,4 +1,0 @@
-# Stage A preview with sample content: keep everything out of search indexes
-# (V6 §4.8, SEO-05). Replace only at launch, after content approval.
-User-agent: *
-Disallow: /

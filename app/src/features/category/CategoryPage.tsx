@@ -6,10 +6,13 @@ import { PageHead } from '../../components/seo/PageHead'
 import { RichText } from '../../components/ui/RichText'
 import { useContent } from '../../content/ContentContext'
 import { pick } from '../../content/localize'
+import { pageSeo, shareImageId } from '../../content/seo'
 import type { CategoryKey } from '../../content/schema'
 import { eventPath } from '../../content/urls'
 import { useLocale, useUi } from '../../i18n/LocaleContext'
 import { localePath, pageAlternates } from '../../i18n/pages'
+import { pageNodes } from '../../lib/jsonLd/pageNodes'
+import { socialImage } from '../../lib/socialImage'
 
 /** Extra pages listed under a category (Lifeguard sits under Diving, V6 §4.5). */
 const RELATED_PAGES: Partial<Record<CategoryKey, readonly ('lifeguard' | 'diveSites')[]>> = {
@@ -31,18 +34,23 @@ export function CategoryPage({ category }: { category: CategoryKey }) {
     .subgroups(category)
     .map((group) => ({ group, events: content.eventsInSubgroup(group.id) }))
     .filter(({ events }) => events.length > 0)
+  const { title, description } = pageSeo(page.seo, locale, {
+    title: ui.nav[category],
+    description: firstParagraph?.type === 'p' ? firstParagraph.text : ui.brand.tagline,
+  })
+  const cover = content.media(page.cover)
+  const image = socialImage(content.media(shareImageId(page.seo, page.cover)), locale)
+  const crumbs = [{ label: ui.nav.home, href: localePath(locale, 'home') }, { label: ui.nav[category] }]
+  // Card fields only: list pages get sliced events (content/pageContent.ts).
+  const jsonLd = pageNodes({ type: 'CollectionPage', path: localePath(locale, category), name: ui.nav[category], description, locale, image, crumbs })
 
   return (
     <>
-      <PageHead
-        title={ui.nav[category]}
-        description={firstParagraph?.type === 'p' ? firstParagraph.text : ui.brand.tagline}
-        alternates={pageAlternates(category)}
-      />
+      <PageHead title={title} description={description} alternates={pageAlternates(category)} image={image} jsonLd={jsonLd} />
       <PageHero
         title={ui.nav[category]}
-        cover={content.media(page.cover)}
-        breadcrumbs={[{ label: ui.nav.home, href: localePath(locale, 'home') }, { label: ui.nav[category] }]}
+        cover={cover}
+        breadcrumbs={crumbs}
       >
         <RichText blocks={intro} className="!text-lg text-ink-muted" />
       </PageHero>

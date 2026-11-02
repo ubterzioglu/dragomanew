@@ -181,7 +181,7 @@ export const tr = {
   },
   health: {
     formKind: { diving: 'Dalış', outdoor: 'Outdoor' },
-    sampleNotice: 'Bu sayfa yalnızca örnek görünümdür. Gerçek kullanımda her katılımcı formu kendisine e-postayla gönderilen güvenli bağlantıdan açar. Burada yanıt kaydedilmez.',
+    sampleNotice: 'Bu sayfa yalnızca örnek görünümdür. Gerçek kullanımda her katılımcı formu e-postayla gönderilen güvenli bağlantıdan açar. Burada yanıt kaydedilmez.',
     signatureNotice: 'Siteden yanıt vermeniz kâğıt imzanın yerine geçmez. Etkinlikten önce merkezimizde katılımcı ve gerekiyorsa veli veya vasi formu kâğıt üzerinde imzalar.',
     participantName: 'Katılımcının adı soyadı',
     guardianName: 'Veli veya vasinin adı soyadı (katılımcı reşit değilse)',
@@ -203,6 +203,15 @@ export const tr = {
     title: 'Sayfa bulunamadı',
     body: 'Aradığınız sayfa taşınmış ya da kaldırılmış olabilir.',
     backHome: 'Ana sayfaya dön',
+  },
+  /** Search titles (PageHead adds " | Dragoman") and descriptions for pages without a content record. */
+  seo: {
+    blogTitle: 'Blog: Kaş’tan Dalış ve Deniz Kayağı Haberleri',
+    blogDescription: 'Kaş’tan haberler ve duyurular: Kekova’da deniz kayağı rotaları, yurt dışı dalış gezileri ve Dragoman ekibinden dalışa ve Likya kıyısına dair yazılar.',
+    notFoundTitle: 'Sayfa Bulunamadı: Adres Taşınmış Olabilir',
+    notFoundDescription: 'Aradığınız sayfa taşınmış ya da kaldırılmış olabilir. Ana sayfadan dalış ve doğa etkinliklerine, bloga veya iletişim bilgilerimize ulaşabilirsiniz.',
+    participantFormTitle: 'Katılımcı Sağlık Formu: {kind} Etkinlikleri',
+    participantFormDescription: 'Etkinlik öncesi doldurulan katılımcı sağlık formunun örnek görünümü. Gerçek kullanımda her katılımcı formu e-postayla gönderilen güvenli bağlantıdan açar.',
   },
 }
 

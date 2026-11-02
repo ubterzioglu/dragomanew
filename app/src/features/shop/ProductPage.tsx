@@ -7,12 +7,16 @@ import { RichText } from '../../components/ui/RichText'
 import { useContent } from '../../content/ContentContext'
 import { pick } from '../../content/localize'
 import type { Product } from '../../content/schema'
-import { productAlternates } from '../../content/urls'
+import { pageSeo, shareImageId } from '../../content/seo'
+import { productAlternates, productPath } from '../../content/urls'
 import { Gallery } from '../../components/ui/Gallery'
 import { PHONE_CONTENT_WIDTH } from '../../components/ui/Picture'
 import { useLocale, useUi } from '../../i18n/LocaleContext'
 import { localePath } from '../../i18n/pages'
 import { formatMoney } from '../../lib/format'
+import { book } from '../../lib/jsonLd/book'
+import { pageNodes } from '../../lib/jsonLd/pageNodes'
+import { socialImage } from '../../lib/socialImage'
 import { mailHref, siteConfig } from '../../lib/siteConfig'
 
 /** Book detail: edition, description, images, price/stock/delivery (all sample), contact to order. */
@@ -28,23 +32,28 @@ export function ProductPage({ product }: { product: Product }) {
     product.stockNote ? { label: ui.pages.stock, value: pick(product.stockNote, locale).value } : null,
     product.deliveryNote ? { label: ui.pages.delivery, value: pick(product.deliveryNote, locale).value } : null,
   ].filter((fact) => fact !== null)
+  const summary = pick(product.summary, locale).value
+  const path = productPath(locale, product)
+  const seo = pageSeo(product.seo, locale, { title, description: summary })
+  const image = socialImage(content.media(shareImageId(product.seo, product.cover)), locale)
+  const crumbs = [
+    { label: ui.nav.home, href: localePath(locale, 'home') },
+    { label: ui.nav.shop, href: localePath(locale, 'shop') },
+    { label: title },
+  ]
+  const bookNode = book({ path, name: title, description: summary, edition: pick(product.edition, locale).value, image })
+  const jsonLd = pageNodes({ path, name: title, description: seo.description, locale, image, crumbs, mainEntity: bookNode })
 
   return (
     <>
-      <PageHead title={title} description={pick(product.summary, locale).value} alternates={productAlternates(product)} />
+      <PageHead title={seo.title} description={seo.description} alternates={productAlternates(product)} image={image} jsonLd={jsonLd} />
       <div className="container-page py-8 md:py-12">
-        <Breadcrumbs
-          items={[
-            { label: ui.nav.home, href: localePath(locale, 'home') },
-            { label: ui.nav.shop, href: localePath(locale, 'shop') },
-            { label: title },
-          ]}
-        />
+        <Breadcrumbs items={crumbs} />
         <div className="mt-6 grid gap-10 lg:grid-cols-2">
           <Gallery images={images} label={title} sizes={`(min-width: 64rem) 50vw, ${PHONE_CONTENT_WIDTH}`} />
           <div>
             <h1 className="text-4xl font-bold md:text-5xl">{title}</h1>
-            <p className="mt-3 text-lg text-ink-muted">{pick(product.summary, locale).value}</p>
+            <p className="mt-3 text-lg text-ink-muted">{summary}</p>
             {product.price !== null && (
               <div className="mt-6">
                 <p className="font-display text-3xl font-bold text-brand-green">{formatMoney(product.price, product.currency, locale)}</p>

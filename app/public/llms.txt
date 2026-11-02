@@ -1,0 +1,45 @@
+# Dragoman
+
+> Dragoman Travel Agency is a diving and outdoor activity centre in Kaş (Antalya, Türkiye), on the Lycian coast, running since 2002 (TÜRSAB licence A4615). It offers scuba diving at more than 30 dive sites, sea kayaking over the sunken city of Kekova, hiking, cycling and coasteering, plus airport transfers and accommodation help. The site is available in English, Turkish, French and German.
+
+Contact: +90 242 836 3614, info@dragoman-turkey.com, Uzunçarşı Cad. No: 15, 07580 Kaş, Antalya.
+
+## English
+
+- [Home](/)
+- [Diving](/diving/)
+- [Sea kayak](/sea-kayak/)
+- [Outdoor activities](/outdoor-activities/)
+- [Transport and accommodation](/transportation-and-accomodation/)
+- [Blog](/blog/)
+- [Contact](/contact/)
+
+## Türkçe
+
+- [Ana sayfa](/tr/)
+- [Dalış](/tr/diving/)
+- [Deniz kanosu](/tr/deniz-kanosu/)
+- [Doğa etkinlikleri](/tr/doga-etkinlikleri/)
+- [Ulaşım ve konaklama](/tr/ulasim-konaklama/)
+- [Blog](/tr/blog/)
+- [Rezervasyon ve iletişim](/tr/rezervasyon-ve-iletisim/)
+
+## Français
+
+- [Accueil](/fr/)
+- [Plongée](/fr/plongee/)
+- [Kayak de mer](/fr/kayak-de-mer/)
+- [Activités de pleine nature](/fr/activites-pleine-nature/)
+- [Transport et hébergement](/fr/transport-et-hebergement/)
+- [Blog](/fr/blog/)
+- [Contact](/fr/contact/)
+
+## Deutsch
+
+- [Startseite](/de/)
+- [Tauchen](/de/tauchen/)
+- [Seekajak](/de/seekajak/)
+- [Outdoor-Aktivitäten](/de/outdoor-aktivitaeten/)
+- [Transfer und Unterkunft](/de/transfer-und-unterkunft/)
+- [Blog](/de/blog/)
+- [Kontakt](/de/kontakt/)

@@ -205,4 +205,12 @@ export const en = {
     body: 'The page you are looking for may have moved or been removed.',
     backHome: 'Back to the home page',
   },
+  seo: {
+    blogTitle: 'Blog: Diving and Sea Kayaking News from Kaş',
+    blogDescription: 'News and announcements from Kaş: sea kayak routes in Kekova, dive trips abroad and articles from the Dragoman team about diving and the Lycian coast.',
+    notFoundTitle: 'Page Not Found: It May Have Moved or Been Removed',
+    notFoundDescription: 'The page you are looking for may have moved or been removed. Head back home for diving, sea kayaking and outdoor activities, the blog or our contact details.',
+    participantFormTitle: 'Participant Health Form for {kind} Activities',
+    participantFormDescription: 'A sample view of the participant health form filled in before an activity. In real use, each participant opens it from a secure link sent to their own email.',
+  },
 } satisfies UiStrings

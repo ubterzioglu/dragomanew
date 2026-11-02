@@ -205,4 +205,12 @@ export const de = {
     body: 'Die gesuchte Seite wurde möglicherweise verschoben oder entfernt.',
     backHome: 'Zur Startseite',
   },
+  seo: {
+    blogTitle: 'Blog: Neues zu Tauchen und Seekajak aus Kaş',
+    blogDescription: 'Neuigkeiten und Ankündigungen aus Kaş: Seekajak-Routen bei Kekova, Tauchreisen ins Ausland und Beiträge des Dragoman-Teams über Tauchen und die lykische Küste.',
+    notFoundTitle: 'Seite nicht gefunden: verschoben oder entfernt',
+    notFoundDescription: 'Die gesuchte Seite wurde möglicherweise verschoben oder entfernt. Über die Startseite finden Sie Tauchen, Seekajak, Outdoor, den Blog und unsere Kontaktdaten.',
+    participantFormTitle: 'Gesundheitsformular für Teilnehmende: {kind}',
+    participantFormDescription: 'Beispielansicht des Gesundheitsformulars, das vor einer Aktivität ausgefüllt wird. Im echten Betrieb öffnet es jede Person über einen sicheren Link per E-Mail.',
+  },
 } satisfies UiStrings

@@ -205,4 +205,12 @@ export const fr = {
     body: 'La page que vous cherchez a peut-être été déplacée ou supprimée.',
     backHome: 'Retour à l’accueil',
   },
+  seo: {
+    blogTitle: 'Blog : actualités plongée et kayak de mer à Kaş',
+    blogDescription: 'Actualités et annonces de Kaş : itinéraires de kayak de mer à Kekova, voyages plongée à l’étranger et articles de l’équipe Dragoman sur la côte lycienne.',
+    notFoundTitle: 'Page introuvable : elle a peut-être été déplacée',
+    notFoundDescription: 'Cette page a peut-être été déplacée ou supprimée. Retrouvez depuis l’accueil la plongée, le kayak de mer, le plein air, le blog et nos coordonnées.',
+    participantFormTitle: 'Formulaire de santé du participant ({kind})',
+    participantFormDescription: 'Aperçu d’exemple du formulaire de santé rempli avant une activité. En usage réel, chaque participant l’ouvre via un lien sécurisé envoyé à son propre e-mail.',
+  },
 } satisfies UiStrings

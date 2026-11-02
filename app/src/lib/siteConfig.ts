@@ -7,6 +7,13 @@ import { resolveSiteOrigin } from './siteOrigin'
 export const siteConfig = {
   // Set per host with VITE_SITE_ORIGIN (see siteOrigin.ts).
   origin: resolveSiteOrigin(import.meta.env.VITE_SITE_ORIGIN),
+  /** Title suffix and og:site_name. */
+  siteName: 'Dragoman',
+  brand: {
+    logo: { path: '/brand/dragoman-logo-480.png', width: 480, height: 208 },
+    // Share image for pages without a photo of their own (scripts/brand-assets.mjs).
+    shareImage: { path: '/brand/dragoman-og-1200x630.png', width: 1200, height: 630 },
+  },
   business: {
     name: 'Dragoman Travel Agency',
     tursab: 'A4615',

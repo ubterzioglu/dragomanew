@@ -5,10 +5,13 @@ import { PHONE_CONTENT_WIDTH, Picture } from '../../components/ui/Picture'
 import { RichText } from '../../components/ui/RichText'
 import { useContent } from '../../content/ContentContext'
 import { pick } from '../../content/localize'
+import { pageSeo, shareImageId } from '../../content/seo'
 import type { ServiceOffer } from '../../content/schema'
 import { useLocale, useUi } from '../../i18n/LocaleContext'
 import { localePath, pageAlternates } from '../../i18n/pages'
 import { jumpToTarget } from '../../lib/inPageLink'
+import { pageNodes } from '../../lib/jsonLd/pageNodes'
+import { socialImage } from '../../lib/socialImage'
 import { LodgingForm } from '../forms/LodgingForm'
 import { TransportForm } from '../forms/TransportForm'
 
@@ -51,6 +54,14 @@ export function TransportPage() {
   const content = useContent()
   const page = content.categoryPage('transport')
   const firstParagraph = pick(page.intro, locale).value.find((block) => block.type === 'p')
+  const { title, description } = pageSeo(page.seo, locale, {
+    title: ui.nav.transport,
+    description: firstParagraph?.type === 'p' ? firstParagraph.text : ui.brand.tagline,
+  })
+  const cover = content.media(page.cover)
+  const image = socialImage(content.media(shareImageId(page.seo, page.cover)), locale)
+  const crumbs = [{ label: ui.nav.home, href: localePath(locale, 'home') }, { label: ui.nav.transport }]
+  const jsonLd = pageNodes({ type: 'CollectionPage', path: localePath(locale, 'transport'), name: ui.nav.transport, description, locale, image, crumbs })
   const sections = [
     { id: 'transport', title: ui.pages.transferTitle, offers: content.serviceOffers('transfer'), form: <TransportForm /> },
     { id: 'lodging', title: ui.pages.lodgingTitle, offers: content.serviceOffers('lodging'), form: <LodgingForm /> },
@@ -58,11 +69,11 @@ export function TransportPage() {
 
   return (
     <>
-      <PageHead title={ui.nav.transport} description={firstParagraph?.type === 'p' ? firstParagraph.text : ui.brand.tagline} alternates={pageAlternates('transport')} />
+      <PageHead title={title} description={description} alternates={pageAlternates('transport')} image={image} jsonLd={jsonLd} />
       <PageHero
         title={ui.nav.transport}
-        cover={content.media(page.cover)}
-        breadcrumbs={[{ label: ui.nav.home, href: localePath(locale, 'home') }, { label: ui.nav.transport }]}
+        cover={cover}
+        breadcrumbs={crumbs}
       >
         <RichText blocks={pick(page.intro, locale).value} className="!text-lg text-ink-muted" />
         <ul className="mt-5 flex flex-wrap gap-3">

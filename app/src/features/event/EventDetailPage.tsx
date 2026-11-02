@@ -7,9 +7,13 @@ import { RichText } from '../../components/ui/RichText'
 import { useContent } from '../../content/ContentContext'
 import { pick } from '../../content/localize'
 import type { DragomanEvent } from '../../content/schema'
-import { eventAlternates } from '../../content/urls'
+import { pageSeo, shareImageId } from '../../content/seo'
+import { eventAlternates, eventPath } from '../../content/urls'
 import { useLocale, useUi } from '../../i18n/LocaleContext'
 import { localePath } from '../../i18n/pages'
+import { touristTrip } from '../../lib/jsonLd/touristTrip'
+import { pageNodes } from '../../lib/jsonLd/pageNodes'
+import { socialImage } from '../../lib/socialImage'
 import { EventRequestForm } from '../forms/EventRequestForm'
 import { EventInfoBox } from './EventInfoBox'
 import { Gallery } from '../../components/ui/Gallery'
@@ -54,19 +58,24 @@ export function EventDetailPage({ event }: { event: DragomanEvent }) {
   const excludes = event.excludes ? pick(event.excludes, locale).value : []
   const conditions = event.conditions ? pick(event.conditions, locale).value : []
   const faq = event.faq.map((item) => ({ question: pick(item.question, locale).value, answer: pick(item.answer, locale).value }))
+  const itinerary = event.itinerary.map((day) => ({ name: pick(day.title, locale).value, description: pick(day.description, locale).value }))
+  const path = eventPath(locale, event)
+  const seo = pageSeo(event.seo, locale, { title, description: summary })
+  const image = socialImage(content.media(shareImageId(event.seo, event.cover)), locale)
+  const crumbs = [
+    { label: ui.nav.home, href: localePath(locale, 'home') },
+    { label: ui.nav[event.category], href: localePath(locale, event.category) },
+    { label: title },
+  ]
+  const trip = touristTrip({ path, name: title, description: summary, image, itinerary })
+  const jsonLd = pageNodes({ path, name: title, description: seo.description, locale, image, crumbs, mainEntity: trip })
 
   return (
     <>
-      <PageHead title={title} description={summary} alternates={eventAlternates(event)} />
+      <PageHead title={seo.title} description={seo.description} alternates={eventAlternates(event)} image={image} jsonLd={jsonLd} />
       <div>
         <div className="container-page py-8 md:py-10">
-          <Breadcrumbs
-            items={[
-              { label: ui.nav.home, href: localePath(locale, 'home') },
-              { label: ui.nav[event.category], href: localePath(locale, event.category) },
-              { label: title },
-            ]}
-          />
+          <Breadcrumbs items={crumbs} />
           <h1 className="mt-4 text-4xl font-bold md:text-5xl">{title}</h1>
           <p className="mt-3 max-w-3xl text-lg text-ink-muted md:text-xl">{summary}</p>
         </div>

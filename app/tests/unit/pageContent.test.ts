@@ -55,10 +55,10 @@ function withSlicesAsJson(records: readonly RouteRecord[]): RouteObject[] {
 }
 
 interface HelmetStrings {
-  helmet?: Record<'title' | 'meta' | 'link' | 'htmlAttributes', { toString(): string }>
+  helmet?: Record<'title' | 'meta' | 'link' | 'script' | 'htmlAttributes', { toString(): string }>
 }
 
-/** Body HTML plus the head tags (title, description, canonical, hreflang) of one page. */
+/** Body HTML plus the head tags (title, description, canonical, hreflang, JSON-LD) of one page. */
 async function render(routeTable: RouteObject[], path: string): Promise<string> {
   const handler = createStaticHandler(routeTable)
   const context = await handler.query(new Request(`http://localhost${path}`))
@@ -73,7 +73,7 @@ async function render(routeTable: RouteObject[], path: string): Promise<string> 
   if (!body.includes('<main')) throw new Error(`${path}: rendered without the page layout`)
   const head = helmetContext.helmet
   if (!head) throw new Error(`${path}: no head tags`)
-  return [head.htmlAttributes, head.title, head.meta, head.link].map(String).join('\n') + body
+  return [head.htmlAttributes, head.title, head.meta, head.link, head.script].map(String).join('\n') + body
 }
 
 describe('per-page content slices', () => {

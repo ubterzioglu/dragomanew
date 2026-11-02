@@ -7,9 +7,12 @@ import { PHONE_CONTENT_WIDTH, Picture } from '../../components/ui/Picture'
 import { RichText } from '../../components/ui/RichText'
 import { useContent } from '../../content/ContentContext'
 import { pick } from '../../content/localize'
+import { pageSeo, shareImageId } from '../../content/seo'
 import type { RichPage } from '../../content/schema'
 import { useLocale, useUi } from '../../i18n/LocaleContext'
 import { localePath, pageAlternates } from '../../i18n/pages'
+import { pageNodes } from '../../lib/jsonLd/pageNodes'
+import { socialImage } from '../../lib/socialImage'
 
 type RichKey = Exclude<RichPage['key'], 'contact'>
 
@@ -69,13 +72,20 @@ export function RichContentPage({ pageKey }: { pageKey: RichKey }) {
   if (pageKey === 'lifeguard' || pageKey === 'diveSites') crumbs.push({ label: ui.nav.diving, href: localePath(locale, 'diving') })
   crumbs.push({ label: title })
 
+  const cover = page.cover ? content.media(page.cover) : null
+  const seo = pageSeo(page.seo, locale, { title, description: summary })
+  const imageId = shareImageId(page.seo, page.cover)
+  const image = socialImage(imageId ? content.media(imageId) : null, locale)
+  const type = pageKey === 'about' ? 'AboutPage' : 'WebPage'
+  const jsonLd = pageNodes({ type, path: localePath(locale, pageKey), name: title, description: seo.description, locale, image, crumbs })
+
   const notice =
     page.notice === 'placeholder-legal' ? ui.sample.placeholderLegal : page.notice === 'provisional-scope' ? ui.pages.provisionalScope : null
 
   return (
     <>
-      <PageHead title={title} description={summary} alternates={pageAlternates(pageKey)} />
-      <PageHero title={title} breadcrumbs={crumbs} cover={page.cover ? content.media(page.cover) : null}>
+      <PageHead title={seo.title} description={seo.description} alternates={pageAlternates(pageKey)} image={image} jsonLd={jsonLd} />
+      <PageHero title={title} breadcrumbs={crumbs} cover={cover}>
         <p>{summary}</p>
       </PageHero>
       <div className="container-page max-w-3xl py-12">

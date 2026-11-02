@@ -5,16 +5,27 @@ import { useContent } from '../../content/ContentContext'
 import { postPath } from '../../content/urls'
 import { useLocale, useUi } from '../../i18n/LocaleContext'
 import { localePath, pageAlternates } from '../../i18n/pages'
+import { blogFeed } from '../../lib/blogFeed'
+import { pageNodes } from '../../lib/jsonLd/pageNodes'
 
 export function BlogPage() {
   const locale = useLocale()
   const ui = useUi()
   const content = useContent()
+  const crumbs = [{ label: ui.nav.home, href: localePath(locale, 'home') }, { label: ui.nav.blog }]
+  const description = ui.seo.blogDescription
+  const jsonLd = pageNodes({ type: 'CollectionPage', path: localePath(locale, 'blog'), name: ui.nav.blog, description, locale, crumbs })
 
   return (
     <>
-      <PageHead title={ui.nav.blog} description={ui.pages.latestPostsTitle} alternates={pageAlternates('blog')} />
-      <PageHero title={ui.nav.blog} breadcrumbs={[{ label: ui.nav.home, href: localePath(locale, 'home') }, { label: ui.nav.blog }]} />
+      <PageHead
+        title={ui.seo.blogTitle}
+        description={description}
+        alternates={pageAlternates('blog')}
+        feed={blogFeed(locale, ui.nav.blog)}
+        jsonLd={jsonLd}
+      />
+      <PageHero title={ui.nav.blog} breadcrumbs={crumbs} />
       <div className="container-page py-12">
         <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {content.posts().map((post) => (

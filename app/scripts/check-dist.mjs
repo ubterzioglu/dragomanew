@@ -1,10 +1,13 @@
 // Checks the prerendered site in dist/ without a browser (SEO-01/05, E01, E13):
 //  - charset declared within the first 1024 bytes
-//  - <html lang>, canonical and noindex present on every page
+//  - <html lang>, canonical and noindex present on every page (no canonical on always-noindex pages)
 //  - every internal link points at a page that exists in dist/
 //  - canonical is the page's own URL; hreflang targets exist, include x-default and the page itself
 //  - every language has its own 404 page for the host to serve (deploy/nginx/dragoman.conf)
-//  - robots.txt keeps the Stage A preview out of search indexes
+//  - robots.txt keeps the Stage A preview out of search indexes; a release lets the named crawlers in
+//  - one parseable JSON-LD block (one organization node) per indexable page; share images exist;
+//    blog posts carry article:published_time; per-language feed.xml; sitemap.xml only in a release,
+//    with every indexable canonical; llms.txt links exist (scripts/lib/seoChecks.mjs)
 //  - Stage A pages show the sample-content banner
 //  - nothing is loaded from another origin (scripts, styles, fonts, media, preconnects, CSS url())
 //  - content data is not in the JS bundle; per-page loader JSON carries no source details
@@ -15,24 +18,18 @@ import { createHash } from 'node:crypto'
 import { existsSync } from 'node:fs'
 import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { loadEnv } from 'vite'
+import { DIST, ORIGIN, PUBLIC_RELEASE, isNoindex, listHtml, pageUrl } from './lib/dist.mjs'
+import { checkFeeds, checkLlmsTxt, checkPageSeo, checkRobotsForCrawlers, checkSitemap } from './lib/seoChecks.mjs'
 
-const APP = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
-const DIST = path.join(APP, 'dist')
 const STATIC_PREFIXES = ['/assets/', '/brand/', '/media/', '/fonts/']
-// Read like the production build does: process.env first, then app/.env* files.
-const env = loadEnv('production', APP, 'VITE_')
-// Same flag as src/lib/env.ts: a public release must be indexable, Stage A must not be.
-const PUBLIC_RELEASE = env.VITE_PUBLIC_RELEASE === 'true'
-// Same origin as siteConfig.origin (src/lib/siteOrigin.ts); the build has already rejected malformed values.
-const ORIGIN = env.VITE_SITE_ORIGIN?.trim() ? new URL(env.VITE_SITE_ORIGIN.trim()).origin : 'https://dragoman-turkey.com'
-// Stage A review index: noindex, never built for a public release, so it claims no canonical URL.
-const NO_CANONICAL = new Set(['/__demo/'])
-// The 404 pages (one per language, served by the host under that prefix) point canonical
-// and hreflang at the home pages instead of themselves.
+// The 404 pages (one per language, served by the host under that prefix) point hreflang at the home pages.
 const NOT_FOUND_PAGES = ['/404/', '/tr/404/', '/fr/404/', '/de/404/']
 const NOT_SELF_REFERENCING = new Set(NOT_FOUND_PAGES)
+// Participant form slugs (src/i18n/pages.ts, participantForm): process pages, noindex even after launch.
+const PARTICIPANT_FORM = /^\/(?:(?:tr|fr|de)\/)?(?:katilimci-formu|participant-form|formulaire-participant|teilnehmerformular)\//
+// Pages that claim no canonical URL: the Stage A review index (never built for a public release) and every
+// page PageHead keeps out of the index for good (alwaysNoindex: 404 pages, participant forms).
+const hasNoCanonical = (url) => url === '/__demo/' || NOT_SELF_REFERENCING.has(url) || PARTICIPANT_FORM.test(url)
 
 // Tags that make the browser fetch something on page load. Plain <a href> links to other sites are fine.
 const LOADING_TAGS = /<(?:script|img|source|iframe|video|audio|link)\b[^>]*>/g
@@ -118,22 +115,6 @@ async function checkRobots(fail) {
   if (PUBLIC_RELEASE && disallowsAll) fail('robots.txt: a public release must not disallow everything')
 }
 
-async function listHtml(dir) {
-  const entries = await readdir(dir, { withFileTypes: true })
-  const nested = await Promise.all(
-    entries.map((entry) => {
-      const full = path.join(dir, entry.name)
-      if (entry.isDirectory()) return listHtml(full)
-      return entry.name === 'index.html' ? [full] : []
-    }),
-  )
-  return nested.flat()
-}
-
-function pageUrl(file) {
-  const rel = path.relative(DIST, path.dirname(file)).split(path.sep).join('/')
-  return rel === '' ? '/' : `/${rel}/`
-}
 
 function targetExists(href) {
   const clean = href.split('#')[0].split('?')[0]
@@ -147,6 +128,7 @@ function targetExists(href) {
 async function main() {
   const files = await listHtml(DIST)
   const failures = []
+  const indexable = new Set()
   let linkCount = 0
 
   for (const file of files) {
@@ -157,7 +139,7 @@ async function main() {
     const charsetAt = Buffer.from(html).indexOf('<meta charset="UTF-8">')
     if (charsetAt < 0 || charsetAt > 1024) fail(`charset at byte ${charsetAt} (must be within 1024)`)
     if (!/<html lang="[a-z]{2}(-[A-Z]{2})?"/.test(html)) fail('missing <html lang>')
-    const noindex = html.includes('name="robots" content="noindex,nofollow"')
+    const noindex = isNoindex(html)
     if (!PUBLIC_RELEASE && !noindex) fail('missing noindex (Stage A sample content)')
     if (!PUBLIC_RELEASE && !html.includes('data-sample-banner')) fail('missing sample-content banner')
     for (const tag of externalLoads(html)) fail(`loads from another origin: ${tag.slice(0, 120)}`)
@@ -167,9 +149,14 @@ async function main() {
     if (html.includes('<script type="module"') || !html.includes('s.type="module"') || !bundle) fail('app script is not deferred until after the first paint')
     else if (!targetExists(bundle)) fail(`deferred app script ${bundle} does not exist`)
     else if (!html.includes(`<link rel="modulepreload" crossorigin href="${bundle}" fetchpriority="low">`)) fail(`no low-priority modulepreload for ${bundle}`)
-    if (!NO_CANONICAL.has(url) && !/<link[^>]+rel="canonical"/.test(html)) fail('missing canonical')
+    const canonicalTag = /<link[^>]+rel="canonical"/.test(html)
+    if (!hasNoCanonical(url) && !canonicalTag) fail('missing canonical')
+    if (hasNoCanonical(url) && canonicalTag) fail('has a canonical, but the page is kept out of the index for good')
     checkHead(url, html, fail)
     checkContentSecurityPolicy(html, fail)
+    checkPageSeo(url, html, !hasNoCanonical(url), fail)
+    const canonical = linkHrefs(html, 'canonical')[0]?.href
+    if (canonical && !noindex) indexable.add(canonical)
 
     for (const match of html.matchAll(/href="(\/[^"]*)"/g)) {
       linkCount += 1
@@ -178,9 +165,14 @@ async function main() {
   }
 
   for (const url of NOT_FOUND_PAGES) if (!targetExists(url)) failures.push(`${url}: missing (the host's 404 page for that language)`)
-  await checkRobots((message) => failures.push(message))
-  await checkStylesheets((message) => failures.push(message))
-  await checkContentStaysServerSide((message) => failures.push(message))
+  const siteFail = (message) => failures.push(message)
+  await checkRobots(siteFail)
+  await checkRobotsForCrawlers(siteFail)
+  await checkSitemap(indexable, siteFail)
+  await checkFeeds(siteFail)
+  await checkLlmsTxt(siteFail)
+  await checkStylesheets(siteFail)
+  await checkContentStaysServerSide(siteFail)
 
   console.log(`Checked ${files.length} pages and ${linkCount} internal links.`)
   if (failures.length > 0) {

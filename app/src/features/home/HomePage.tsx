@@ -9,9 +9,12 @@ import { PHONE_CONTENT_WIDTH, Picture } from '../../components/ui/Picture'
 import { Section } from '../../components/ui/Section'
 import { useContent } from '../../content/ContentContext'
 import { pick } from '../../content/localize'
+import { pageSeo, shareImageId } from '../../content/seo'
 import { eventPath, postPath } from '../../content/urls'
 import { useLocale, useUi } from '../../i18n/LocaleContext'
 import { localePath, pageAlternates } from '../../i18n/pages'
+import { pageNodes } from '../../lib/jsonLd/pageNodes'
+import { socialImage } from '../../lib/socialImage'
 import { HeroTriptych } from './HeroTriptych'
 
 const WHY_ICONS = [Anchor, ShieldCheck, Users, Leaf] as const
@@ -33,10 +36,14 @@ export function HomePage() {
       : []
   })
   const latestPosts = content.posts().slice(0, 3)
+  const { title, description } = pageSeo(home.seo, locale, { title: ui.titles.home, description: pick(home.hero.subheading, locale).value })
+  const imageId = shareImageId(home.seo, home.hero.tiles[0]?.media)
+  const image = socialImage(imageId ? content.media(imageId) : null, locale)
+  const jsonLd = pageNodes({ path: localePath(locale, 'home'), name: ui.titles.home, description, locale, image })
 
   return (
     <>
-      <PageHead title={ui.titles.home} description={pick(home.hero.subheading, locale).value} alternates={pageAlternates('home')} />
+      <PageHead title={title} description={description} alternates={pageAlternates('home')} image={image} jsonLd={jsonLd} />
 
       {/* 1. Three-photo opening */}
       <HeroTriptych hero={home.hero} />

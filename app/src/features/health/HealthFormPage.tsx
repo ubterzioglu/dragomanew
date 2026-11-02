@@ -6,6 +6,7 @@ import { PageHead } from '../../components/seo/PageHead'
 import { Badge } from '../../components/ui/Badge'
 import { buttonClass } from '../../components/ui/Button'
 import type { LocalizedPaths } from '../../i18n/pages'
+import { formatTemplate } from '../../i18n/ui'
 import { useLocale, useUi } from '../../i18n/LocaleContext'
 import { TextField } from '../forms/Field'
 import { DemoFormFields, DemoResult, useDemoSubmission } from '../forms/submission'
@@ -45,6 +46,7 @@ export function HealthFormPage({ kind, alternates }: HealthFormPageProps) {
     await submit(values)
   }
   const title = `${ui.titles.participantForm} — ${ui.health.formKind[kind]}`
+  const searchTitle = formatTemplate(ui.seo.participantFormTitle, { kind: ui.health.formKind[kind] })
   const isTranslation = locale !== 'tr'
 
   // A render function, not a nested component: a component defined here would be
@@ -86,7 +88,7 @@ export function HealthFormPage({ kind, alternates }: HealthFormPageProps) {
 
   return (
     <>
-      <PageHead title={title} description={ui.health.sampleNotice} alternates={alternates} alwaysNoindex />
+      <PageHead title={searchTitle} description={ui.seo.participantFormDescription} alternates={alternates} alwaysNoindex />
       <div className="container-page max-w-4xl py-10">
         <div className="flex flex-wrap gap-2">
           <Badge tone="sample">{ui.sample.badge}</Badge>

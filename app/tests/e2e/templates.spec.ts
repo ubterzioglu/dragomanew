@@ -1,4 +1,6 @@
+import { fileURLToPath } from 'node:url'
 import { expect, test } from '@playwright/test'
+import { loadEnv } from 'vite'
 import { LOCALES } from '../../src/i18n/locales'
 import { localePath } from '../../src/i18n/pages'
 import { getUi } from '../../src/i18n/ui'
@@ -45,8 +47,17 @@ test('E03/E04: no extra activity filters on category pages', async ({ page }) =>
   }
 })
 
-test('sample banner and noindex are on every page in Stage A', async ({ page }) => {
+// The flag of the build under test, read like check-dist.mjs does (process.env, then app/.env*).
+const isPublicRelease = loadEnv('production', fileURLToPath(new URL('../../', import.meta.url)), 'VITE_').VITE_PUBLIC_RELEASE === 'true'
+
+test('Stage A pages carry the sample banner and noindex; a release has neither', async ({ page }) => {
   await page.goto(localePath('de', 'home'))
+  const robots = page.locator('meta[name="robots"]')
+  if (isPublicRelease) {
+    await expect(page.locator('[data-sample-banner]')).toHaveCount(0)
+    await expect(robots).toHaveCount(0)
+    return
+  }
   await expect(page.getByText(getUi('de').sample.banner)).toBeVisible()
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,nofollow')
+  await expect(robots).toHaveAttribute('content', 'noindex,nofollow')
 })

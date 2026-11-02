@@ -5,8 +5,10 @@ import { PageHead } from '../../components/seo/PageHead'
 import { RichText } from '../../components/ui/RichText'
 import { useContent } from '../../content/ContentContext'
 import { pick } from '../../content/localize'
+import { pageSeo } from '../../content/seo'
 import { useLocale, useUi } from '../../i18n/LocaleContext'
 import { localePath, pageAlternates } from '../../i18n/pages'
+import { pageNodes } from '../../lib/jsonLd/pageNodes'
 import { mailHref, siteConfig, telHref } from '../../lib/siteConfig'
 import { ContactForm } from '../forms/ContactForm'
 
@@ -32,12 +34,16 @@ export function ContactPage() {
   const { business, contact } = siteConfig
   const link = 'text-brand-green hover:underline'
   const icon = 'size-5'
+  const summary = pick(page.summary, locale).value
+  const seo = pageSeo(page.seo, locale, { title: ui.nav.contact, description: summary })
+  const crumbs = [{ label: ui.nav.home, href: localePath(locale, 'home') }, { label: ui.nav.contact }]
+  const jsonLd = pageNodes({ type: 'ContactPage', path: localePath(locale, 'contact'), name: ui.nav.contact, description: seo.description, locale, crumbs })
 
   return (
     <>
-      <PageHead title={ui.nav.contact} description={pick(page.summary, locale).value} alternates={pageAlternates('contact')} />
-      <PageHero title={ui.nav.contact} breadcrumbs={[{ label: ui.nav.home, href: localePath(locale, 'home') }, { label: ui.nav.contact }]}>
-        <p>{pick(page.summary, locale).value}</p>
+      <PageHead title={seo.title} description={seo.description} alternates={pageAlternates('contact')} jsonLd={jsonLd} />
+      <PageHero title={ui.nav.contact} breadcrumbs={crumbs}>
+        <p>{summary}</p>
       </PageHero>
       <div className="container-page grid gap-10 py-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <section aria-labelledby="contact-details">
