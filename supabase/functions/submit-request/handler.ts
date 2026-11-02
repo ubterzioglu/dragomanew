@@ -28,7 +28,6 @@ import type {
   Deps,
   EventRecord,
   EventSnapshot,
-  FormVersionRecord,
   LocalizedText,
   MailMessage,
   NewNotification,
@@ -152,13 +151,13 @@ interface ResolvedForm {
 
 /**
  * Step 6 of the contract (dalga2-sozlesme §8): a given version must exist, else the request is
- * refused on `formVersion`; without one the latest published version applies, else the built-in form.
+ * refused on `formVersion`. Without one the built-in form applies: release builds always send their
+ * version, so a request without one comes from a page that renders the built-in form, and checking it
+ * against a newer published version would refuse every visitor until the rebuilt site is live.
  */
 async function resolveForm(envelope: SubmitEnvelope, deps: Deps): Promise<ResolvedForm | null> {
-  const find = (version: number | null): Promise<FormVersionRecord | null> =>
-    deps.store.findFormVersion ? deps.store.findFormVersion(envelope.kind, version) : Promise.resolve(null)
-  if (envelope.formVersion !== undefined) return find(envelope.formVersion)
-  return (await find(null)) ?? { version: null, definition: DEFAULT_FORM_DEFINITIONS[envelope.kind] }
+  if (envelope.formVersion === undefined) return { version: null, definition: DEFAULT_FORM_DEFINITIONS[envelope.kind] }
+  return deps.store.findFormVersion ? deps.store.findFormVersion(envelope.kind, envelope.formVersion) : null
 }
 
 function parseValues(envelope: SubmitEnvelope, definition: FormDefinition): KindValues | { fields: string[] } {

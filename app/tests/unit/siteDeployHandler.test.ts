@@ -77,7 +77,7 @@ describe('site-deploy: Coolify', () => {
     expect(store.findSending).toHaveBeenCalledWith(9)
     expect(store.markTriggered).toHaveBeenCalledWith(9, 'dep-1')
     const [url, init] = (fetchMock.mock.calls[0] ?? []) as unknown as [string, RequestInit]
-    expect(url).toBe(DEPLOY_URL)
+    expect(url).toBe(DEPLOY_URL.replace('force=false', 'force=true'))
     expect(init.method).toBe('POST')
     expect((init.headers as Record<string, string>).authorization).toBe(`Bearer ${TOKEN}`)
   })
@@ -127,10 +127,11 @@ describe('site-deploy: Coolify', () => {
     expect(await pending).toEqual({ status: 'failed', error: 'timeout' })
   })
 
-  it('refuses a non-https URL and rewrites force=true to false', async () => {
+  it('refuses a non-https URL and always asks for a cache-less build (force=true)', async () => {
     expect(deployUrl('http://coolify.example/api/v1/deploy?uuid=a')).toBeNull()
     expect(deployUrl('not a url')).toBeNull()
-    expect(deployUrl('https://coolify.example/api/v1/deploy?uuid=a&force=true')).toBe('https://coolify.example/api/v1/deploy?uuid=a&force=false')
+    expect(deployUrl('https://coolify.example/api/v1/deploy?uuid=a&force=false')).toBe('https://coolify.example/api/v1/deploy?uuid=a&force=true')
+    expect(deployUrl('https://coolify.example/api/v1/deploy?uuid=a')).toBe('https://coolify.example/api/v1/deploy?uuid=a&force=true')
 
     const { deps, store, fetchMock } = setup({ coolify: { deployUrl: 'http://coolify.example/api/v1/deploy?uuid=a', token: TOKEN } })
     expect(await call(deps)).toMatchObject({ status: 502, body: { status: 'failed', reason: 'invalid_deploy_url' } })

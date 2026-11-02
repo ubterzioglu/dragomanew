@@ -88,6 +88,13 @@ describe('translate-content: auth and input', () => {
     expect((await send(deps, { action: 'usage' }, { origin: 'https://evil.example' })).status).toBe(403)
   })
 
+  it('403 when the caller may translate but not edit that kind of draft (forms need forms.manage)', async () => {
+    const { deps, saved } = setup()
+    const formBody = translateBody({ target: { kind: 'form', key: 'contact' }, expectedRevision: 1, locales: ['en'] })
+    expect(await send(deps, formBody, { token: 'content' })).toMatchObject({ status: 403, body: { error: 'forbidden' } })
+    expect(saved).toHaveLength(0)
+  })
+
   it('400 bad_request for a bad body', async () => {
     const { deps } = setup()
     expect(await send(deps, translateBody({ locales: ['tr'] }))).toMatchObject({ status: 400, body: { error: 'bad_request' } })

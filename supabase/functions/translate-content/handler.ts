@@ -61,6 +61,8 @@ export async function handleTranslate(request: Request, deps: TranslateDeps): Pr
     if (!body.success) return reply([400, failure('bad_request', { fields: [...new Set(body.error.issues.map((issue) => issue.path.join('.') || 'body'))] })])
 
     if (body.data.action === 'usage') return reply([200, { ok: true, usage: usageView(await currentUsage(deps)) }])
+    // The service client writes the draft, so the right to edit that draft is checked here, as RLS would.
+    if (!auth.caller.permissions.includes(EDIT_PERMISSION[body.data.target.kind])) return reply([403, failure('forbidden')])
     return reply(await translate(body.data, auth.caller, deps))
   } catch (error) {
     deps.reportError?.('translate-content', error)
@@ -68,6 +70,9 @@ export async function handleTranslate(request: Request, deps: TranslateDeps): Pr
     return reply([500, failure('server')])
   }
 }
+
+/** Who may change each kind of draft (dalga2-sozlesme §5): forms are `forms.manage`, the rest `content.edit`. */
+const EDIT_PERMISSION: Readonly<Record<TranslateTarget['kind'], string>> = { content: 'content.edit', media: 'content.edit', form: 'forms.manage' }
 
 const targetId = (target: TranslateTarget): string => (target.kind === 'form' ? target.key : target.id)
 

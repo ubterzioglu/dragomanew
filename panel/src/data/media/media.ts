@@ -124,6 +124,6 @@ export async function uploadMedia({ id, image, altTr, topic }: NewUpload): Promi
   const file = { object_path: path, sha256: image.sha256, width: image.width, height: image.height, bytes: image.blob.size }
   const { error } = await db()
     .from('media_assets')
-    .insert({ id, storage: 'upload', ...file, alt: { tr: altTr }, topic, rights: 'confirmed', placeholder: false, translation_meta: {} })
+    .insert({ id, storage: 'upload', ...file, alt: { tr: altTr }, topic, rights: 'confirmed', translation_meta: {} })
   if (error) throw error
 }

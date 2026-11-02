@@ -116,17 +116,17 @@ describe('submit-request: form versions', () => {
     expect(requests[0]).toMatchObject({ formVersion: 1, payload: { subject: 'Dives' } })
   })
 
-  it('uses the latest published version when none is given', async () => {
+  it('checks a request without a version against the built-in form, even after a version is published', async () => {
+    // A page built before the release still renders the built-in form; published v2 (phone and
+    // budget required) must not refuse it while the new build is on its way.
     const { deps, requests, lookups } = setup({ contact: CONTACT_VERSIONS })
-    // v2 requires a phone and the budget answer.
-    expect(await send(deps, contact({}))).toEqual([400, { ok: false, error: 'invalid', fields: ['values.phone', 'values.custom'] }])
-    const [status] = await send(deps, contact({ phone: '+90 555', custom: { c_budget: 'high' } }))
+    const [status] = await send(deps, contact({ subject: 'Dives' }))
     expect(status).toBe(200)
-    expect(lookups).toContainEqual(['contact', null])
-    expect(requests[0]?.formVersion).toBe(2)
+    expect(lookups).toEqual([])
+    expect(requests[0]).toMatchObject({ formVersion: null, payload: { subject: 'Dives' } })
   })
 
-  it('falls back to the built-in form, stored without a version, when nothing is published', async () => {
+  it('uses the built-in form, stored without a version, when nothing is published', async () => {
     const { deps, requests } = setup({})
     const [status] = await send(deps, contact({ subject: 'Dives' }))
     expect(status).toBe(200)

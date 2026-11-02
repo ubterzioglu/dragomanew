@@ -1,8 +1,10 @@
 /**
  * Coolify Deploy Webhook call (dalga2-sozlesme §6 site-deploy): `POST <COOLIFY_DEPLOY_URL>`
- * (`…/api/v1/deploy?uuid=…&force=false`, https only) with `Authorization: Bearer <token>` and a
- * 15 s timeout. `force` is always rewritten to `false`, so a misconfigured URL can never start a
- * cache-less rebuild. The token never appears in a result or an error. Deno-free.
+ * (`…/api/v1/deploy?uuid=…`, https only) with `Authorization: Bearer <token>` and a 15 s timeout.
+ * `force` is always set to `true`: a content release changes neither the commit nor the build args,
+ * so a cached build would reuse the old `npm run build` layer and never fetch the new release.
+ * The media cache is a BuildKit cache mount, which a cache-less build keeps. (This replaces the
+ * contract's "never force=true".) The token never appears in a result or an error. Deno-free.
  */
 
 export const COOLIFY_TIMEOUT_MS = 15_000
@@ -19,7 +21,7 @@ export type CoolifyResult =
   | { status: 'triggered'; deploymentUuid: string | null }
   | { status: 'failed'; error: string }
 
-/** The webhook URL with `force=false`, or null when it is not an https URL. */
+/** The webhook URL with `force=true`, or null when it is not an https URL. */
 export function deployUrl(raw: string): string | null {
   let url: URL
   try {
@@ -28,7 +30,7 @@ export function deployUrl(raw: string): string | null {
     return null
   }
   if (url.protocol !== 'https:') return null
-  url.searchParams.set('force', 'false')
+  url.searchParams.set('force', 'true')
   return url.toString()
 }
 
