@@ -7,6 +7,7 @@ import { NotFoundPage, RouteErrorPage } from './routes/NotFoundPage'
 import { OverviewPage } from './routes/OverviewPage'
 import { RequestsPage } from './routes/RequestsPage'
 import { ChangelogPage } from './routes/help/ChangelogPage'
+import { ReadmePage } from './routes/help/ReadmePage'
 import { DeveloperPage } from './routes/help/DeveloperPage'
 import { GuidePage } from './routes/help/GuidePage'
 import { StaffPage } from './routes/StaffPage'
@@ -38,6 +39,7 @@ export const router = createBrowserRouter(
         { path: 'icerik/:type/:id', element: <ContentEditorPage /> },
         { path: 'medya', element: <MediaPage /> },
         { path: 'yayin', element: <PublishPage /> },
+        { path: 'beni-oku', element: <ReadmePage /> },
         { path: 'kilavuz', element: <GuidePage /> },
         { path: 'guncellemeler', element: <ChangelogPage /> },
         { path: 'gelistirici', element: <DeveloperPage /> },

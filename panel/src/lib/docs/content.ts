@@ -9,6 +9,7 @@ import { buildGuide, type GuideSection } from './guide'
 
 const guideFiles = import.meta.glob<string>('../../docs/kilavuz/*.md', { query: '?raw', import: 'default', eager: true })
 const changelogFiles = import.meta.glob<string>('../../docs/guncellemeler.md', { query: '?raw', import: 'default', eager: true })
+const readmeFiles = import.meta.glob<string>('../../docs/beni-oku.md', { query: '?raw', import: 'default', eager: true })
 const cookbookFiles = import.meta.glob<string>('../../docs/gelistirici-cookbook.md', { query: '?raw', import: 'default', eager: true })
 
 export const GUIDE: readonly GuideSection[] = buildGuide(guideFiles, GUIDE_IDS)
@@ -21,3 +22,6 @@ export const CHANGELOG: readonly ChangelogEntry[] = parseChangelog(Object.values
 
 /** Null until the cookbook has been synced into the panel. */
 export const COOKBOOK: string | null = Object.values(cookbookFiles)[0] ?? null
+
+/** The "Beni Oku!" page: general notes about the site for every staff member. */
+export const README: string = Object.values(readmeFiles)[0] ?? ''

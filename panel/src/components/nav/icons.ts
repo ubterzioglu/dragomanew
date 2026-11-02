@@ -2,6 +2,7 @@ import {
   BookOpen,
   FileText,
   Image,
+  Info,
   Inbox,
   LayoutDashboard,
   ListChecks,
@@ -16,6 +17,7 @@ import type { NavIcon } from './navItems'
 /** lucide icons are plain SVG elements (no inline style), so they fit the panel's CSP. */
 export const NAV_ICONS: Readonly<Record<NavIcon, LucideIcon>> = {
   overview: LayoutDashboard,
+  readme: Info,
   requests: Inbox,
   content: FileText,
   media: Image,

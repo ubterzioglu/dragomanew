@@ -8,6 +8,7 @@ import type { StaffRole } from '../../lib/types'
 
 export type NavIcon =
   | 'overview'
+  | 'readme'
   | 'requests'
   | 'content'
   | 'media'
@@ -74,6 +75,13 @@ export const NAV_GROUPS: readonly NavGroup[] = [
         description: 'Bekleyen işler ve son durum tek ekranda.',
         guide: 'genel-bakis',
         end: true,
+        visible: always,
+      },
+      {
+        to: '/beni-oku',
+        label: 'Beni Oku!',
+        icon: 'readme',
+        description: 'Site, ekip ve çalışma kuralları hakkında bilinmesi gerekenler.',
         visible: always,
       },
       {

@@ -2,6 +2,7 @@
 
 ## 2026-11-02
 
+- Yeni **Beni Oku!** sayfası (Genel bakışın altında): site, çeviri, talepler, fotoğraflar ve hesaplarla ilgili bilinmesi gerekenler ve şu anki durum.
 - Panelin menüsü artık solda; ekranlar Genel, İçerik, Ayarlar ve Yardım başlıkları altında toplandı.
 - Menü daraltılabiliyor; telefonda soldan açılan bir çekmece olarak çalışıyor.
 - Yeni **Genel bakış** ekranı: bekleyen talepler, yayınlanmamış taslaklar, son yayın ve DeepL kotası tek bakışta.
