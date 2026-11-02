@@ -6,10 +6,10 @@
 
 ## 1. Önce buradan başla
 
-1. [Brief V6](./Dragoman_Proje_Brief_V6.md): bütün kapsam ve kabul edilmiş iş kuralları.
-2. [Layout ve veri ilişkileri](./Dragoman_Layout_Veri_Iliskileri.md): 31 Ekim derlemesi; temel içerik, seçenek ve talep ilişkileri. Zoho/iletişim/son SEO ekleri için ayrıca V6 ve rehberi oku.
-3. [Claude Code uygulama rehberi](./Dragoman_Claude_Code_Uygulama_Rehberi.md): E01–E17 ile son ek E2E kontrolleri, teslim sırası ve eksik erişimle ilerleme.
-4. [Sağlık gereksinimleri](./Dragoman_Saglik_Formu_Gereksinimleri.md): yalnızca ilgili sağlık işi gerektiğinde; kullanıcı bu konuya takılınmasını istemiyor.
+1. [Brief V6](../Dragoman_Proje_Brief_V6.md): bütün kapsam ve kabul edilmiş iş kuralları.
+2. [Layout ve veri ilişkileri](../Dragoman_Layout_Veri_Iliskileri.md): 31 Ekim derlemesi; temel içerik, seçenek ve talep ilişkileri. Zoho/iletişim/son SEO ekleri için ayrıca V6 ve rehberi oku.
+3. [Claude Code uygulama rehberi](../Dragoman_Claude_Code_Uygulama_Rehberi.md): E01–E17 ile son ek E2E kontrolleri, teslim sırası ve eksik erişimle ilerleme.
+4. [Sağlık gereksinimleri](../Dragoman_Saglik_Formu_Gereksinimleri.md): yalnızca ilgili sağlık işi gerektiğinde; kullanıcı bu konuya takılınmasını istemiyor.
 5. [29 Ekim handover](./Dragoman_Handover_2026-10-29.md): önceki ayrıntılı bağlam ve sonradan eklenen kayıtlar. Güncel devam başlangıcı bu 31 Ekim belgesidir.
 
 Diğer kaynaklar: cloner/analysis altındaki WordPress analizi, SEO/GEO araştırması ve ödeme notu. V6, özetlerin yerine geçer; özet V6 kapsamını daraltmaz.

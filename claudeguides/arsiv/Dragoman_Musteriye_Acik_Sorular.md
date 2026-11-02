@@ -44,4 +44,4 @@ Durum: Güncel kararlar esas alınarak ayrılmış müşteri bilgi/onay listesi.
 
 UBT ile ilgili uygulama aşamasında netleştirilecek: (1) DeepL çevirisi beklerken Türkçe yayının bekleyip beklemeyeceği; (2) ulaşım/konaklama taleplerinde etkinliklerle aynı operasyon durum/sorumlu akışının kullanılması. Bu iki konuya henüz yanıt verilmedi; kabul edilmiş karar sayılmaz.
 
-Kaynaklar: [Brief V6](./Dragoman_Proje_Brief_V6.md), [uygulama rehberi](./Dragoman_Claude_Code_Uygulama_Rehberi.md), [servis envanteri](./Dragoman_Servis_Envanteri_Gecis.md), [ödeme görüşme özeti](./iyzico-posnet-gorusme-ozeti.md).
+Kaynaklar: [Brief V6](../Dragoman_Proje_Brief_V6.md), [uygulama rehberi](../Dragoman_Claude_Code_Uygulama_Rehberi.md), [servis envanteri](../Dragoman_Servis_Envanteri_Gecis.md), [ödeme görüşme özeti](../iyzico-posnet-gorusme-ozeti.md).

@@ -16,7 +16,7 @@ Bu belge, müşterinin ilk 50 yanıtını içeren [önceki brief](./Dragoman_Pro
 
 ### 1.1 V5'in kaynakları ve çalışma yöntemi
 
-V5, [V4 kapsam kaydını](./Dragoman_Proje_Brief_V4.md), sonraki [layout kararlarını](./Dragoman_Layout_Kararlari.md), [ödeme karar notunu](./Dragoman_Odeme_Kararlari.md), [WordPress içerik analizini](../cloner/analysis/Dragoman_WordPress_Analizi.md) ve [26 Ekim 2026 SEO/GEO araştırmasını](./Dragoman_SEO_GEO_Arastirma_2026-10-26.md) birleştirir. V4'ten gelen işlevsel gereksinimler ve Ek A'daki ilk 50 müşteri yanıtı korunur. V5'te yeni kararlar ilgili bölümlere işlenmiştir; eski sürümdeki bir ifadeyle çelişirse sonraki açık UBT yanıtı ve V5'in güncel kuralı esas alınır. Tarihsel müşteri yanıtları güncel kuralın yerine geçirilmez.
+V5, [V4 kapsam kaydını](./Dragoman_Proje_Brief_V4.md), sonraki [layout kararlarını](../Dragoman_Layout_Kararlari.md), [ödeme karar notunu](../Dragoman_Odeme_Kararlari.md), [WordPress içerik analizini](../../tmp/cloner/analysis/Dragoman_WordPress_Analizi.md) ve [26 Ekim 2026 SEO/GEO araştırmasını](../Dragoman_SEO_GEO_Arastirma_2026-10-26.md) birleştirir. V4'ten gelen işlevsel gereksinimler ve Ek A'daki ilk 50 müşteri yanıtı korunur. V5'te yeni kararlar ilgili bölümlere işlenmiştir; eski sürümdeki bir ifadeyle çelişirse sonraki açık UBT yanıtı ve V5'in güncel kuralı esas alınır. Tarihsel müşteri yanıtları güncel kuralın yerine geçirilmez.
 
 - **GitHub deposu:** [ubterzioglu/dragomanew](https://github.com/ubterzioglu/dragomanew)
 - **Yerel çalışma klasörü:** `C:\temp_private\dragomanew`
@@ -131,7 +131,7 @@ ID **2, 335 ve 936** boş başlıklı veya `sample-page` adresli olsa da ana say
 
 Yerel düzen: `cloner/source/` özgün XML; `cloner/extracted/` tek çıkarılmış çalışma kopyası; `cloner/archive/` aynı içeriğin diğer kopyaları ve ek dosyalar; `cloner/analysis/` rapor/CSV/JSON envanterleri. 200 kaynak dosya silinmeden taşındı ve SHA-256 ile doğrulandı; iki klasör ve ZIP aynı, 88 çıkarılmış HTML kaynak XML ile eşleşiyor. Ham kaynaklarda yazar, form ve kupon bilgileri de bulunduğundan `source/`, `extracted/`, `archive/` kök `.gitignore` ile yerelde tutulur; kamuya açık depoya otomatik eklenmez.
 
-[Analiz raporu](../cloner/analysis/Dragoman_WordPress_Analizi.md), [içerik envanteri](../cloner/analysis/content-inventory.csv), [çeviri matrisi](../cloner/analysis/translation-matrix.csv), [etkinlik adayları](../cloner/analysis/activity-candidates.csv), [medya envanteri](../cloner/analysis/media-inventory.csv) ve [yönlendirme adayları](../cloner/analysis/redirect-candidates.csv) uygulamayı destekler. Aday listeleri güncel aktif ürün onayı değildir. Medya ayrıca edinilip görsel kalite/kırpım/kullanım hakkı bakımından incelenmelidir. Yönlendirme listesindeki yeni URL alanları nihai adres kararı bekler.
+[Analiz raporu](../../tmp/cloner/analysis/Dragoman_WordPress_Analizi.md), [içerik envanteri](../../tmp/cloner/analysis/content-inventory.csv), [çeviri matrisi](../../tmp/cloner/analysis/translation-matrix.csv), [etkinlik adayları](../../tmp/cloner/analysis/activity-candidates.csv), [medya envanteri](../../tmp/cloner/analysis/media-inventory.csv) ve [yönlendirme adayları](../../tmp/cloner/analysis/redirect-candidates.csv) uygulamayı destekler. Aday listeleri güncel aktif ürün onayı değildir. Medya ayrıca edinilip görsel kalite/kırpım/kullanım hakkı bakımından incelenmelidir. Yönlendirme listesindeki yeni URL alanları nihai adres kararı bekler.
 
 ### 4.7 Sık Sorulan Sorular — kesin gereksinim
 
@@ -198,7 +198,7 @@ Eksik form için katılımcıya etkinlikten **72 ve 24 saat önce** otomatik e-p
 
 ## 7. Ödeme, iptal/iade ve fatura
 
-Dragoman kredi kartı ve IBAN havalesi ister; mümkünse bazı ürünlerde kapora da düşünülür. **V5 güncel kararı:** Sağlayıcı seçimi açık. Yapı Kredi Sanal POS/POSNET **entegrasyonu kolaysa kullanılabilecek adaydır**; kolaylığı henüz doğrulanmadı. UBT iyzico dışındaki alternatiflerin de araştırılmasını istedi, ardından **“Bunu şimdi yapma ama not al”** diyerek araştırmayı sonraya bıraktı. Araştırma şu anda sürdürülmez; seçilmiş sağlayıcı varmış gibi entegrasyon başlatılmaz. iyzico otomatik yedek kabul edilmez; tamamen elendiği de varsayılmaz. V4'ün “POSNET uygun değilse iyzico” yaklaşımı bu güncel notla değiştirilmiştir. Ayrıntılı kayıt: [Ödeme kararları](./Dragoman_Odeme_Kararlari.md).
+Dragoman kredi kartı ve IBAN havalesi ister; mümkünse bazı ürünlerde kapora da düşünülür. **V5 güncel kararı:** Sağlayıcı seçimi açık. Yapı Kredi Sanal POS/POSNET **entegrasyonu kolaysa kullanılabilecek adaydır**; kolaylığı henüz doğrulanmadı. UBT iyzico dışındaki alternatiflerin de araştırılmasını istedi, ardından **“Bunu şimdi yapma ama not al”** diyerek araştırmayı sonraya bıraktı. Araştırma şu anda sürdürülmez; seçilmiş sağlayıcı varmış gibi entegrasyon başlatılmaz. iyzico otomatik yedek kabul edilmez; tamamen elendiği de varsayılmaz. V4'ün “POSNET uygun değilse iyzico” yaklaşımı bu güncel notla değiştirilmiştir. Ayrıntılı kayıt: [Ödeme kararları](../Dragoman_Odeme_Kararlari.md).
 
 Araştırma yeniden açıldığında entegrasyon belgeleri, test ortamı, geliştirme/bakım eforu, komisyon, EUR/TL tahsilat ve hesaba aktarım koşulları, yabancı kartlar, 3D Secure, iade ve mutabakat değerlendirilir. POS sağlayıcısı ve canlı açılış tarihi henüz kesin değildir. Banka/sağlayıcı hesabı Dragoman adına açılır. Kart bilgileri uygulamada saklanmaz; sağlayıcının güvenli akışı kullanılır. Başarı, başarısızlık ve tekrarlanan sağlayıcı bildirimi siparişte tutarlı tek sonuç üretmelidir. EUR/TL hedefi sağlayıcı/işyeri yetkileri doğrulanmadan her kart için koşulsuz destek sözüne dönüştürülmez.
 
@@ -250,7 +250,7 @@ Google İşletme Profili, Instagram, Facebook ve YouTube bağlantıları doğru 
 
 ### 9.1 Güncel araştırma, kapsam ve öncelik
 
-**Araştırma tarihi: 26 Ekim 2026.** Kaynak bulguları ve sınırlamalar [SEO/GEO araştırma notunda](./Dragoman_SEO_GEO_Arastirma_2026-10-26.md) kayıtlıdır. Bu bölüm Claude Code için uygulanacak gereksinimleri somutlaştırır; canlı sitede SEO denetimi veya ölçüm yapıldığı anlamına gelmez.
+**Araştırma tarihi: 26 Ekim 2026.** Kaynak bulguları ve sınırlamalar [SEO/GEO araştırma notunda](../Dragoman_SEO_GEO_Arastirma_2026-10-26.md) kayıtlıdır. Bu bölüm Claude Code için uygulanacak gereksinimleri somutlaştırır; canlı sitede SEO denetimi veya ölçüm yapıldığı anlamına gelmez.
 
 Buradaki **GEO**, üretken yapay zekâ yanıtlarında keşfedilebilirliktir; yerel/harita SEO'su ayrıca ele alınır. Google'ın güncel rehberi özel bir GEO şeması veya `llms.txt` zorunluluğu getirmiyor. Arama için değerli içerik ve teknik erişilebilirlik temel alınır. Bu nedenle bir “AI puanı” veya aramada kaynak gösterilme garantisi teslim ölçütü yapılmaz. [Google'ın güncel AI optimizasyon rehberi](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide).
 

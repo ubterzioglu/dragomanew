@@ -45,7 +45,7 @@ M1'de kalanlar (sırayla):
 ## BATCH 1 — Bağlam, kapsam, sınırlar, mevcut durum
 
 ### 1.1 Bağlam
-Dragoman (Kaş/Kekova dalış, deniz kanosu, outdoor) WordPress sitesini yeniden yapıyor. Hedef MVP yayını **1 Aralık 2026**. Başlangıç talimatı (`claudeguides/Dragoman_Claude_Code_Baslangic.md`) şunu söylüyor: **önce yalnızca Aşama A**; UBT dolu şablonları toplu değerlendirdikten sonra panel/kalıcılık/bildirim (Aşama B) başlar. Bu plan yalnızca Aşama A'yı kapsar; B'ye ait hiçbir şey Aşama A'da gerçek çalışmaz.
+Dragoman (Kaş/Kekova dalış, deniz kanosu, outdoor) WordPress sitesini yeniden yapıyor. Hedef MVP yayını **1 Aralık 2026**. Başlangıç talimatı (`claudeguides/arsiv/Dragoman_Claude_Code_Baslangic.md`) şunu söylüyor: **önce yalnızca Aşama A**; UBT dolu şablonları toplu değerlendirdikten sonra panel/kalıcılık/bildirim (Aşama B) başlar. Bu plan yalnızca Aşama A'yı kapsar; B'ye ait hiçbir şey Aşama A'da gerçek çalışmaz.
 
 ### 1.2 Okunan kaynaklar (planın dayanağı)
 Başlangıç talimatı, Uygulama Rehberi (tamamı), Handover 31 Ekim, Brief V6 (Bölüm 1–5, 9, 10.1), README, Layout_Veri_Iliskileri, Sağlık_Formu_Gereksinimleri, `cloner/analysis` (summary, translation-matrix, legacy-menus, activity-candidates, products, redirect, hero-media). **Henüz okunmadı:** Layout_Kararlari (M4 öncesi okunacak), Servis_Envanteri_Gecis, Odeme_Kararlari, iyzico-posnet özeti (bağlantı aşamasında gerekir, Aşama A'yı bloklamaz).

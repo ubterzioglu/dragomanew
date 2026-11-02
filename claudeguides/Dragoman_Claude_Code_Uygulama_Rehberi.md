@@ -34,12 +34,12 @@ Panel Google ile giriş ve Supabase kullanır. Ana Yönetici personel erişimi e
 
 ## 1. Önce okunacaklar ve karar önceliği
 
-**Güncel oturum bağlamı:** [31 Ekim handover](./Dragoman_Handover_2026-10-31.md). Kapsam için V6 esas alınır.
+**Güncel oturum bağlamı:** yerel `tmp/docs/DURUM.md` (git'te değil). Eski handover'lar [arşivde](./arsiv/), örneğin [31 Ekim handover](./arsiv/Dragoman_Handover_2026-10-31.md). Kapsam için V6 esas alınır.
 
 1. [Brief V6](./Dragoman_Proje_Brief_V6.md): kapsam, kabul edilmiş yerleşimler, dört dil, teknoloji referansı, iş kuralları ve yayın kabul ölçütleri.
 2. Bu rehber: karar sınırları, çalışma sırası, senaryolar ve teslim kanıtları.
 3. [Sağlık formu gereksinimleri](./Dragoman_Saglik_Formu_Gereksinimleri.md) ve [kaynak PDF](./sources/forms/try-saglik-formu-tr-21.pdf).
-4. [WordPress analizi](../cloner/analysis/Dragoman_WordPress_Analizi.md), [SEO/GEO araştırması](./Dragoman_SEO_GEO_Arastirma_2026-10-26.md) ve [ödeme notu](./Dragoman_Odeme_Kararlari.md): ilgili uygulama ayrıntıları.
+4. [WordPress analizi](../tmp/cloner/analysis/Dragoman_WordPress_Analizi.md), [SEO/GEO araştırması](./Dragoman_SEO_GEO_Arastirma_2026-10-26.md) ve [ödeme notu](./Dragoman_Odeme_Kararlari.md): ilgili uygulama ayrıntıları.
 
 V5, V4, ilk müşteri yanıtları ve kronolojik devir kayıtları tarihsel kaynaktır. Güncel V6 ile çelişiyorsa eski kararı yeniden uygulama. Bu rehber V6'nın kapsamını daraltmaz veya genişletmez; belirsizlikte önce ilgili güncel bölümü ve kaynakları incele. Yeni kullanıcı talimatı varsa sonraki açık talimat esas alınır.
 

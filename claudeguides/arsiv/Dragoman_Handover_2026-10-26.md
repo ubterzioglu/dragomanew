@@ -4,25 +4,25 @@
 
 **Hazırlanma tarihi:** 26 Ekim 2026  
 **Son durum güncellemesi:** 29 Ekim 2026  
-**Claude Code uygulama rehberi:** UBT, belgeyi uygulayıcının çok sayıda ek soru sormadan ilerleyebileceği hale getirmek istiyor. [Uçtan uca uygulama rehberi](./Dragoman_Claude_Code_Uygulama_Rehberi.md), V6'nın yanında okunacak yürütme kaydıdır: olağan tasarım/teknik tercihleri yeniden sormama, kaynak/mockup ile ilerleme, gerçek karar sınırları, iki geliştirme aşaması, yayın ve sonraki ödeme fazı, E01–E17 senaryoları ve teslim kanıtları. Güncel kapsam V6'dadır; geliştirme bu oturumda başlatılmaz.  
-**Katılımcı sağlık formu:** UBT'nin Dalış ve Outdoor için verdiği tek sayfalık PDF proje içine alındı; açıklamalar, soru/alt maddeler ve katılımcı/veli-vasi tarih/imza alanları [sağlık formu gereksinimlerinde](./Dragoman_Saglik_Formu_Gereksinimleri.md) kaydedildi. V6 Bölüm 6.1 ve K4 güncellendi. Sağlık soruları ilk rezervasyon talebine taşınmaz; ayrı katılımcı formudur. İmza kararı kesinleşti: sorular çevrimiçi yanıtlanır, katılımcı ve gerekiyorsa veli/vasi etkinlik öncesinde merkezde kâğıt formu imzalar; sitede imza çizme eklenmez. Dijital sorular Evet/Hayır seçeneklidir; yeni formda hiçbir yanıt seçili gelmez, boş yanıt Hayır sayılmaz. Outdoor'da dalışa özgü açıklamaların kullanımı, koşullu alt maddeler ve veri işleme kuralları gerçek kullanım öncesi tamamlanır.  
+**Claude Code uygulama rehberi:** UBT, belgeyi uygulayıcının çok sayıda ek soru sormadan ilerleyebileceği hale getirmek istiyor. [Uçtan uca uygulama rehberi](../Dragoman_Claude_Code_Uygulama_Rehberi.md), V6'nın yanında okunacak yürütme kaydıdır: olağan tasarım/teknik tercihleri yeniden sormama, kaynak/mockup ile ilerleme, gerçek karar sınırları, iki geliştirme aşaması, yayın ve sonraki ödeme fazı, E01–E17 senaryoları ve teslim kanıtları. Güncel kapsam V6'dadır; geliştirme bu oturumda başlatılmaz.  
+**Katılımcı sağlık formu:** UBT'nin Dalış ve Outdoor için verdiği tek sayfalık PDF proje içine alındı; açıklamalar, soru/alt maddeler ve katılımcı/veli-vasi tarih/imza alanları [sağlık formu gereksinimlerinde](../Dragoman_Saglik_Formu_Gereksinimleri.md) kaydedildi. V6 Bölüm 6.1 ve K4 güncellendi. Sağlık soruları ilk rezervasyon talebine taşınmaz; ayrı katılımcı formudur. İmza kararı kesinleşti: sorular çevrimiçi yanıtlanır, katılımcı ve gerekiyorsa veli/vasi etkinlik öncesinde merkezde kâğıt formu imzalar; sitede imza çizme eklenmez. Dijital sorular Evet/Hayır seçeneklidir; yeni formda hiçbir yanıt seçili gelmez, boş yanıt Hayır sayılmaz. Outdoor'da dalışa özgü açıklamaların kullanımı, koşullu alt maddeler ve veri işleme kuralları gerçek kullanım öncesi tamamlanır.  
 **Gerçek görsel kaynağı:** `C:\temp_private\dragoman\cloner\images` — 323 görsel indirildi; başarısız indirme yok, dosya boyutları ve SHA-256 değerleri doğrulandı. Kaynak/dosya eşleştirmesi `C:\temp_private\dragoman\cloner\media-download-manifest.json` içindedir. Aşağıdaki eski medya eksikliği kayıtları tarihsel durumu anlatır. Güncel ilk teslim sınırı ve kaynak yolları V6 Bölüm 1.2'dedir; bütün sayfa türleri dolu örneklerle hazırlanır, tüm eski içeriğin aktarılması ilk tasarım değerlendirmesini bekletmez.  
 **Proje sahibi / nihai karar:** Dragoman; müşteri ve Murat Draman  
 **Geliştirici:** UBT (Umut Barış Terzioğlu)  
 **Hedef ilk yayın:** 1 Aralık 2026  
-**Esas alınacak güncel dosya:** [Dragoman_Proje_Brief_V6.md](./Dragoman_Proje_Brief_V6.md). UBT'nin talimatıyla V5'in son durumu V6 olarak kaydedildi. Layout, önce şablon/sonra içerik sırası, teknoloji referansı, WordPress bulguları, SEO/GEO ve ödeme notları bu sürümdedir. V5 ve V4 korunur; dokümantasyon devam ediyor.
+**Esas alınacak güncel dosya:** [Dragoman_Proje_Brief_V6.md](../Dragoman_Proje_Brief_V6.md). UBT'nin talimatıyla V5'in son durumu V6 olarak kaydedildi. Layout, önce şablon/sonra içerik sırası, teknoloji referansı, WordPress bulguları, SEO/GEO ve ödeme notları bu sürümdedir. V5 ve V4 korunur; dokümantasyon devam ediyor.
 
-**Güncel layout durumu:** Sonraki görüşmede üst menü, ana sayfa akışı, kategori sayfaları ve etkinlik detayının temel yerleşimi kabul edildi. Ayrıntı ve kalan konular: [Layout kararları](./Dragoman_Layout_Kararlari.md). Aşağıdaki eski durum notları kronolojik kayıttır; sonraki açık kararlar geçerlidir.
+**Güncel layout durumu:** Sonraki görüşmede üst menü, ana sayfa akışı, kategori sayfaları ve etkinlik detayının temel yerleşimi kabul edildi. Ayrıntı ve kalan konular: [Layout kararları](../Dragoman_Layout_Kararlari.md). Aşağıdaki eski durum notları kronolojik kayıttır; sonraki açık kararlar geçerlidir.
 
 **UBT'nin çalışma yöntemi açıklaması:** Dokümantasyon tamamlanınca belge Claude Code'a verilecek. Bu oturum dokümantasyonu tamamlamaya yöneliktir; görsel taslak veya uygulama geliştirmeye geçiş kararı alınmadı. Sonraki çalışma, kalan layout ayrıntılarını belgelemek ve kesin kararlar/uygulayıcıya bırakılan ayrıntılar/açık bağımlılıkları tutarlı bir uygulama belgesinde bir araya getirmektir.
 
 **Sonraki menü kararı:** UBT, Cankurtarma Eğitimleri'nin Dalış menüsü altında ayrı sayfa olarak yer almasını kabul etti (“katılıyorum”). Beş ana kategori korunur. Güncel eğitim kapsamı ve koşulları ayrıca doğrulanacaktır.
 
-**Sonraki ödeme talimatı:** UBT, iyzico dışındaki alternatiflerin de araştırılması gerektiğini belirtti; ardından araştırmanın şimdi yapılmamasını, yalnızca not alınmasını istedi. Yapı Kredi POSNET entegrasyonu kolaysa kullanılabilecek adaydır. Seçim kesinleşmedi; V4'teki iyzico yedek varsayımı otomatik uygulanmaz. Güncel kayıt: [Ödeme kararları](./Dragoman_Odeme_Kararlari.md). Araştırma şu anda sürdürülmeyecek.
+**Sonraki ödeme talimatı:** UBT, iyzico dışındaki alternatiflerin de araştırılması gerektiğini belirtti; ardından araştırmanın şimdi yapılmamasını, yalnızca not alınmasını istedi. Yapı Kredi POSNET entegrasyonu kolaysa kullanılabilecek adaydır. Seçim kesinleşmedi; V4'teki iyzico yedek varsayımı otomatik uygulanmaz. Güncel kayıt: [Ödeme kararları](../Dragoman_Odeme_Kararlari.md). Araştırma şu anda sürdürülmeyecek.
 
 **V5 sonrası SSS kararı:** UBT, SSS'nin kesinlikle olacağını belirtti. Etkinlik detaylarında ürüne özel, açılıp kapanabilir, taranabilir ve dil bazında onaylı soru-cevap desteği V5 Bölüm 4.7'ye işlendi; K1c kabul ölçütü eklendi. SSS'nin varlığı artık açık soru değildir. İçerik onayı ve ayrı genel SSS sayfası konusu ayrıdır; yeni menü öğesi veya ana sayfa sırası değişikliği yapılmadı. Ödeme araştırmasının ertelenmesi geçerliliğini korur.
 
-**SEO/GEO araştırması — 26 Ekim 2026:** UBT'nin talebiyle güncel resmî kaynaklar araştırıldı; [kaynak/bulgu notu](./Dragoman_SEO_GEO_Arastirma_2026-10-26.md) oluşturuldu. V5 Bölüm 9.1–9.8'e 15 SEO ve 3 GEO gereksinimi, K7a–K7h kabul senaryoları eklendi. İlk HTML, dil/canonical/hreflang, WordPress URL/QR geçişi, doğru şema, işletme profili, görseller, performans ve AI ölçümü somutlaştırıldı. Önceki tarayıcı dili algılaması açık dil URL'lerini zorla değiştirmeyen dil önerisi olarak netleştirildi. Arama botu ile model eğitimi izinleri ayrı tutulur. Resmî kaynaklar mevcut Google/Bing AI raporlarını açıklıyor; gerçek hesap erişimi/veri durumları uygulamada kontrol edilecek. Bu iş araştırma ve dokümantasyondur; canlı site/hesap ayarı değiştirilmedi. Ödeme araştırmasının ertelenmesi değişmedi.
+**SEO/GEO araştırması — 26 Ekim 2026:** UBT'nin talebiyle güncel resmî kaynaklar araştırıldı; [kaynak/bulgu notu](../Dragoman_SEO_GEO_Arastirma_2026-10-26.md) oluşturuldu. V5 Bölüm 9.1–9.8'e 15 SEO ve 3 GEO gereksinimi, K7a–K7h kabul senaryoları eklendi. İlk HTML, dil/canonical/hreflang, WordPress URL/QR geçişi, doğru şema, işletme profili, görseller, performans ve AI ölçümü somutlaştırıldı. Önceki tarayıcı dili algılaması açık dil URL'lerini zorla değiştirmeyen dil önerisi olarak netleştirildi. Arama botu ile model eğitimi izinleri ayrı tutulur. Resmî kaynaklar mevcut Google/Bing AI raporlarını açıklıyor; gerçek hesap erişimi/veri durumları uygulamada kontrol edilecek. Bu iş araştırma ve dokümantasyondur; canlı site/hesap ayarı değiştirilmedi. Ödeme araştırmasının ertelenmesi değişmedi.
 
 **Ulaşım/Konaklama — güncel karar, 29 Ekim:** Önceden sona bırakılan konu ele alındı; iki bölüm için düzenlenebilir talep formu kabul edildi. Başlangıçta mockup alanlar kullanılacak; nihai bilgileri UBT müşteriden alıp güncelleyecek. Yalnızca WhatsApp/e-posta ile sınırlı akış seçilmedi. Bu karar doğrudan satış/ödeme eklemez.
 
@@ -38,7 +38,7 @@ Müşterinin ilk 50 yanıtını içeren eski brief, yüklenen V2 temeli, UBT'nin
 
 | Dosya | Rolü |
 | --- | --- |
-| [Dragoman_Proje_Brief_V6.md](./Dragoman_Proje_Brief_V6.md) | Güncel birleştirilmiş kapsam, şablon sırası, layout, SEO/GEO, kabul ölçütleri ve açık müşteri soruları |
+| [Dragoman_Proje_Brief_V6.md](../Dragoman_Proje_Brief_V6.md) | Güncel birleştirilmiş kapsam, şablon sırası, layout, SEO/GEO, kabul ölçütleri ve açık müşteri soruları |
 | [Dragoman_Proje_Brief_V5.md](./Dragoman_Proje_Brief_V5.md) | V6'nın temeli olan önceki çalışma kaydı; değiştirilmeden korundu |
 | [Dragoman_Proje_Brief_V4.md](./Dragoman_Proje_Brief_V4.md) | V5'in temeli olan önceki kapsam kaydı; değiştirilmeden korundu |
 | [Dragoman_Proje_Brief_V3.md](./Dragoman_Proje_Brief_V3.md) | V4 öncesi sürüm; yeni kararlar bunun üzerine yazılmamalı |
@@ -97,7 +97,7 @@ Yeni oturumda 25 soruluk diziyi tekrar açmaya gerek yok: **25/25 geliştirici y
 - **GitHub:** https://github.com/ubterzioglu/dragomanew
 - **Yerel çalışma klasörü:** `C:\temp_private\dragomanew`
 - **Kontrol anındaki durum:** GitHub depo boyutu 0; yerel klasör boş ve henüz `.git` içermiyordu. Uygulama kodu bulunmadı. Çalışma belgeleri devam için bu klasöre kopyalanacaktır; bu kayıt bir Git bağlantısı kurulmuş veya dosyalar GitHub'a yüklenmiş anlamına gelmez.
-- **Güncel kapsam:** V4 korunur. Sonraki layout kararlarının kaynağı [Dragoman_Layout_Kararlari.md](./Dragoman_Layout_Kararlari.md) dosyasıdır.
+- **Güncel kapsam:** V4 korunur. Sonraki layout kararlarının kaynağı [Dragoman_Layout_Kararlari.md](../Dragoman_Layout_Kararlari.md) dosyasıdır.
 
 **Kabul edilen layout kararları:** Ana sayfa tüm etkinlikleri tanıtır. Beş ana kategori Dalış, Deniz Kanosu, Doğa Aktiviteleri, Ulaşım ve Konaklama, Mağaza'dır. Açılışta kısa başlık ve tek cümlelik açıklama ile ilk üç kategori gerçek fotoğraflarla gösterilir; masaüstünde yan yana ve kategoriye doğrudan geçişlidir. Mobil yerleşim ayrıca hazırlanacaktır. Ulaşım ve Konaklama ile Mağaza hemen devamında yer alır. Video seçilmemiştir.
 
@@ -105,7 +105,7 @@ Yeni oturumda 25 soruluk diziyi tekrar açmaya gerek yok: **25/25 geliştirici y
 
 ## 8. WordPress kaynak analizi ve klasör düzeni
 
-UBT, `C:\temp_private\dragomanew\cloner` içindeki mevcut dragoman-turkey.com WordPress exportunun analizini ve klasörün düzenlenmesini istedi. [Analiz raporu](../cloner/analysis/Dragoman_WordPress_Analizi.md) ve [klasör rehberi](../cloner/README.md) hazırlandı.
+UBT, `C:\temp_private\dragomanew\cloner` içindeki mevcut dragoman-turkey.com WordPress exportunun analizini ve klasörün düzenlenmesini istedi. [Analiz raporu](../../tmp/cloner/analysis/Dragoman_WordPress_Analizi.md) ve [klasör rehberi](../../tmp/cloner/README.md) hazırlandı.
 
 - Özgün XML `cloner/source/`, tek çıkarılmış çalışma kopyası `cloner/extracted/`, aynı içeriğin diğer kopyaları ve ek dosyalar `cloner/archive/` altında korundu. 200 kaynak dosyanın taşıma öncesi/sonrası SHA-256 değerleri doğrulandı; silme yapılmadı.
 - XML'de 1.140 öğe var. İçerik kümesi 49 sayfa, 25 yazı, 11 ürün ve 3 bloktan oluşuyor. İki çıkarılmış klasör ve ZIP aynı; 88 HTML kaydı kaynak XML ile eşleşiyor.

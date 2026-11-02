@@ -4,7 +4,7 @@
 **Kullanıcı / geliştirici:** UBT — Umut Barış Terzioğlu  
 **İşletme ve yayın kararı:** Dragoman / Murat Draman  
 **Hedef MVP:** 1 Aralık 2026  
-**Güncel brief:** [Dragoman_Proje_Brief_V6.md](./Dragoman_Proje_Brief_V6.md). V7 oluşturulmadı. V5 ve eski briefler korunuyor.
+**Güncel brief:** [Dragoman_Proje_Brief_V6.md](../Dragoman_Proje_Brief_V6.md). V7 oluşturulmadı. V5 ve eski briefler korunuyor.
 
 ## 1. Nerede kaldık?
 
@@ -12,7 +12,7 @@
 
 **Müşteri talep alındı e-postası ve Zoho — 31 Ekim 2026, UBT kabulü:** Etkinlik talebi başarıyla kalıcı kayda alındığında rezervasyon sahibinin e-posta adresine talep alındı bildirimi gönderilir. Bu gönderim için Zoho kullanılacaktır. E-postada etkinlik, tercih edilen tarih, kişi sayısı, varsa seçenek/kişi dağılımı ve talep anındaki fiyat özeti bulunur; fiyat talep üzerine ise toplam uydurulmaz. Mesaj talebin alındığını ve kesin rezervasyon için ekibin iletişime geçeceğini açıkça belirtir; rezervasyon, müsaitlik veya ödeme onayı değildir. Bildirim mevcut müşteri dili ve onaylı e-posta şablonu kurallarına uyar; sağlık yanıtları veya diğer katılımcıların özel bağlantıları eklenmez. İşletmenin info@dragoman-turkey.com bildirimi ayrıca korunur. Kaydedilmeyen talep için başarı/alındı e-postası gönderilmez. E-posta gönderim hatası kalıcı talep kaydını silmez ve yeniden talep yaratma nedeni değildir. Zoho hesabı, kullanılacak ürün/gönderim yöntemi ve gerçek servis erişimleri bağlantı aşamasında doğrulanır; bu karar Zoho CRM, yeni müşteri takip sistemi veya ücretli abonelik onayı eklemez.
 
-**Sade kapsam ve veri ilişkileri — 31 Ekim 2026:** Etkinlik kopyalama özelliği UBT tarafından gereksiz bulunarak kapsam dışında bırakıldı. Kabul edilen layout/veri ilişkilerinin özeti [Layout ve veri ilişkileri taslağında](./Dragoman_Layout_Veri_Iliskileri.md) toplandı. Bu belge V6 kapsamını değiştirmez; kesin tablo/alan adlarını uygulayıcı belirler. Dalış ve Outdoor ayrı etkinliklerdir; ortak kayıtla iki kategoriye bağlama önerisi kabul edilmedi. Sağlık formunun ayrıntı sorularına geri dönmeden, sade layout/veri yapısıyla ilerlenir.
+**Sade kapsam ve veri ilişkileri — 31 Ekim 2026:** Etkinlik kopyalama özelliği UBT tarafından gereksiz bulunarak kapsam dışında bırakıldı. Kabul edilen layout/veri ilişkilerinin özeti [Layout ve veri ilişkileri taslağında](../Dragoman_Layout_Veri_Iliskileri.md) toplandı. Bu belge V6 kapsamını değiştirmez; kesin tablo/alan adlarını uygulayıcı belirler. Dalış ve Outdoor ayrı etkinliklerdir; ortak kayıtla iki kategoriye bağlama önerisi kabul edilmedi. Sağlık formunun ayrıntı sorularına geri dönmeden, sade layout/veri yapısıyla ilerlenir.
 
 Kullanıcı, dokümantasyon tamamlandığında belgeleri **Claude Code'a verip geliştirmeyi orada yaptıracak**. Bu sohbetin işi kapsamı, iş akışlarını ve uçtan uca uygulama/test gereksinimlerini netleştirmek. Site geliştirmeye, görsel mockup üretmeye veya canlı yayına başlanmadı. Görseller indirildi; bu, uygulamaya entegre edildikleri anlamına gelmez.
 
@@ -24,14 +24,14 @@ Kullanıcının son amacı: **Claude'un bir sürü ek soru sormadan ilerleyebilm
 
 | Belge | Görevi |
 | --- | --- |
-| [Brief V6](./Dragoman_Proje_Brief_V6.md) | Güncel kapsam, iş kuralları, layout, teknoloji referansı, fazlar ve K kabul ölçütleri. Esas belge. |
-| [Claude Code uygulama rehberi](./Dragoman_Claude_Code_Uygulama_Rehberi.md) | Tekrar sorulmayacak tercihler, eksik bilgiyle ilerleme, kaynak yolları, aşama teslimleri ve E01–E17 uçtan uca senaryolar. |
-| [Sağlık formu gereksinimleri](./Dragoman_Saglik_Formu_Gereksinimleri.md) | Kaynak PDF'nin bütün soru/alanları ve son sağlık formu kararları. Bölüm 5–6 güncel kuralları içerir. |
-| [Kaynak sağlık PDF'si](./sources/forms/try-saglik-formu-tr-21.pdf) | Kullanıcının Dalış ve Outdoor için verdiği boş form; değiştirilmeden korundu. |
-| [WordPress analizi](../cloner/analysis/Dragoman_WordPress_Analizi.md) | Eski içerik, çeviri, ürün, medya ve URL envanterleri. Medya dosyalarının eksikliği ilk analiz tarihine aittir; sonradan indirildi. |
-| [SEO/GEO araştırması](./Dragoman_SEO_GEO_Arastirma_2026-10-26.md) | 26 Ekim'deki birincil kaynak araştırması; V6'da 15 SEO, 3 GEO gereksinimi ve K7a–K7h kontrolü korunuyor. |
-| [Ödeme notu](./Dragoman_Odeme_Kararlari.md) | Sağlayıcı seçimi açık; araştırma kullanıcı tarafından ertelendi. |
-| [Layout kararları](./Dragoman_Layout_Kararlari.md) | Kronolojik karar izi. Sağlık formunun son kararları için V6 ve sağlık gereksinimlerine bak. |
+| [Brief V6](../Dragoman_Proje_Brief_V6.md) | Güncel kapsam, iş kuralları, layout, teknoloji referansı, fazlar ve K kabul ölçütleri. Esas belge. |
+| [Claude Code uygulama rehberi](../Dragoman_Claude_Code_Uygulama_Rehberi.md) | Tekrar sorulmayacak tercihler, eksik bilgiyle ilerleme, kaynak yolları, aşama teslimleri ve E01–E17 uçtan uca senaryolar. |
+| [Sağlık formu gereksinimleri](../Dragoman_Saglik_Formu_Gereksinimleri.md) | Kaynak PDF'nin bütün soru/alanları ve son sağlık formu kararları. Bölüm 5–6 güncel kuralları içerir. |
+| [Kaynak sağlık PDF'si](../sources/forms/try-saglik-formu-tr-21.pdf) | Kullanıcının Dalış ve Outdoor için verdiği boş form; değiştirilmeden korundu. |
+| [WordPress analizi](../../tmp/cloner/analysis/Dragoman_WordPress_Analizi.md) | Eski içerik, çeviri, ürün, medya ve URL envanterleri. Medya dosyalarının eksikliği ilk analiz tarihine aittir; sonradan indirildi. |
+| [SEO/GEO araştırması](../Dragoman_SEO_GEO_Arastirma_2026-10-26.md) | 26 Ekim'deki birincil kaynak araştırması; V6'da 15 SEO, 3 GEO gereksinimi ve K7a–K7h kontrolü korunuyor. |
+| [Ödeme notu](../Dragoman_Odeme_Kararlari.md) | Sağlayıcı seçimi açık; araştırma kullanıcı tarafından ertelendi. |
+| [Layout kararları](../Dragoman_Layout_Kararlari.md) | Kronolojik karar izi. Sağlık formunun son kararları için V6 ve sağlık gereksinimlerine bak. |
 | [26 Ekim handover](./Dragoman_Handover_2026-10-26.md) | Önceki bağlam ve tarihsel kayıt. Güncel devam başlangıcı bu 29 Ekim belgesidir. |
 
 Eski sürümdeki açık notlar sonraki açık kullanıcı kararını geçersiz kılmaz. Ana briefteki Ek A'nın 50 müşteri yanıtı ve 25 geliştirici karar tablosu korunmuştur. Belgelerde istenen işlev, uygulanmış/test edilmiş işlev demek değildir.

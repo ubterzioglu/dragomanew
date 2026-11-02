@@ -1,17 +1,38 @@
 # Dragoman yeni web sitesi
 
-**Yeni sohbette başlangıç:** [29 Ekim güncel handover](./claudeguides/Dragoman_Handover_2026-10-29.md). Son sağlık formu kararları, görsel kaynakları, Claude Code rehberi ve devam noktaları bu belgededir. Esas kapsam belgesi V6'dır.
+**Yeni sohbette başlangıç:** yerel `tmp/docs/DURUM.md` (durum, kararlar, çalışma notları) ve `tmp/docs/PLAN.md` (açık işler). `tmp/` git'te değil; bu iki dosya yalnız çalışma makinesinde. Esas kapsam belgesi [Brief V6](./claudeguides/Dragoman_Proje_Brief_V6.md).
 
 - GitHub: https://github.com/ubterzioglu/dragomanew
 - Yerel çalışma klasörü: `C:\temp_private\dragomanew`
 - Hedef MVP yayını: **1 Aralık 2026**
 
-## Güncel durum — 1 Kasım 2026
+## Güncel durum — 2 Kasım 2026
 
-- **Aşama A ziyaretçi sitesi hazır ve önizlemede:** [notyetbro.club](https://notyetbro.club/) (arama motorlarına kapalı; metin, görsel ve fiyatlar örnek). Kod `app/` altında: React 19, TypeScript, Vite, Tailwind CSS 4. `vite-react-ssg` dört dilde 197 sayfayı önceden üretilmiş HTML olarak çıkarır.
-- **Geliştirme:** `app/` klasöründe `npm ci`, sonra `npm run dev`. Her değişiklikten sonra `npm run verify` (tip denetimi, lint, birim testleri, build, bağlantı denetimi, uçtan uca testler).
-- **Yayın:** `main` dalına push, ardından Coolify'da Redeploy. Ayrıntı: [app/deploy/KURULUM.md](./app/deploy/KURULUM.md).
-- **Açık olanlar:** müşteri kararları ve teyit bekleyen içerik (fiyatlar, görsel hakları, ekip, yorumlar, yasal metinler), eksik görseller, kalıcı alan adına geçiş. Aşama B (Supabase formları, yönetim paneli, bildirimler) henüz başlamadı.
+- **Site önizlemede:** [notyetbro.club](https://notyetbro.club/), Coolify üzerinde. Arama motorlarına bilerek kapalı; içerik ve fiyatlar kısmen örnek. Kalıcı alan adına geçiş bekliyor.
+- **Bitenler:**
+  - Aşama A: 4 dilde 197 sayfa, dalış zemini.
+  - Dalga 1: formlar Supabase'e yazıyor, talep akışı, bot koruması.
+  - Dalga 2: panelde içerik, medya ve form düzenleme, Yayınla, DeepL çevirisi, slug değişince 301.
+  - SEO/GEO temelleri: JSON-LD, RSS, `llms.txt`, `FAQPage`.
+- **Sıradaki:** Dalga 3 (sağlık formu akışı), e-posta (Zoho SMTP), çerez bandı ve GA4, alan adı geçişi.
+
+## Klasörler
+
+| Klasör | İçerik |
+| --- | --- |
+| `app/` | Ziyaretçi sitesi: React 19, TypeScript, Vite, Tailwind CSS 4, `vite-react-ssg` |
+| `panel/` | Yönetim paneli (`/panel/`) |
+| `supabase/` | Migration'lar, Edge Function'lar, pgTAP testleri |
+| `docs/` | Geliştirici cookbook'u (panele kopyalanır) |
+| `claudeguides/` | Kapsam, iş kuralları, sağlık formu gereksinimleri. Eski handover'lar, Brief V1–V5, Aşama A planı ve müşteri soruları listesi `claudeguides/arsiv/` altında |
+
+## Geliştirme ve yayın
+
+- **Site:** `app/` klasöründe `npm ci`, sonra `npm run dev`. Her değişiklikten sonra `npm run verify` (tip denetimi, lint, birim testleri, build, bağlantı denetimi, uçtan uca testler).
+- **Panel:** `panel/` klasöründe `npm ci`, sonra `npm run dev`.
+- **Ortak kod:** tek kaynak `app/src/shared/`; `npm run sync:shared` fonksiyonlara ve panele kopyalar.
+- **Kod yayını:** `main` dalına push, ardından Coolify'da Redeploy. Ayrıntı: [app/deploy/KURULUM.md](./app/deploy/KURULUM.md).
+- **İçerik yayını:** panelde Yayınla. Site, Supabase'deki yayın kopyasından build edilir.
 
 Aşağıdaki bölümler dokümantasyon aşamasının (26–29 Ekim 2026) kaydıdır.
 
@@ -35,14 +56,14 @@ UBT, dokümantasyon tamamlandığında belgeyi **Claude Code'a vererek uygulamay
 
 **Katılımcı sağlık formu — 29 Ekim 2026:** UBT'nin Dalış ve Outdoor için verdiği PDF alındı. [Soru/alan envanteri ve uygulama gereksinimleri](./claudeguides/Dragoman_Saglik_Formu_Gereksinimleri.md), [kaynak PDF](./claudeguides/sources/forms/try-saglik-formu-tr-21.pdf) ve V6 Bölüm 6.1 birlikte okunur. Bu form ilk kısa rezervasyon talebinden ayrıdır; Sağlık soruları siteden yanıtlanır; katılımcı ve gerekiyorsa veli/vasi etkinlik öncesinde merkezde kâğıt formu imzalar. Sitede imza çizme yoktur. Evet/Hayır yanıtlarının hiçbiri yeni formda önceden seçili gelmez; boş yanıt Hayır sayılmaz. Outdoor'da dalışa özgü metinlerin kullanımı ve koşullu alt maddeler ayrıca netleştirilecektir.
 
-1. [Devir belgesi](./claudeguides/Dragoman_Handover_2026-10-26.md) — proje bağlamı, fazlar, bağımlılıklar ve yeni repo notu.
-2. [Proje briefi V6](./claudeguides/Dragoman_Proje_Brief_V6.md) — güncel kapsam, şablon geliştirme sırası, kabul edilen layout, SEO/GEO, teknoloji referansı ve ödeme notlarının birleştirilmiş kaydı. [V5](./claudeguides/Dragoman_Proje_Brief_V5.md) ve [V4](./claudeguides/Dragoman_Proje_Brief_V4.md) önceki sürümler olarak korunur.
+1. [Eski devir belgeleri](./claudeguides/arsiv/) — 26, 29 ve 31 Ekim handover'ları; artık güncel değil. Güncel durum yerel `tmp/docs/DURUM.md`'de.
+2. [Proje briefi V6](./claudeguides/Dragoman_Proje_Brief_V6.md) — güncel kapsam, şablon geliştirme sırası, kabul edilen layout, SEO/GEO, teknoloji referansı ve ödeme notlarının birleştirilmiş kaydı. [V5](./claudeguides/arsiv/Dragoman_Proje_Brief_V5.md) ve [V4](./claudeguides/arsiv/Dragoman_Proje_Brief_V4.md) önceki sürümler olarak arşivde korunur.
 3. [Layout kararları](./claudeguides/Dragoman_Layout_Kararlari.md) — kabul edilen ilk ekran, ana kategoriler, üst menü, ana sayfa akışı, kategori ve etkinlik detay şablonları; dört temel layout önerisi de kabul edildi.
 4. [WordPress içerik analizi](./tmp/cloner/analysis/Dragoman_WordPress_Analizi.md) — eski sitenin içerik, dil, ürün ve medya envanteri; layout için yeni bulgular.
 5. [Ödeme kararları](./claudeguides/Dragoman_Odeme_Kararlari.md) — sağlayıcı seçimi açık; POSNET entegrasyonu kolaysa aday, iyzico dışı alternatiflerin araştırılması sonraya bırakıldı.
 6. [SEO/GEO araştırması — 26 Ekim 2026](./claudeguides/Dragoman_SEO_GEO_Arastirma_2026-10-26.md) — güncel resmî kaynaklar, bulgular ve V6'da korunan SEO-01–SEO-15 / GEO-01–GEO-03 gereksinimleri; K7a–K7h kabul ölçütleri.
 
-V3 ve ilk brief kaynak/önceki sürüm olarak korunur. İlk briefin görsel eki `claudeguides/Dragoman_Proje_Brief_assets` klasöründedir.
+V3 ve ilk brief de `claudeguides/arsiv/` altında korunur. İlk briefin görsel eki `claudeguides/Dragoman_Proje_Brief_assets` klasöründedir.
 
 ## Son durum — 29 Ekim 2026
 

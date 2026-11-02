@@ -460,7 +460,7 @@ Aşağıda cevapların özlü ham kayıtları bulunur: mümkün olan yerlerde m�
 
 - Soru 50: “üyelik sistemi düşüneceklerimiz arasında ilk seferde olmasına gerek yok. Bütün bunların yanında bir de konustuk mu bilemedim ama direk satın alınamyan seyler için direk e mail at whatsapptan son vs gibi seceneklerin her sayfada kolayca görünür olması lazım, hem bilgisayar hem de telefondan tabletten girişlerde”
 
-![](Dragoman_Proje_Brief_assets/image1.png)
+![](../Dragoman_Proje_Brief_assets/image1.png)
 
 Bu dökümanı kopyalayıp UBT'ye gönderebilirsiniz.
 

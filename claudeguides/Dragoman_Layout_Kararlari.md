@@ -93,7 +93,7 @@ Renk tonları, yazı tipi, boşluklar ve fotoğraf oranlarının mevcut marka y�
 
 ## 26 Ekim 2026 — WordPress exportundan layout bulguları
 
-Kaynak: [WordPress analiz raporu](../cloner/analysis/Dragoman_WordPress_Analizi.md). Bunlar içerik bulgularıdır; yeni layout kararları veya müşteri yayın onayı değildir.
+Kaynak: [WordPress analiz raporu](../tmp/cloner/analysis/Dragoman_WordPress_Analizi.md). Bunlar içerik bulgularıdır; yeni layout kararları veya müşteri yayın onayı değildir.
 
 - Dalış ve Doğa Aktiviteleri uzun kategori sayfalarında çok sayıda etkinlik/eğitim içeriyor. İnceleme sırasında sunulan kısa kategori kartları ve ayrı detay sayfalarına geçiş önerisi, sonraki kategori sayfası kabulüyle netleşti; detay sayfasının temel yerleşimi de ayrıca kabul edildi.
 - Dört kano turunun ayrıntılı EN/TR/FR içerikleri WordPress yazısı olarak mevcut. Yeni sistemde sadece blog olarak ele alınmamalı; kategori sayfasındaki aynı turlarla eşleştirilmeli.
