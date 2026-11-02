@@ -8,8 +8,9 @@ select plan(41);
 
 select tables_are(
   'public',
-  array['staff_members', 'events', 'event_options', 'requests', 'request_activity', 'notifications', 'submission_throttle', 'app_settings'],
-  'public holds exactly the Dalga 1 tables'
+  array['staff_members', 'events', 'event_options', 'requests', 'request_activity', 'notifications', 'submission_throttle', 'app_settings',
+        'content_entries', 'media_assets', 'content_releases', 'site_deploys', 'form_versions', 'form_definitions', 'translation_runs'],
+  'public holds exactly the Dalga 1 and Dalga 2 tables'
 );
 
 select is_empty(
@@ -44,8 +45,9 @@ select is_empty(
 select is_empty(
   $$ select c.relname from pg_class as c join pg_namespace as n on n.oid = c.relnamespace
      where n.nspname = 'public' and c.relkind = 'r'
-       and (has_table_privilege('authenticated', c.oid, 'delete, truncate')
-            or (c.relname not in ('staff_members', 'app_settings')
+       and ((has_table_privilege('authenticated', c.oid, 'delete') and c.relname <> 'content_entries')
+            or has_table_privilege('authenticated', c.oid, 'truncate')
+            or (c.relname not in ('staff_members', 'app_settings', 'content_entries', 'media_assets', 'form_definitions')
                 and (has_table_privilege('authenticated', c.oid, 'insert, update')
                      or has_any_column_privilege('authenticated', c.oid, 'insert, update')))) $$,
   'authenticated cannot write requests, activity, the outbox, the throttle or content'
@@ -85,7 +87,8 @@ select results_eq(
   array[
     'private.before_user_created', 'private.can', 'private.current_staff_id',
     'public.claim_request', 'public.hand_over_request', 'public.link_staff_account',
-    'public.list_staff_members', 'public.reassign_request', 'public.throttle_submission'
+    'public.list_staff_members', 'public.my_permissions', 'public.reassign_request', 'public.request_site_deploy',
+    'public.throttle_submission'
   ],
   'security definer is used only for the RPCs and the private helpers that need it'
 );

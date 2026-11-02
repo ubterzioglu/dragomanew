@@ -412,6 +412,24 @@ verify_jwt = false
 import_map = "./functions/submit-request/deno.json"
 entrypoint = "./functions/submit-request/index.ts"
 
+# Dalga 2 functions: each checks its own caller (staff Bearer + AAL2 + my_permissions(), the
+# publishable key, or the pg_net dispatch secret), so the platform JWT check is off.
+[functions.publish-content]
+enabled = true
+verify_jwt = false
+
+[functions.translate-content]
+enabled = true
+verify_jwt = false
+
+[functions.content-release]
+enabled = true
+verify_jwt = false
+
+[functions.site-deploy]
+enabled = true
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327
