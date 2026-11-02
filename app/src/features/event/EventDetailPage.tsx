@@ -14,6 +14,7 @@ import { useLocale, useUi } from '../../i18n/LocaleContext'
 import { localePath } from '../../i18n/pages'
 import { touristTrip } from '../../lib/jsonLd/touristTrip'
 import { pageNodes } from '../../lib/jsonLd/pageNodes'
+import { faqPage } from '../../lib/jsonLd/faqPage'
 import { socialImage } from '../../lib/socialImage'
 import { EventRequestForm } from '../forms/EventRequestForm'
 import { EventInfoBox } from './EventInfoBox'
@@ -70,7 +71,8 @@ export function EventDetailPage({ event }: { event: DragomanEvent }) {
     { label: title },
   ]
   const trip = touristTrip({ path, name: title, description: summary, image, itinerary })
-  const jsonLd = pageNodes({ path, name: title, description: seo.description, locale, image, crumbs, mainEntity: trip })
+  const nodes = pageNodes({ path, name: title, description: seo.description, locale, image, crumbs, mainEntity: trip })
+  const jsonLd = faq.length > 0 ? [...nodes, faqPage(path, faq)] : nodes
 
   return (
     <>

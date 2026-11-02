@@ -4,6 +4,7 @@ import { pick } from '../../src/content/localize'
 import { blogPosting } from '../../src/lib/jsonLd/blogPosting'
 import { book } from '../../src/lib/jsonLd/book'
 import { breadcrumb } from '../../src/lib/jsonLd/breadcrumb'
+import { faqPage } from '../../src/lib/jsonLd/faqPage'
 import { pageGraph, serializeJsonLd, WEBSITE_ID } from '../../src/lib/jsonLd/graph'
 import { organization, ORGANIZATION_ID } from '../../src/lib/jsonLd/organization'
 import { pageNodes } from '../../src/lib/jsonLd/pageNodes'
@@ -110,6 +111,16 @@ describe('page generators', () => {
       publisher: { '@id': ORGANIZATION_ID },
       mainEntityOfPage: { '@id': `${ORIGIN}/blog/x/#webpage` },
       image: { '@type': 'ImageObject', url: image.url, width: 1000, height: 580 },
+    })
+  })
+
+  it('faqPage carries the shown questions and answers, tied to the page', () => {
+    const node = faqPage('/sea-kayak/kekova/', [{ question: 'Q?', answer: 'A.' }])
+    expect(node).toEqual({
+      '@type': 'FAQPage',
+      '@id': `${ORIGIN}/sea-kayak/kekova/#faq`,
+      isPartOf: { '@id': `${ORIGIN}/sea-kayak/kekova/#webpage` },
+      mainEntity: [{ '@type': 'Question', name: 'Q?', acceptedAnswer: { '@type': 'Answer', text: 'A.' } }],
     })
   })
 
