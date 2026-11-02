@@ -15,6 +15,7 @@ describe('visibleNav', () => {
     expect(paths(forRole('main_admin'))).toEqual([
       '/',
       '/beni-oku',
+      '/sorular',
       '/talepler',
       '/icerik',
       '/medya',
@@ -30,13 +31,13 @@ describe('visibleNav', () => {
 
   it('gives request roles the overview, requests and help only, and drops the empty groups', () => {
     for (const role of ['reservations', 'accounting'] as const) {
-      expect(paths(forRole(role))).toEqual(['/', '/beni-oku', '/talepler', '/kilavuz', '/guncellemeler'])
+      expect(paths(forRole(role))).toEqual(['/', '/beni-oku', '/sorular', '/talepler', '/kilavuz', '/guncellemeler'])
       expect(visibleNav(forRole(role)).map((group) => group.id)).toEqual(['genel', 'yardim'])
     }
   })
 
   it('gives the content role İçerik, Medya and Yayın but not Formlar or Kullanıcılar', () => {
-    expect(paths(forRole('content'))).toEqual(['/', '/beni-oku', '/talepler', '/icerik', '/medya', '/yayin', '/kilavuz', '/guncellemeler'])
+    expect(paths(forRole('content'))).toEqual(['/', '/beni-oku', '/sorular', '/talepler', '/icerik', '/medya', '/yayin', '/kilavuz', '/guncellemeler'])
   })
 
   it('follows the permissions, not the role name (extra permissions, my_permissions)', () => {
@@ -56,7 +57,7 @@ describe('visibleNav', () => {
   })
 
   it('shows nothing but the always-on items without permissions or a role', () => {
-    expect(paths({ role: null, can: () => false })).toEqual(['/', '/beni-oku', '/talepler', '/kilavuz', '/guncellemeler'])
+    expect(paths({ role: null, can: () => false })).toEqual(['/', '/beni-oku', '/sorular', '/talepler', '/kilavuz', '/guncellemeler'])
   })
 })
 

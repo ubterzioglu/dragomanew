@@ -4,6 +4,7 @@ import {
   Image,
   Info,
   Inbox,
+  MessageCircleQuestionMark,
   LayoutDashboard,
   ListChecks,
   Rocket,
@@ -18,6 +19,7 @@ import type { NavIcon } from './navItems'
 export const NAV_ICONS: Readonly<Record<NavIcon, LucideIcon>> = {
   overview: LayoutDashboard,
   readme: Info,
+  questions: MessageCircleQuestionMark,
   requests: Inbox,
   content: FileText,
   media: Image,

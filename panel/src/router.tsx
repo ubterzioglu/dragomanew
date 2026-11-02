@@ -12,6 +12,7 @@ import { DeveloperPage } from './routes/help/DeveloperPage'
 import { GuidePage } from './routes/help/GuidePage'
 import { StaffPage } from './routes/StaffPage'
 import { PasswordPage } from './routes/PasswordPage'
+import { QuestionsPage } from './routes/QuestionsPage'
 // Dalga 2 content (Lane F)
 import { ContentEditorPage } from './routes/content/ContentEditorPage'
 import { ContentListPage } from './routes/content/ContentListPage'
@@ -28,6 +29,7 @@ export const router = createBrowserRouter(
       children: [
         { index: true, element: <OverviewPage /> },
         { path: 'talepler', element: <RequestsPage /> },
+        { path: 'sorular', element: <QuestionsPage /> },
         { path: 'giris', element: <LoginPage /> },
         { path: 'sifre', element: <PasswordPage /> },
         { path: 'kullanicilar', element: <StaffPage /> },

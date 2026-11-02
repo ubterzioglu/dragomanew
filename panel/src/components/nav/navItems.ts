@@ -9,6 +9,7 @@ import type { StaffRole } from '../../lib/types'
 export type NavIcon =
   | 'overview'
   | 'readme'
+  | 'questions'
   | 'requests'
   | 'content'
   | 'media'
@@ -30,6 +31,7 @@ export const GUIDE_IDS = [
   'formlar',
   'kullanicilar',
   'giris-ve-sifre',
+  'musteri-sorulari',
   'sss',
 ] as const
 
@@ -82,6 +84,14 @@ export const NAV_GROUPS: readonly NavGroup[] = [
         label: 'Beni Oku!',
         icon: 'readme',
         description: 'Site, ekip ve çalışma kuralları hakkında bilinmesi gerekenler.',
+        visible: always,
+      },
+      {
+        to: '/sorular',
+        label: 'Müşteri soruları',
+        icon: 'questions',
+        description: "Dragoman'dan beklenen bilgiler; yanıtı bilen yazıp kaydeder.",
+        guide: 'musteri-sorulari',
         visible: always,
       },
       {

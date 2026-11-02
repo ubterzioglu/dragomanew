@@ -20,6 +20,8 @@ const BY_CODE: Readonly<Record<string, string>> = {
   P0002: 'Talep bulunamadı.',
   '22023':
     'Talep bu kişiye verilemiyor: kişi etkin olmalı, talepler üzerinde çalışabilmeli ve talep zaten onda olmamalı.',
+  // save_client_answer (supabase/migrations/*_client_answers_conflict.sql)
+  DRG01: 'Bu soruyu siz yazarken başka biri yanıt kaydetti.',
   PGRST116: 'Kayıt bulunamadı ya da görme yetkiniz yok.',
   PGRST301: 'Oturumunuzun süresi doldu. Lütfen yeniden giriş yapın.',
   PGRST303: 'Oturumunuzun süresi doldu. Lütfen yeniden giriş yapın.',

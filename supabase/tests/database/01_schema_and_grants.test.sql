@@ -9,8 +9,9 @@ select plan(41);
 select tables_are(
   'public',
   array['staff_members', 'events', 'event_options', 'requests', 'request_activity', 'notifications', 'submission_throttle', 'app_settings',
-        'content_entries', 'media_assets', 'content_releases', 'site_deploys', 'form_versions', 'form_definitions', 'translation_runs'],
-  'public holds exactly the Dalga 1 and Dalga 2 tables'
+        'content_entries', 'media_assets', 'content_releases', 'site_deploys', 'form_versions', 'form_definitions', 'translation_runs',
+        'client_answers'],
+  'public holds exactly the Dalga 1 and Dalga 2 tables plus the open-question answers'
 );
 
 select is_empty(
@@ -47,7 +48,7 @@ select is_empty(
      where n.nspname = 'public' and c.relkind = 'r'
        and ((has_table_privilege('authenticated', c.oid, 'delete') and c.relname <> 'content_entries')
             or has_table_privilege('authenticated', c.oid, 'truncate')
-            or (c.relname not in ('staff_members', 'app_settings', 'content_entries', 'media_assets', 'form_definitions')
+            or (c.relname not in ('staff_members', 'app_settings', 'content_entries', 'media_assets', 'form_definitions', 'client_answers')
                 and (has_table_privilege('authenticated', c.oid, 'insert, update')
                      or has_any_column_privilege('authenticated', c.oid, 'insert, update')))) $$,
   'authenticated cannot write requests, activity, the outbox, the throttle or content'

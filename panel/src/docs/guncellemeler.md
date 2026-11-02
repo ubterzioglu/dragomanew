@@ -2,6 +2,7 @@
 
 ## 2026-11-02
 
+- Yeni **Müşteri soruları** sayfası (Beni Oku!'nun altında): siteyi yayına hazırlamak için Dragoman'dan beklenen 27 soru konulara göre sıralı. Her sorunun altına yanıtı yazıp **Kaydet**'e basabilirsiniz; kimin ne zaman kaydettiği ve kaç sorunun yanıtlandığı görünür.
 - Ana sayfadaki **Google yorumları** bölümünde artık örnek yorumlar görünmüyor. Yerine iki düğme var: **Google’daki yorumları okuyun** ve **Yorum yazın**; ikisi de Dragoman’ın Google kaydını açıyor.
 - Sitedeki derinlik ölçeği, derinlik göstergesi ve **yukarı çık** düğmesi artık sitenin renklerinde: beyaz zemin, yeşil yazı, turuncu ibre.
 - Yeni **Beni Oku!** sayfası (Genel bakışın altında): site, çeviri, talepler, fotoğraflar ve hesaplarla ilgili bilinmesi gerekenler ve şu anki durum.
