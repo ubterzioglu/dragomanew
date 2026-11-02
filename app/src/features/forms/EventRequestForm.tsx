@@ -9,9 +9,12 @@ import { formatTemplate } from '../../i18n/ui'
 import { formatMoney } from '../../lib/format'
 import { needsDistribution } from '../../lib/options'
 import { describedBy, TextAreaField, TextField } from './Field'
+import { FormResult } from './FormResult'
+import { HoneypotField } from './HoneypotField'
 import { PriceSummary } from './PriceSummary'
 import { eventRequestSchema } from './schemas'
-import { DemoFormFields, DemoResult, useDemoSubmission } from './submission'
+import { DemoFormFields } from './FormParts'
+import { useFormSubmission } from './submission'
 
 /**
  * First short booking request (V6 §6): one event only, auto-selected. Name,
@@ -42,9 +45,10 @@ export function EventRequestForm({ event }: { event: DragomanEvent }) {
     handleSubmit,
     setFocus,
     control,
+    reset,
     formState: { errors },
   } = useForm({ resolver: zodResolver(schema), defaultValues })
-  const { ready, canSubmit, result, submissions, submit } = useDemoSubmission('event-request')
+  const { ready, sending, canSubmit, result, submissions, submit, edited, honeypotRef } = useFormSubmission('event-request', { eventId: event.id, onSent: reset })
 
   const partySize = useWatch({ control, name: 'partySize' })
   const distribution = useWatch({ control, name: 'distribution' })
@@ -64,7 +68,7 @@ export function EventRequestForm({ event }: { event: DragomanEvent }) {
   }
 
   return (
-    <form method="post" noValidate onSubmit={handleSubmit(submit, focusDistribution)}>
+    <form method="post" noValidate aria-busy={sending || undefined} onSubmit={handleSubmit(submit, focusDistribution)} onChange={edited}>
       <DemoFormFields ready={ready} className="space-y-5">
         <p className="rounded-lg border border-line bg-sand px-4 py-3">
           <span className="text-sm text-ink-muted">{ui.forms.activity}{ui.typography.labelSeparator}</span>
@@ -126,12 +130,13 @@ export function EventRequestForm({ event }: { event: DragomanEvent }) {
           <TextField id={field('phone')} label={ui.forms.phone} type="tel" autoComplete="tel" optional {...register('phone')} />
         </div>
         <TextAreaField id={field('message')} label={ui.forms.message} optional {...register('message')} />
+        <HoneypotField ref={honeypotRef} />
 
         <p className="text-sm text-ink-muted">{ui.pages.requestNote}</p>
         <button type="submit" disabled={!canSubmit} className={buttonClass('primary', 'w-full sm:w-auto')}>
-          {ui.forms.submitRequest}
+          {sending ? ui.forms.sending : ui.forms.submitRequest}
         </button>
-        {result && <DemoResult key={submissions} />}
+        {result && <FormResult key={submissions} result={result} />}
       </DemoFormFields>
     </form>
   )

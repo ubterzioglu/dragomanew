@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Locator, type Page } from '@playwright/test'
 import { LOCALE_TAG, LOCALES } from '../../src/i18n/locales'
 import { localePath } from '../../src/i18n/pages'
 import { getUi } from '../../src/i18n/ui'
@@ -101,6 +101,19 @@ async function watchCsp(page: Page): Promise<() => Promise<string[]>> {
   return () => page.evaluate(() => (window as unknown as { __cspViolations: string[] }).__cspViolations)
 }
 
+const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+/**
+ * On a deployed host (E2E_BASE_URL) the forms post to the real function, so every post-deploy check
+ * would store a request and send real e-mails. Filling the honeypot (HoneypotField, `website`) makes the
+ * server discard it and answer a fake reference. The input is moved off screen and aria-hidden, so it is
+ * filled by name, not by label. The local preview is a demo build whose forms send nothing; it stays as is.
+ */
+async function trapAsBot(form: Locator): Promise<void> {
+  if (!process.env.E2E_BASE_URL) return
+  await form.locator('input[name="website"]').fill('e2e-post-deploy-check', { force: true })
+}
+
 // L5: each page's own policy lets it hydrate, navigate and submit; nothing is blocked.
 test('the Content-Security-Policy blocks nothing the site does', async ({ page }) => {
   test.setTimeout(120_000)
@@ -125,8 +138,13 @@ test('the Content-Security-Policy blocks nothing the site does', async ({ page }
   await form.getByLabel(ui.forms.fullName).fill('Örnek Ziyaretçi')
   await form.getByLabel(ui.forms.email).fill('ornek@example.com')
   await form.getByLabel(ui.forms.message).fill('Merhaba')
+  await trapAsBot(form)
   await form.getByRole('button', { name: ui.forms.submit }).click()
-  await expect(form.getByRole('status')).toBeVisible()
+  const status = form.getByRole('status')
+  await expect(status).toBeVisible()
+  // Locally the forms are samples; a deployed host answers the trapped request with a fake reference.
+  await expect(status).toContainText(new RegExp(`${escapeRegExp(ui.forms.demoResult)}|${escapeRegExp(ui.forms.result.sentTitle)}`))
+  if (process.env.E2E_BASE_URL) await expect(status.locator('strong')).toHaveText(/^DRG-\d+$/)
   seen.push(...(await violations()))
 
   expect(seen).toEqual([])

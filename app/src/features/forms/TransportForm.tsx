@@ -5,8 +5,11 @@ import { buttonClass } from '../../components/ui/Button'
 import { useUi } from '../../i18n/LocaleContext'
 import { formatTemplate } from '../../i18n/ui'
 import { TextAreaField, TextField } from './Field'
+import { FormResult } from './FormResult'
+import { HoneypotField } from './HoneypotField'
 import { transportSchema } from './schemas'
-import { DemoFormFields, DemoResult, useDemoSubmission } from './submission'
+import { DemoFormFields } from './FormParts'
+import { useFormSubmission } from './submission'
 
 // Also written into the markup, so the prerendered form shows what react-hook-form sets on hydration.
 const TRANSPORT_DEFAULTS = {
@@ -36,9 +39,15 @@ export function TransportForm() {
     control,
     getValues,
     setValue,
+    reset,
     formState: { errors },
   } = useForm({ resolver: zodResolver(schema), shouldUnregister: true, defaultValues: TRANSPORT_DEFAULTS })
-  const { ready, canSubmit, result, submissions, submit } = useDemoSubmission('transport')
+  // The seat count lives outside react-hook-form, so a new request also starts with one seat.
+  const startOver = () => {
+    reset()
+    setSeatCount(1)
+  }
+  const { ready, sending, canSubmit, result, submissions, submit, edited, honeypotRef } = useFormSubmission('transport', { onSent: startOver })
   const roundTrip = useWatch({ control, name: 'tripType' }) === 'roundTrip'
   const childSeat = useWatch({ control, name: 'childSeat' })
   const field = (name: string) => `${idPrefix}-${name}`
@@ -51,7 +60,7 @@ export function TransportForm() {
   }
 
   return (
-    <form method="post" noValidate onSubmit={handleSubmit(submit)}>
+    <form method="post" noValidate aria-busy={sending || undefined} onSubmit={handleSubmit(submit)} onChange={edited}>
       <DemoFormFields ready={ready} className="space-y-5">
         <fieldset>
           <legend className="font-semibold">{ui.forms.tripType}</legend>
@@ -136,11 +145,12 @@ export function TransportForm() {
           <TextField id={field('phone')} label={ui.forms.phone} type="tel" autoComplete="tel" optional {...register('phone')} />
         </div>
         <TextAreaField id={field('note')} label={ui.forms.message} optional {...register('note')} />
+        <HoneypotField ref={honeypotRef} />
 
         <button type="submit" disabled={!canSubmit} className={buttonClass('primary', 'w-full sm:w-auto')}>
-          {ui.forms.submitRequest}
+          {sending ? ui.forms.sending : ui.forms.submitRequest}
         </button>
-        {result && <DemoResult key={submissions} />}
+        {result && <FormResult key={submissions} result={result} />}
       </DemoFormFields>
     </form>
   )

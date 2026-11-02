@@ -1,0 +1,17 @@
+// Builds the site with its forms in demo mode, whatever app/.env.local holds (npm run build:demo).
+// The E2E suite runs against this build: it submits every form, and a build with the Supabase
+// settings would post those test requests to the configured project instead of showing the sample
+// result. Values already in the environment win over the .env files, blank ones included.
+import { spawnSync } from 'node:child_process'
+
+const DEMO_ENV = { VITE_SUPABASE_URL: '', VITE_SUPABASE_PUBLISHABLE_KEY: '' }
+
+// npm sets npm_execpath for its scripts; running it with this Node avoids spawning npm.cmd through a shell on Windows.
+// Run directly (node scripts/build-demo.mjs), npm is found through the shell, given as one command line.
+const npmCli = process.env.npm_execpath
+const options = { stdio: 'inherit', env: { ...process.env, ...DEMO_ENV } }
+const result = npmCli
+  ? spawnSync(process.execPath, [npmCli, 'run', 'build'], options)
+  : spawnSync('npm run build', { ...options, shell: true })
+if (result.error) throw result.error
+process.exit(result.status ?? 1)

@@ -1,6 +1,7 @@
-# Only app/ goes into the image build, without local installs, builds or secrets.
+# Only app/ and panel/ go into the image build, without local installs, builds or secrets.
 *
 !app
+!panel
 app/node_modules
 app/tools/lint/node_modules
 app/dist
@@ -11,3 +12,10 @@ app/playwright-report
 app/.env
 app/.env.*
 app/**/*.local
+panel/node_modules
+panel/dist
+panel/coverage
+panel/.omc
+panel/.env
+panel/.env.*
+panel/**/*.local

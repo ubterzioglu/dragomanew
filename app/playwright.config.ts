@@ -4,11 +4,13 @@ import { defineConfig, devices } from '@playwright/test'
 const deployedHost = process.env.E2E_BASE_URL || undefined
 
 /**
- * E2E checks against the prerendered build (npm run build first).
+ * E2E checks against the prerendered demo build (npm run build:demo first; global-setup refuses a
+ * live one, whose forms would store the test requests).
  * Results feed tmp/docs/asama-a-teslim/kontrol-sonuclari.md; a deployed host's run stays out of them.
  */
 export default defineConfig({
   testDir: 'tests/e2e',
+  globalSetup: './tests/e2e/global-setup.ts',
   fullyParallel: true,
   retries: 0,
   reporter: deployedHost ? [['list']] : [['list'], ['json', { outputFile: 'test-results/e2e-results.json' }]],

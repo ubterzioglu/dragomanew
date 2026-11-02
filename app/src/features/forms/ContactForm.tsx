@@ -4,8 +4,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { buttonClass } from '../../components/ui/Button'
 import { useUi } from '../../i18n/LocaleContext'
 import { TextAreaField, TextField } from './Field'
+import { FormResult } from './FormResult'
+import { HoneypotField } from './HoneypotField'
 import { contactSchema } from './schemas'
-import { DemoFormFields, DemoResult, useDemoSubmission } from './submission'
+import { DemoFormFields } from './FormParts'
+import { useFormSubmission } from './submission'
 
 export function ContactForm() {
   const ui = useUi()
@@ -14,16 +17,17 @@ export function ContactForm() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: { fullName: '', email: '', phone: '', subject: '', message: '' },
   })
-  const { ready, canSubmit, result, submissions, submit } = useDemoSubmission('contact')
+  const { ready, sending, canSubmit, result, submissions, submit, edited, honeypotRef } = useFormSubmission('contact', { onSent: reset })
   const field = (name: string) => `${idPrefix}-${name}`
 
   return (
-    <form method="post" noValidate onSubmit={handleSubmit(submit)}>
+    <form method="post" noValidate aria-busy={sending || undefined} onSubmit={handleSubmit(submit)} onChange={edited}>
       <DemoFormFields ready={ready} className="space-y-5">
         <div className="grid gap-5 sm:grid-cols-2">
           <TextField id={field('name')} label={ui.forms.fullName} autoComplete="name" error={errors.fullName?.message} {...register('fullName')} />
@@ -32,10 +36,11 @@ export function ContactForm() {
           <TextField id={field('subject')} label={ui.forms.subject} optional {...register('subject')} />
         </div>
         <TextAreaField id={field('message')} label={ui.forms.message} error={errors.message?.message} {...register('message')} />
+        <HoneypotField ref={honeypotRef} />
         <button type="submit" disabled={!canSubmit} className={buttonClass('primary', 'w-full sm:w-auto')}>
-          {ui.forms.submit}
+          {sending ? ui.forms.sending : ui.forms.submit}
         </button>
-        {result && <DemoResult key={submissions} />}
+        {result && <FormResult key={submissions} result={result} />}
       </DemoFormFields>
     </form>
   )

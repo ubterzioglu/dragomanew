@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+/* Colour tokens copied from app/src/styles/app.css @theme (the panel never imports the site's CSS). */
+@theme {
+  --color-brand-green: #006c50;
+  --color-brand-green-dark: #00523d;
+  --color-brand-green-soft: #e6f1ed;
+  --color-brand-orange: #e06c08;
+  --color-brand-orange-ink: #a34e00;
+  --color-brand-orange-soft: #fcefe3;
+  --color-brand-orange-light: #f9a65a;
+
+  --color-ink: #14221d;
+  --color-ink-muted: #4a5a54;
+  --color-sand: #fff;
+  --color-line: #e2ded5;
+  --color-line-strong: #7d8a84;
+  --color-sea: #0b4f6c;
+
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 0.75rem;
+}
+
+@layer base {
+  html {
+    color: var(--color-ink);
+    background: #f6f5f1;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    line-height: 1.5;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-brand-orange-ink);
+    outline-offset: 2px;
+  }
+
+  dialog::backdrop {
+    background: rgb(20 34 29 / 0.5);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

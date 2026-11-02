@@ -2,7 +2,7 @@ import { defineConfig, loadEnv, type UserConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import type { ViteReactSSGOptions } from 'vite-react-ssg'
-import { addContentSecurityPolicyToPages } from './src/lib/contentSecurityPolicy'
+import { addContentSecurityPolicyToPages, supabaseConnectSources } from './src/lib/contentSecurityPolicy'
 import { deferAppScript } from './src/lib/deferAppScript'
 import { resolveSiteOrigin } from './src/lib/siteOrigin'
 
@@ -20,22 +20,28 @@ function withTrailingSlash(route: string): string {
   return route.endsWith('/') ? route : `${route}/`
 }
 
-const ssgOptions: ViteReactSSGOptions = {
-  entry: 'src/main.tsx',
-  dirStyle: 'nested',
-  includedRoutes: (paths) => paths.filter((route) => !route.includes(':') && !route.includes('*')).map(withTrailingSlash),
-  onPageRendered: (_route, html) => deferAppScript(charsetFirst(html)),
-  // Each page's policy allows its inline scripts by hash, so it is added once every page is final.
-  onFinished: async (outDir) => {
-    await addContentSecurityPolicyToPages(outDir)
-  },
-  // Critical-CSS inlining would add <style> blocks the policy does not allow.
-  beastiesOptions: false,
+/** `connectSources`: origins the forms may post to besides the site (the Supabase project, once configured). */
+function ssgOptions(connectSources: readonly string[]): ViteReactSSGOptions {
+  return {
+    entry: 'src/main.tsx',
+    dirStyle: 'nested',
+    includedRoutes: (paths) => paths.filter((route) => !route.includes(':') && !route.includes('*')).map(withTrailingSlash),
+    onPageRendered: (_route, html) => deferAppScript(charsetFirst(html)),
+    // Each page's policy allows its inline scripts by hash, so it is added once every page is final.
+    onFinished: async (outDir) => {
+      await addContentSecurityPolicyToPages(outDir, connectSources)
+    },
+    // Critical-CSS inlining would add <style> blocks the policy does not allow.
+    beastiesOptions: false,
+  }
 }
 
 export default defineConfig(({ mode }): UserConfig & { ssgOptions: ViteReactSSGOptions } => {
+  const env = loadEnv(mode, process.cwd(), 'VITE_')
   // Validated here so a malformed origin fails the build rather than every canonical URL.
-  const siteOrigin = resolveSiteOrigin(loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_ORIGIN)
+  const siteOrigin = resolveSiteOrigin(env.VITE_SITE_ORIGIN)
+  // Empty while VITE_SUPABASE_URL is unset, so a Stage A build keeps connect-src 'self' only.
+  const connectSources = supabaseConnectSources(env.VITE_SUPABASE_URL)
   return {
     plugins: [react(), tailwindcss()],
     define: {
@@ -43,6 +49,6 @@ export default defineConfig(({ mode }): UserConfig & { ssgOptions: ViteReactSSGO
       'import.meta.env.VITE_BUILD_YEAR': JSON.stringify(String(new Date().getFullYear())),
       'import.meta.env.VITE_SITE_ORIGIN': JSON.stringify(siteOrigin),
     },
-    ssgOptions,
+    ssgOptions: ssgOptions(connectSources),
   }
 })

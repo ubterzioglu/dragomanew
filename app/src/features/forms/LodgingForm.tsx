@@ -5,8 +5,11 @@ import { buttonClass } from '../../components/ui/Button'
 import { useUi } from '../../i18n/LocaleContext'
 import { formatTemplate } from '../../i18n/ui'
 import { TextAreaField, TextField } from './Field'
+import { FormResult } from './FormResult'
+import { HoneypotField } from './HoneypotField'
 import { lodgingSchema, MAX_CHILDREN } from './schemas'
-import { DemoFormFields, DemoResult, useDemoSubmission } from './submission'
+import { DemoFormFields } from './FormParts'
+import { useFormSubmission } from './submission'
 
 // Also written into the markup, so the prerendered form shows what react-hook-form sets on hydration.
 const LODGING_DEFAULTS = {
@@ -33,9 +36,10 @@ export function LodgingForm() {
     control,
     getValues,
     setValue,
+    reset,
     formState: { errors },
   } = useForm({ resolver: zodResolver(schema), shouldUnregister: true, defaultValues: LODGING_DEFAULTS })
-  const { ready, canSubmit, result, submissions, submit } = useDemoSubmission('lodging')
+  const { ready, sending, canSubmit, result, submissions, submit, edited, honeypotRef } = useFormSubmission('lodging', { onSent: reset })
   const childCount = useWatch({ control, name: 'children' })
   const visibleChildren = Number.isInteger(childCount) ? Math.min(Math.max(childCount, 0), MAX_CHILDREN) : 0
   const field = (name: string) => `${idPrefix}-${name}`
@@ -49,7 +53,7 @@ export function LodgingForm() {
   const number = { type: 'number', step: 1, inputMode: 'numeric' } as const
 
   return (
-    <form method="post" noValidate onSubmit={handleSubmit(submit)}>
+    <form method="post" noValidate aria-busy={sending || undefined} onSubmit={handleSubmit(submit)} onChange={edited}>
       <DemoFormFields ready={ready} className="space-y-5">
         <div className="grid gap-5 sm:grid-cols-2">
           <TextField id={field('in')} label={ui.forms.checkIn} type="date" error={errors.checkIn?.message} {...register('checkIn')} />
@@ -83,12 +87,13 @@ export function LodgingForm() {
           <TextField id={field('phone')} label={ui.forms.phone} type="tel" autoComplete="tel" optional {...register('phone')} />
         </div>
         <TextAreaField id={field('prefs')} label={ui.forms.lodgingPreferences} optional {...register('preferences')} />
+        <HoneypotField ref={honeypotRef} />
 
         <p className="text-sm text-ink-muted">{ui.forms.lodgingNote}</p>
         <button type="submit" disabled={!canSubmit} className={buttonClass('primary', 'w-full sm:w-auto')}>
-          {ui.forms.submitRequest}
+          {sending ? ui.forms.sending : ui.forms.submitRequest}
         </button>
-        {result && <DemoResult key={submissions} />}
+        {result && <FormResult key={submissions} result={result} />}
       </DemoFormFields>
     </form>
   )

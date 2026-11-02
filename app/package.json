@@ -9,13 +9,16 @@
   "scripts": {
     "dev": "vite",
     "build": "vitest run tests/unit/content.test.ts && vite-react-ssg build",
+    "build:demo": "node scripts/build-demo.mjs",
     "preview": "vite preview --port 4173 --strictPort",
     "demo": "npm run build && npm run preview",
     "postinstall": "npm install --prefix tools/lint --no-audit --no-fund",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "node tools/lint/node_modules/eslint/bin/eslint.js -c tools/lint/eslint.config.js --max-warnings 0 .",
     "check:dist": "node scripts/check-dist.mjs",
+    "check:events": "node scripts/check-events-drift.mjs",
     "content-report": "node scripts/content-report.mjs",
+    "db:seed": "node scripts/generate-supabase-seed.mjs",
     "brand": "node scripts/brand-assets.mjs",
     "media": "node scripts/images-optimize.mjs",
     "test": "vitest run",
@@ -23,8 +26,9 @@
     "test:coverage": "vitest run --coverage",
     "e2e": "playwright test",
     "screenshots": "playwright test tests/e2e/screenshots.spec.ts --project=desktop",
-    "verify": "npm run typecheck && npm run lint && npm test && npm run build && npm run check:dist && npm run e2e",
-    "fonts": "node scripts/fonts-subset.mjs"
+    "verify": "npm run typecheck && npm run lint && npm test && npm run build:demo && npm run check:dist && npm run e2e",
+    "fonts": "node scripts/fonts-subset.mjs",
+    "sync:shared": "node scripts/sync-shared.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^7.0.0",
