@@ -15,3 +15,6 @@ __pycache__/
 
 # Browser automation scratch output (screenshots, page snapshots).
 .playwright-mcp/
+
+# Claude Code agent worktrees
+.claude/worktrees/
