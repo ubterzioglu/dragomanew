@@ -108,9 +108,19 @@ describe('business rules (guide §6, handover 31 Oct)', () => {
 })
 
 describe('languages', () => {
-  it('has every text in all four languages (no silent fallback)', () => {
+  it('has every text of the published content in all four languages (no silent fallback)', () => {
     const { media: _media, ...content } = d
-    expect(missingTranslations(content)).toEqual([])
+    expect(missingTranslations({ ...content, events: content.events.filter((e) => e.status !== 'draft') })).toEqual([])
+  })
+
+  it('leaves German out of the cloner drafts for staff to translate in the panel', () => {
+    const drafts = d.events.filter((e) => e.status === 'draft')
+    expect(drafts.length).toBeGreaterThan(0)
+    for (const event of drafts) {
+      expect([event.title.de, event.summary.de, event.body.de], event.id).toEqual([undefined, undefined, undefined])
+      expect(event.translationOrigin.de, event.id).toBeUndefined()
+      expect([event.title.en, event.title.fr, event.body.en, event.body.fr].every(Boolean), event.id).toBe(true)
+    }
   })
 
   it('never marks German as coming from the old site (it had no German)', () => {

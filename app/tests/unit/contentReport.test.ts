@@ -36,9 +36,20 @@ describe('buildContentReport (Stage A data)', () => {
     for (const row of report.records) expect(['cloner', 'kayak-site', 'mockup']).toContain(row.origin)
   })
 
-  it('reports German as sample text everywhere and no silent gaps in the sample set', () => {
-    for (const row of report.records) expect(row.translationOrigin.de).toBe('mockup')
-    expect(report.totals.missing).toEqual({ en: 0, fr: 0, de: 0 })
+  it('reports German as sample text everywhere and no silent gaps in the published sample set', () => {
+    const published = report.records.filter((row) => row.status !== 'draft')
+    for (const row of published) expect(row.translationOrigin.de).toBe('mockup')
+    for (const locale of ['en', 'fr', 'de'] as const) expect(published.reduce((sum, row) => sum + row.missing[locale], 0)).toBe(0)
+  })
+
+  it('shows the open German gap of every draft, and nothing else missing', () => {
+    const drafts = report.records.filter((row) => row.status === 'draft')
+    expect(drafts.length).toBeGreaterThan(0)
+    for (const row of drafts) {
+      expect(row.translationOrigin.de).toBeUndefined()
+      expect(row.missing.de).toBeGreaterThan(0)
+      expect([row.missing.en, row.missing.fr]).toEqual([0, 0])
+    }
   })
 
   it('lists every numeric price as awaiting confirmation and covers all media', () => {

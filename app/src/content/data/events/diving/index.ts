@@ -1,6 +1,6 @@
 import type { DragomanEvent } from '../../../schema'
 import { geceDalisi, ozelDalisDragomanJunior, sharmElSheikh2026, tekneDalislari } from './certified'
-import { beceriTazeleme, denemeDalisi, ssiOpenWaterDiver, ssiUzmanlikKurslari } from './training'
+import { beceriTazeleme, denemeDalisi, ssiAdvancedOpenWaterDiver, ssiDiverStressAndRescue, ssiDivemaster, ssiOpenWaterDiver, ssiUzmanlikKurslari } from './training'
 
 /** Diving events from the old diving page (cloner). All use the diving health form. */
 export const divingEvents: DragomanEvent[] = [
@@ -12,4 +12,7 @@ export const divingEvents: DragomanEvent[] = [
   beceriTazeleme,
   ssiOpenWaterDiver,
   ssiUzmanlikKurslari,
+  ssiAdvancedOpenWaterDiver,
+  ssiDiverStressAndRescue,
+  ssiDivemaster,
 ]

@@ -41,7 +41,9 @@ describe('buildReleaseSnapshot', () => {
   it('round-trips the fixture minus sourceRefs', () => {
     const { content } = snapshot
     const collections = ['categoryPages', 'subgroups', 'events', 'serviceOffers', 'products', 'posts', 'team', 'testimonials', 'richPages'] as const
-    for (const name of collections) expect(content[name], name).toEqual(byKey<object>(d[name]).map(noRefs))
+    // Draft events never reach a release (see the draft test below).
+    const shipped = (name: (typeof collections)[number]): readonly object[] => (name === 'events' ? d.events.filter((event) => event.status !== 'draft') : d[name])
+    for (const name of collections) expect(content[name], name).toEqual(byKey<object>(shipped(name)).map(noRefs))
     expect(content.home).toEqual(noRefs(d.home))
   })
 

@@ -164,6 +164,162 @@ export const ssiOpenWaterDiver: DragomanEvent = {
   sourceRefs: sourcePages,
 }
 
+/** Drafts from the old diving page. German is left out on purpose: staff translate these with DeepL in the panel. */
+const materialsCondition = {
+  tr: ["Kurs materyali ücreti için güncel fiyatları bize sorun."],
+  en: ["Please ask us for current prices for the course materials."],
+  fr: ["Pour le prix du matériel pédagogique, demandez-nous les tarifs actuels."],
+}
+
+export const ssiAdvancedOpenWaterDiver: DragomanEvent = {
+  id: "ssi-advanced-open-water-diver",
+  category: "diving",
+  subgroup: "dalis-egitim",
+  order: 4,
+  slug: { tr: "ssi-advanced-open-water-diver-kursu", en: "ssi-advanced-open-water-diver-course", fr: "cours-ssi-advanced-open-water-diver", de: "ssi-advanced-open-water-diver-kurs" },
+  title: { tr: "SSI Advanced Open Water Diver", en: "SSI Advanced Open Water Diver", fr: "SSI Advanced Open Water Diver" },
+  summary: {
+    tr: "Open Water sonrası sıradaki adım: beş uzmanlık dalışıyla daha bağımsız ve deneyimli bir dalıcı olun.",
+    en: "The step after Open Water: five specialty dives to become a more independent, experienced diver.",
+    fr: "L'étape qui suit l'Open Water : cinq plongées de spécialité pour devenir un plongeur plus autonome et expérimenté.",
+  },
+  body: {
+    tr: [
+      { type: "p", text: "Dalış konusundaki teorik bilgilerinizi ve dalış tecrübenizi geliştirerek su altında daha bağımsız hareket etmek istiyorsanız ve SSI Open Water Diver veya dengi bir sertifikaya sahipseniz, SSI Advanced Open Water Diver kursuna başlayabilirsiniz." },
+      { type: "p", text: "SSI sisteminde teorik bilgilerinizi geliştiren eğitimden sonra, sunulan seçenekler arasından beş uzmanlık dalışını tamamlamanız gerekir. Bu sertifika için Derin Dalış zorunludur; diğer dalışlar sizin seçiminize bırakılır ve batık dalışı, gece dalışı, mükemmel yüzerlik, arama ve kurtarma, sualtı doğacılığı, tekne dalışı, zenginleştirilmiş hava (Nitrox) dalışı, balık tanımlama, sualtı fotoğrafçılığı, sualtı videoculuğu ve daha fazlasını içerebilir." },
+      { type: "h2", text: "Kurs bilgileri" },
+      { type: "ul", items: ["Seviye: İleri eğitim", "En kısa süre: 2,5 gün", "Kurs ücreti: 395 €"] },
+    ],
+    en: [
+      { type: "p", text: "If you want to improve your theoretical knowledge and diving experience, become more independent underwater, and already hold an SSI Open Water Diver or equivalent certification, you can begin the SSI Advanced Open Water Diver course." },
+      { type: "p", text: "In the SSI system, after completing the theory training that enhances your knowledge, you complete five specialty dives from a list of offered options. Deep Diving is mandatory for this certification; the other dives are your choice and may include Wreck Diving, Night Diving, Perfect Buoyancy, Search & Recovery, Underwater Naturalist, Boat Diving, Enriched Air (Nitrox) Diving, Fish Identification, Underwater Photography, Underwater Videography and more." },
+      { type: "h2", text: "Course details" },
+      { type: "ul", items: ["Level: Advanced", "Minimum duration: 2.5 days", "Course price: €395"] },
+    ],
+    fr: [
+      { type: "p", text: "Si vous souhaitez approfondir vos connaissances théoriques, enrichir votre expérience de plongée et devenir plus autonome sous l'eau, et que vous êtes déjà titulaire de la certification SSI Open Water Diver ou d'un niveau équivalent, vous pouvez commencer le cours SSI Advanced Open Water Diver." },
+      { type: "p", text: "Dans le système SSI, après la formation théorique qui renforce vos connaissances, vous effectuez cinq plongées de spécialité choisies dans une liste d'options. La plongée profonde est obligatoire pour cette certification ; les autres plongées sont de votre choix et peuvent comprendre la plongée sur épave, la plongée de nuit, la flottabilité parfaite, la recherche et la récupération, le naturaliste sous-marin, la plongée en bateau, la plongée Nitrox (air enrichi), l'identification des poissons, la photographie et la vidéographie sous-marines, et plus encore." },
+      { type: "h2", text: "Informations sur le cours" },
+      { type: "ul", items: ["Niveau : avancé", "Durée minimale : 2,5 jours", "Prix du cours : 395 €"] },
+    ],
+  },
+  duration: { tr: "En az 2,5 gün", en: "At least 2.5 days", fr: "2,5 jours minimum" },
+  priceDisplay: "numeric",
+  options: [
+    { id: "kurs-ucreti", name: { tr: "Kurs ücreti", en: "Course fee", fr: "Prix du cours" }, price: 395, currency: "EUR", basis: "person" },
+  ],
+  cover: "diving-course-training-1",
+  gallery: [],
+  conditions: materialsCondition,
+  faq: [],
+  itinerary: [],
+  healthForm: "diving",
+  featured: false,
+  status: "draft",
+  origin: "cloner",
+  // The second paragraph of the old French page is in Turkish; that part is translated.
+  translationOrigin: { en: "cloner", fr: "cloner" },
+  sourceRefs: sourcePages,
+}
+
+export const ssiDiverStressAndRescue: DragomanEvent = {
+  id: "ssi-diver-stress-and-rescue",
+  category: "diving",
+  subgroup: "dalis-egitim",
+  order: 5,
+  slug: { tr: "ssi-diver-stress-and-rescue-kursu", en: "ssi-diver-stress-and-rescue-course", fr: "cours-ssi-diver-stress-and-rescue", de: "ssi-diver-stress-and-rescue-kurs" },
+  title: { tr: "SSI Diver Stress and Rescue", en: "SSI Diver Stress and Rescue", fr: "SSI Diver Stress and Rescue" },
+  summary: {
+    tr: "Dalış kazalarını önlemeyi ve acil durumlarla başa çıkmayı öğreten SSI kurtarma dalgıcı programı.",
+    en: "An SSI programme that teaches how to prevent diving accidents and handle emergency situations.",
+    fr: "Un programme SSI qui apprend à prévenir les accidents de plongée et à gérer les situations d'urgence.",
+  },
+  body: {
+    tr: [
+      { type: "p", text: "SSI Rescue Diver kursu, dalış kazalarını önlemeyi ve acil durumlarla başa çıkmayı öğreten, hem ilgi çekici hem keyifli bir programdır. Kurs teorik eğitim, sığ su egzersizleri, açık suda beceri uygulamaları ve acil durum senaryosu tatbikatlarını içerir." },
+      { type: "h2", text: "Kurs bilgileri" },
+      { type: "ul", items: ["Seviye: İleri eğitim", "En kısa süre: 3 gün", "Kurs ücreti: 395 €"] },
+    ],
+    en: [
+      { type: "p", text: "The SSI Rescue Diver Course is a highly engaging and enjoyable program that teaches how to prevent diving accidents and handle emergency situations. The course includes theoretical training, confined water exercises, open water skill applications and emergency scenario drills." },
+      { type: "h2", text: "Course details" },
+      { type: "ul", items: ["Level: Advanced", "Minimum duration: 3 days", "Course price: €395"] },
+    ],
+    fr: [
+      { type: "p", text: "Le cours SSI Rescue Diver est un programme à la fois passionnant et enrichissant, qui enseigne comment prévenir les accidents de plongée et gérer les situations d'urgence. Le cours comprend une formation théorique, des exercices en milieu protégé, des applications pratiques en eau libre et des simulations de scénarios d'urgence." },
+      { type: "h2", text: "Informations sur le cours" },
+      { type: "ul", items: ["Niveau : avancé", "Durée minimale : 3 jours", "Prix du cours : 395 €"] },
+    ],
+  },
+  duration: { tr: "En az 3 gün", en: "At least 3 days", fr: "3 jours minimum" },
+  priceDisplay: "numeric",
+  options: [
+    { id: "kurs-ucreti", name: { tr: "Kurs ücreti", en: "Course fee", fr: "Prix du cours" }, price: 395, currency: "EUR", basis: "person" },
+  ],
+  cover: "diving-course-training-1",
+  gallery: [],
+  conditions: materialsCondition,
+  faq: [],
+  itinerary: [],
+  healthForm: "diving",
+  featured: false,
+  status: "draft",
+  origin: "cloner",
+  // The old Turkish page repeats the English text here, so Turkish is written anew.
+  translationOrigin: { en: "cloner", fr: "cloner" },
+  sourceRefs: sourcePages,
+}
+
+export const ssiDivemaster: DragomanEvent = {
+  id: "ssi-divemaster",
+  category: "diving",
+  subgroup: "dalis-egitim",
+  order: 6,
+  slug: { tr: "ssi-divemaster-kursu", en: "ssi-divemaster-course", fr: "cours-ssi-divemaster", de: "ssi-divemaster-kurs" },
+  title: { tr: "SSI Divemaster", en: "SSI Divemaster", fr: "SSI Divemaster" },
+  summary: {
+    tr: "SSI'daki liderlik eğitiminin ilk basamağı: profesyonel SSI üyeliğine giden yoğun program.",
+    en: "The first level of SSI leadership training and the way into professional SSI membership.",
+    fr: "Le premier niveau de la formation au leadership SSI et la porte d'entrée de l'adhésion professionnelle SSI.",
+  },
+  body: {
+    tr: [
+      { type: "p", text: "SSI Dive Guide kursu, teorik ve pratik eğitiminizin profesyonel düzeye ulaşmasını sağlayan, yoğun bir eğitim programıdır. Bu süreçte katılımcılar fizik, fizyoloji, dalış ekipmanları, dalış ortamı ve çevre, dekompresyon teorisi ve dalış tabloları, dalış sağlığı, SSI standartları, SSI Dive Guide'ın yürütebileceği eğitimler, dalış endüstrisi ve SSI profesyoneli olmakla ilgili teorik çalışmalar yapar." },
+      { type: "p", text: "Belirli bir fiziksel kondisyon gerektiren pratik kısımda ise dalış liderliği, tekne ve dalış organizasyonu, temel denizcilik, eğitmen asistanlığı, haritalama, acil durumlara müdahale ve eğitim verme gibi konularda çalışılır. Süreci başarıyla tamamlayan katılımcılar dalış endüstrisinde yerlerini alır ve SSI'nin profesyonel üyeliğine adım atar." },
+      { type: "h2", text: "Kurs bilgileri" },
+      { type: "ul", items: ["Seviye: Profesyonel", "En kısa süre: 10–14 gün", "Kurs ücreti: 600 €"] },
+    ],
+    en: [
+      { type: "p", text: "This is the first level of leadership training and professional SSI membership. The SSI Dive Guide course gives you a chance to be an SSI Pro, with intensive academic and training sessions. Throughout the course the participants learn the theory of physics, physiology, diving equipment, the diving environment and surroundings, decompression theory and dive tables, diving health, SSI standards, courses run by SSI, the diving industry and being an SSI Pro." },
+      { type: "p", text: "The practical sessions require physical fitness. Participants learn about diving leadership, boat and diving organization, basic navigation (seamanship), instructor assistantship, mapping, emergency first response and training skills. Participants who complete the course successfully can start working in the diving industry and become professional members of SSI." },
+      { type: "h2", text: "Course details" },
+      { type: "ul", items: ["Level: Professional", "Minimum duration: 10–14 days", "Course price: €600"] },
+    ],
+    fr: [
+      { type: "p", text: "Il s'agit de la première étape de la formation en leadership et de l'adhésion professionnelle au sein de SSI. Le cours SSI Dive Guide vous offre l'opportunité de devenir un professionnel SSI, avec des sessions académiques et pratiques intensives. Tout au long du cours, les participants acquièrent des connaissances théoriques sur la physique, la physiologie, les équipements de plongée, l'environnement marin, la théorie de la décompression et les tables de plongée, la santé du plongeur, les standards SSI, les formations proposées par SSI, l'industrie de la plongée, ainsi que le rôle et les responsabilités d'un professionnel SSI." },
+      { type: "p", text: "Lors des sessions pratiques exigeant une bonne condition physique, les participants se forment au leadership en plongée, à l'organisation des plongées depuis la terre et les bateaux, à la navigation de base (maritime), à l'assistance à l'enseignement, à la cartographie, à la réponse d'urgence et aux compétences pédagogiques. Les participants qui réussissent ce cours peuvent commencer leur carrière dans l'industrie de la plongée et devenir membres professionnels de SSI." },
+      { type: "h2", text: "Informations sur le cours" },
+      { type: "ul", items: ["Niveau : professionnel", "Durée minimale : 10–14 jours", "Prix du cours : 600 €"] },
+    ],
+  },
+  duration: { tr: "10–14 gün", en: "10–14 days", fr: "10–14 jours" },
+  priceDisplay: "numeric",
+  options: [
+    { id: "kurs-ucreti", name: { tr: "Kurs ücreti", en: "Course fee", fr: "Prix du cours" }, price: 600, currency: "EUR", basis: "person" },
+  ],
+  cover: "diving-course-training-1",
+  gallery: [],
+  conditions: materialsCondition,
+  faq: [],
+  itinerary: [],
+  healthForm: "diving",
+  featured: false,
+  status: "draft",
+  origin: "cloner",
+  translationOrigin: { en: "cloner", fr: "cloner" },
+  sourceRefs: sourcePages,
+}
+
 const specialty = (id: string, tr: string, en: string, fr: string, de: string, price: number | null): DragomanEvent['options'][number] => ({
   id,
   name: { tr, en, fr, de },

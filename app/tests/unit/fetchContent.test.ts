@@ -171,7 +171,7 @@ describe('release mode', () => {
 
     const release = JSON.parse(await readFile(out(OUTPUTS.releaseFile), 'utf8'))
     expect(release.releaseId).toBe(42)
-    expect(release.content.events).toHaveLength(d.events.length)
+    expect(release.content.events).toHaveLength(d.events.filter((event) => event.status !== 'draft').length)
     expect(release.forms.event.version).toBe(1)
     const upload = release.content.media.find((asset: { id: string }) => asset.id === UPLOAD_ID)
     expect(upload).toMatchObject({ id: UPLOAD_ID, widths: [480, 720, 800, 1000], width: 1000, height: 700, placeholder: false })
