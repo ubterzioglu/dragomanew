@@ -214,7 +214,7 @@ Ayrıntılar:
 - Kuyruk ardışık yayınları toplar. Süreler `public.app_settings`'ten okunur (`private.setting_seconds`): `deploy_debounce_seconds` (varsayılan 60), `deploy_max_wait_seconds` (300), `deploy_min_gap_seconds` (180).
 - `COOLIFY_DEPLOY_URL` / `COOLIFY_API_TOKEN` yoksa satır `skipped` (`not_configured`) olur; panelde "Atlandı (kurulum ayarlı değil)". O durumda Coolify'da elle **Redeploy** gerekir.
 - `fetch-content.mjs` release modunda hiçbir zaman fixture'a düşmez. Yayın bozuk ya da yoksa build başarısız olur ve eski container yayında kalır.
-- Release build şunları da üretir: `src/content/release/release.json`, `public/release.json` (`{releaseId, createdAt}`), `build-meta/nginx-redirects.map` (slug değişikliği 301'leri), `build-meta/media/` (panel yüklemelerinin türevleri).
+- Release build şunları da üretir: `src/content/release/release.json`, `public/release.json` (`{releaseId, createdAt}`), `build-meta/nginx-redirects.map` (slug değişikliği 301'leri ve eski WordPress adresleri), `build-meta/media/` (panel yüklemelerinin türevleri).
 - Yerelde release build denemek için:
 
   ```powershell
@@ -223,6 +223,13 @@ Ayrıntılar:
 
   `CONTENT_SOURCE` boşsa ya da `fixture` ise `app/src/content/data` kullanılır (testler ve demo build bunu ister).
 - Panel, yayının siteye ulaştığını sitenin `/release.json`'unu okuyarak anlar (`panel/src/lib/publish/deployState.ts`). Tetiklemeden 15 dakika sonra hâlâ eskiyse gecikme uyarısı gösterir.
+
+### Eski WordPress adresleri
+
+- Liste: `app/src/content/legacyRedirects.ts` (`LEGACY_ADDRESSES`). Hedef adres değil kayıt ya da sayfa olarak yazılır (`page('shop')`, `post('maldivler-2026')`); slug değişirse yönlendirme de değişir.
+- Yeni sitede hâlâ açılan adresler (WordPress slug'ı korunan sayfalar) haritaya girmez. Hedef kayıt yayında değilse adres 404 verir ve build logunda `redirect skipped` satırı çıkar.
+- Aynı eski adres için slug yönlendirmesi de varsa slug yönlendirmesi kazanır.
+- Yeni bir eski adres eklemek: listeye satır ekleyin, `npx vitest run tests/unit/legacyRedirects.test.ts`.
 
 ## 10. Coolify ve Dockerfile
 

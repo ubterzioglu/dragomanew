@@ -13,6 +13,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import { fetchContent, OUTPUTS, type FetchContentModules } from '../../scripts/fetch-content.mjs'
 import { staticRouteSpecs } from '../../src/app/routePaths'
 import { contentData } from '../../src/content/data'
+import { legacyRedirects } from '../../src/content/legacyRedirects'
 import { eventPath, postPath, productPath } from '../../src/content/urls'
 import { LOCALES } from '../../src/i18n/locales'
 import { buildReleaseSnapshot, releaseSnapshotSchema, type MediaSource, type ReleaseEntryInput, type ReleaseInput, type ReleaseSnapshot } from '../../src/shared/content/release'
@@ -36,6 +37,7 @@ const modules = {
   productPath,
   staticRouteSpecs,
   locales: LOCALES,
+  legacyRedirects,
 } as unknown as FetchContentModules
 
 const d = contentData
@@ -182,6 +184,9 @@ describe('release mode', () => {
     const map = await readFile(out(OUTPUTS.redirectMap), 'utf8')
     expect(map).toContain(`${eventPath('en', { category: movedEvent.category, slug: { ...movedEvent.slug, en: 'old-event-slug' } })} ${eventPath('en', movedEvent)};`)
     expect(map).toContain(`${postPath('tr', { slug: { ...coverPost.slug, tr: 'eski-yazi' } })} ${postPath('tr', coverPost)};`)
+    // Old WordPress addresses join the slug redirects (src/content/legacyRedirects.ts).
+    expect(map).toContain('/cart/ /shop/;')
+    expect(map).toMatch(/old-site redirects/)
 
     const files = (await readdir(out(OUTPUTS.uploadMedia))).toSorted()
     expect(files).toEqual([480, 720, 800, 1000].flatMap((w) => ['avif', 'jpg', 'webp'].map((f) => `${UPLOAD_ID}-${w}.${f}`)).toSorted())

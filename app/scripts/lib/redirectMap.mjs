@@ -3,8 +3,11 @@
 // Removed or archived records are not redirected (they answer 404). The URL builders are passed in
 // (src/content/urls.ts), so this module stays plain JavaScript and testable on its own.
 
-/** The only shape a map line may have on either side: a lowercase site path with a trailing slash. */
-export const REDIRECT_PATH = /^\/[a-z0-9/-]+\/$/
+/**
+ * The only shape a map line may have on either side: a lowercase site path with a trailing slash
+ * (the underscore is for old WordPress addresses such as /refund_returns/).
+ */
+export const REDIRECT_PATH = /^\/[a-z0-9/_-]+\/$/
 
 const compare = (a, b) => (a < b ? -1 : a > b ? 1 : 0)
 

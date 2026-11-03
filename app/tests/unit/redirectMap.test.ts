@@ -89,6 +89,10 @@ describe('renderRedirectMap', () => {
     }
   })
 
+  it('accepts an old WordPress path with an underscore', () => {
+    expect(renderRedirectMap([{ from: '/refund_returns/', to: '/terms-and-conditions/' }], 'x')).toBe('# x\n/refund_returns/ /terms-and-conditions/;\n')
+  })
+
   it('writes a comment-only map when nothing moved', () => {
     expect(renderRedirectMap([], 'fixture')).toBe('# fixture\n')
   })

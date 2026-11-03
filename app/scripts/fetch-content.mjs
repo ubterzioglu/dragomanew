@@ -38,12 +38,13 @@ export async function loadModules(appDir = APP) {
   const { runnerImport } = await import('vite')
   // configFile: false keeps the SSG build options (and their env checks) out of a plain data load.
   const load = async (file) => (await runnerImport(path.join(appDir, file), { configFile: false, root: appDir })).module
-  const [release, validate, urls, routePaths, locales] = await Promise.all([
+  const [release, validate, urls, routePaths, locales, legacy] = await Promise.all([
     load('src/shared/content/release.ts'),
     load('src/shared/content/validate.ts'),
     load('src/content/urls.ts'),
     load('src/app/routePaths.ts'),
     load('src/i18n/locales.ts'),
+    load('src/content/legacyRedirects.ts'),
   ])
   return {
     releaseSnapshotSchema: release.releaseSnapshotSchema,
@@ -53,6 +54,7 @@ export async function loadModules(appDir = APP) {
     productPath: urls.productPath,
     staticRouteSpecs: routePaths.staticRouteSpecs,
     locales: locales.LOCALES,
+    legacyRedirects: legacy.legacyRedirects,
   }
 }
 
@@ -232,18 +234,25 @@ export async function fetchContent({ env = process.env, appDir = APP, outDir = a
   for (const asset of snapshot.content.media) media.push(await resolveMedia(asset, context))
 
   const content = { ...snapshot.content, media }
-  const { redirects, skipped } = buildRedirects({
+  const live = new Set(liveRoutes(loaded, content))
+  const slugMoves = buildRedirects({
     content,
     slugHistory: snapshot.slugHistory,
     paths: { eventPath: loaded.eventPath, postPath: loaded.postPath, productPath: loaded.productPath },
-    liveRoutes: liveRoutes(loaded, content),
+    liveRoutes: live,
   })
-  for (const item of skipped) log(`  redirect skipped: ${item.from} (${item.reason})`)
+  // Old WordPress addresses; a slug redirect for the same address wins (it follows the release).
+  const oldSite = loaded.legacyRedirects(content, live)
+  const taken = new Set(slugMoves.redirects.map((redirect) => redirect.from))
+  const oldSiteRedirects = oldSite.redirects.filter((redirect) => !taken.has(redirect.from))
+  const redirects = [...slugMoves.redirects, ...oldSiteRedirects].toSorted((a, b) => (a.from < b.from ? -1 : a.from > b.from ? 1 : 0))
+  for (const item of [...slugMoves.skipped, ...oldSite.skipped]) log(`  redirect skipped: ${item.from} (${item.reason})`)
 
   const release = { format: 1, releaseId: snapshot.releaseId, createdAt: snapshot.createdAt, content, forms: snapshot.forms, slugHistory: snapshot.slugHistory }
   await writeOutput(outDir, OUTPUTS.releaseFile, `${JSON.stringify(release)}\n`)
   await writeOutput(outDir, OUTPUTS.publicRelease, `${JSON.stringify({ releaseId: snapshot.releaseId, createdAt: snapshot.createdAt })}\n`)
-  await writeOutput(outDir, OUTPUTS.redirectMap, renderRedirectMap(redirects, `release ${snapshot.releaseId} (${snapshot.createdAt}): ${redirects.length} slug redirects`))
+  const header = `release ${snapshot.releaseId} (${snapshot.createdAt}): ${slugMoves.redirects.length} slug redirects, ${oldSiteRedirects.length} old-site redirects`
+  await writeOutput(outDir, OUTPUTS.redirectMap, renderRedirectMap(redirects, header))
   const uploads = media.length - snapshot.content.media.filter((asset) => asset.storage === 'repo').length
   log(`fetch-content: release ${snapshot.releaseId} written (${media.length} media, ${uploads} uploads, ${redirects.length} redirects)`)
   return { source, releaseId: snapshot.releaseId, redirects }

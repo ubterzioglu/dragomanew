@@ -5,6 +5,7 @@
 - Panelin sol üstünde artık Dragoman logosu var. Logoya tıklayınca **Genel bakış** açılır.
 - Bilgisayarda her ekranın üstünde yeni bir bar var: solda hangi ekranda olduğunuz (ör. **İçerik › Medya**), sağda sloganımız *Once a Dragoman, always a Dragoman.* ve **Siteyi aç** düğmesi. **Siteyi aç** sitenin ana sayfasını yeni sekmede açar.
 - Telefonda slogan ve **Siteyi aç** bağlantısı menü çekmecesinin altında.
+- Eski sitenin (dragoman-turkey.com) blog, kitap, dükkân ve form adresleri, alan adı yeni siteye geçtiğinde ilgili yeni sayfaya yönlenecek. Ziyaretçiler ve arama motorları eski bağlantılardan boş sayfaya düşmez.
 - **İçerik → Etkinlikler**'de eski siteden alınmış 12 yeni etkinlik **Taslak** olarak duruyor: dalışta Advanced Open Water, Stress & Rescue ve Divemaster; doğada yürüyüş, bisiklet, Işık Ülkesi ve Elmalı–Arikanda. Metinleri ve fiyatları kontrol edip Almanca çeviriyi yaptıktan sonra yayınlayabilirsiniz.
 - Etkinliklere de **Son güncelleme tarihi** eklendi (İçerik → kayıt → **Ayrıntılar**). Etkinlik ve blog yazılarında girdiğiniz tarih sayfada "Güncellendi: …" olarak görünüyor.
 
