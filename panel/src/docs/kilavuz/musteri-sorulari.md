@@ -1,10 +1,10 @@
-# Müşteri soruları
+# Dragoman soruları
 
 Siteyi yayına hazırlamak için Dragoman'dan beklenen bilgiler burada soru soru listelenir. Yanıtı bilen kişi sorunun altına yazar ve kaydeder; yazılanları geliştirici okuyup siteye işler.
 
 ## Nasıl kullanılır
 
-1. Soldaki menüden **Müşteri soruları**'nı açın. En üstte kaç sorunun yanıtlandığı yazar.
+1. Soldaki menüden **Dragoman soruları**'nı açın. En üstte kaç sorunun yanıtlandığı yazar.
 2. Sorular konulara göre gruplanmıştır: hizmetler ve fiyatlar, fotoğraflar, işletme bilgileri, yasal metinler, hesaplar, sağlık formu ve online ödeme. Her grubun altında yanıtların ne zaman gerektiği yazar.
 3. Yanıtını bildiğiniz sorunun altındaki **Yanıtınız** kutusuna yazın.
 4. **Kaydet**'e basın. "Kaydedildi." yazısı çıkar, soru **Yanıtlandı** olarak işaretlenir.

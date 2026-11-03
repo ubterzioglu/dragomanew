@@ -43,7 +43,7 @@ export function QuestionsPage() {
   return (
     <div className="space-y-6">
       <PageHeading
-        title="Müşteri soruları"
+        title="Dragoman soruları"
         description="Sitenin yayına hazırlanması için Dragoman'dan beklenen bilgiler. Yanıtı bilen herkes yazıp kaydedebilir."
         help="musteri-sorulari"
       />

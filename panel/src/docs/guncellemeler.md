@@ -9,6 +9,7 @@
 - **İçerik → Etkinlikler**'de eski siteden alınmış 12 yeni etkinlik **Taslak** olarak duruyor: dalışta Advanced Open Water, Stress & Rescue ve Divemaster; doğada yürüyüş, bisiklet, Işık Ülkesi ve Elmalı–Arikanda. Metinleri ve fiyatları kontrol edip Almanca çeviriyi yaptıktan sonra yayınlayabilirsiniz.
 - Etkinliklere de **Son güncelleme tarihi** eklendi (İçerik → kayıt → **Ayrıntılar**). Etkinlik ve blog yazılarında girdiğiniz tarih sayfada "Güncellendi: …" olarak görünüyor.
 - Sitede çerez bandı hazır: Google Analytics kimliği girilip site yeniden yayınlanınca ziyaretçiler **Kabul Et**, **Reddet** ya da **Tercihleri Yönet** ile seçim yapacak ve ziyaretler yalnız izin verenler için ölçülecek. Kimlik girilene kadar sitede bir değişiklik görünmüyor.
+- **Müşteri soruları** sayfasının adı artık **Dragoman soruları**.
 
 ## 2026-11-02
 

@@ -88,7 +88,7 @@ export const NAV_GROUPS: readonly NavGroup[] = [
       },
       {
         to: '/sorular',
-        label: 'Müşteri soruları',
+        label: 'Dragoman soruları',
         icon: 'questions',
         description: "Dragoman'dan beklenen bilgiler; yanıtı bilen yazıp kaydeder.",
         guide: 'musteri-sorulari',
