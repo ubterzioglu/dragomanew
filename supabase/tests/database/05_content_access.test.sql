@@ -55,7 +55,7 @@ select tests.sign_in('admin');
 select is(
   public.my_permissions(),
   array['content.edit', 'content.publish', 'content.translate', 'forms.manage', 'requests.read', 'requests.reassign',
-        'requests.work', 'settings.manage', 'site.deploy', 'staff.manage'],
+        'requests.work', 'revisions.use', 'settings.manage', 'site.deploy', 'staff.manage'],
   'main_admin has every permission'
 );
 reset role;

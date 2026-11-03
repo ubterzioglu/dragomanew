@@ -10,7 +10,8 @@ select tables_are(
   'public',
   array['staff_members', 'events', 'event_options', 'requests', 'request_activity', 'notifications', 'submission_throttle', 'app_settings',
         'content_entries', 'media_assets', 'content_releases', 'site_deploys', 'form_versions', 'form_definitions', 'translation_runs',
-        'client_answers'],
+        'client_answers', 'revision_requests', 'revision_comments', 'revision_status_changes', 'revision_attachments',
+        'revision_notifications'],
   'public holds exactly the Dalga 1 and Dalga 2 tables plus the open-question answers'
 );
 
@@ -48,7 +49,8 @@ select is_empty(
      where n.nspname = 'public' and c.relkind = 'r'
        and ((has_table_privilege('authenticated', c.oid, 'delete') and c.relname <> 'content_entries')
             or has_table_privilege('authenticated', c.oid, 'truncate')
-            or (c.relname not in ('staff_members', 'app_settings', 'content_entries', 'media_assets', 'form_definitions', 'client_answers')
+            or (c.relname not in ('staff_members', 'app_settings', 'content_entries', 'media_assets', 'form_definitions', 'client_answers',
+                                  'revision_requests', 'revision_comments', 'revision_attachments')
                 and (has_table_privilege('authenticated', c.oid, 'insert, update')
                      or has_any_column_privilege('authenticated', c.oid, 'insert, update')))) $$,
   'authenticated cannot write requests, activity, the outbox, the throttle or content'
@@ -89,7 +91,7 @@ select results_eq(
     'private.before_user_created', 'private.can', 'private.current_staff_id',
     'public.claim_request', 'public.finish_password_change', 'public.hand_over_request', 'public.link_staff_account',
     'public.list_staff_members', 'public.my_password_change_required', 'public.my_permissions', 'public.reassign_request', 'public.request_site_deploy',
-    'public.staff_auth_user_id', 'public.throttle_submission'
+    'public.set_revision_status', 'public.staff_auth_user_id', 'public.throttle_submission'
   ],
   'security definer is used only for the RPCs and the private helpers that need it'
 );

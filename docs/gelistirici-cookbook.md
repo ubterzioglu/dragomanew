@@ -271,8 +271,8 @@ Değerler hiçbir dosyaya, commit'e, log'a ya da sohbete yazılmaz. `app/.env.lo
 | --- | --- |
 | `ALLOWED_ORIGINS` | Tarayıcıdan çağrılan bütün fonksiyonlar (CORS; site ve panel kökleri) |
 | `THROTTLE_SALT` | `submit-request` (IP yerine HMAC; en az 32 karakter) |
-| `BUSINESS_EMAIL`, `PANEL_URL` | `submit-request` (işletmeye "yeni talep" e-postası) |
-| `MAIL_FROM`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS` | `submit-request` (Zoho SMTP, örtük TLS). Eksikse talep yine kaydedilir, e-posta `smtp_not_configured` ile kalır. |
+| `BUSINESS_EMAIL`, `PANEL_URL` | `submit-request` (işletmeye "yeni talep" e-postası); `PANEL_URL` ayrıca `revision-notify` (e-postadaki istek bağlantısı) |
+| `MAIL_FROM`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS` | `submit-request` ve `revision-notify` (Zoho SMTP, örtük TLS). Eksikse talep ve revizyon yine kaydedilir, e-posta `smtp_not_configured` ile kalır. |
 | `DEEPL_API_KEY` | `translate-content` |
 | `DEPLOY_DISPATCH_SECRET` | `site-deploy` (Vault'taki `deploy_dispatch_secret` ile aynı olmalı) |
 | `COOLIFY_DEPLOY_URL`, `COOLIFY_API_TOKEN` | `site-deploy` |
@@ -338,6 +338,22 @@ Platformun kendisinin verdikleri (girilmez): `SUPABASE_URL`, `SUPABASE_PUBLISHAB
 - Personel dışı kayıtları `before_user_created` kancası reddeder; kayıt formu yoktur.
 - Yetkiler: rol + `extra_permissions`, veritabanında `public.my_permissions()`. Panelin `panel/src/lib/permissions.ts` dosyası bunun aynasıdır; düğmeyi gizlemek koruma değildir, karar veritabanınındır. Roller: `main_admin` (hepsi), `reservations` (`requests.read`, `requests.work`), `accounting` (`requests.read`), `content` (`content.edit`, `content.translate`). Yayın (`content.publish`) yalnız `main_admin`'de ya da kişiye özel `extra_permissions` ile.
 - Yalnız şifreyle girecek bir çalışanı ana yönetici panelden açar: **Kullanıcılar** → **Geçici şifre oluştur** ya da satırdaki **Geçici şifre ver**. `staff-account` fonksiyonu (staff.manage) Auth kullanıcısını e-postası doğrulanmış olarak açar ya da şifresini değiştirir, `password_change_required` bayrağını koyar ve şifreyi yalnız yanıtında bir kez döndürür. Panel bayraklı kişiyi kendi şifresini belirleyene kadar **Şifre** ekranında tutar; kayıttan sonra `finish_password_change()` bayrağı kaldırır. Bayrak bir yönlendirmedir, güvenlik sınırı değildir. Supabase Dashboard'dan elle kullanıcı açmak gerekmez.
+
+### Revizyonlar (`revisions.use`)
+
+- Ekran **Revizyonlar** (`/panel/revizyonlar`, ayrıntı `/panel/revizyonlar/<id>`). Migration `20261103150000_revisions.sql`, test `13_revisions.test.sql`, fonksiyon testi `app/tests/unit/revisionNotifyHandler.test.ts`.
+- Yetki `revisions.use`: `main_admin`'de rolüyle, başkasında yalnız kişiye özel `extra_permissions` ile. Panelde bunu veren düğme yok; ana yönetici Supabase SQL Editor'da verir: `update public.staff_members set extra_permissions = array_append(extra_permissions, 'revisions.use') where email = '…';`. Yetkisi olan herkes bütün istekleri görür (yalnız kendi açtıklarını değil), yorum yazar, ekran görüntüsü ekler.
+- Tablolar (hepsinde RLS, `revisions.use` ister; silme yok):
+  - `revision_requests`: numara (`#12`), isteyen (oturumdan yazılır), açıklama, aciliyet 1–10, `status` `open` / `in_progress` / `done`, `created_at`, `updated_at`, `completed_at`;
+  - `revision_comments`: yazar oturumdan yazılır; metni yalnız yazarı değiştirir (`edited_at`);
+  - `revision_status_changes`: her durum değişikliği, kimin yaptığıyla;
+  - `revision_attachments`: ekran görüntüsü satırı; isteğe (`comment_id` boş) yalnız isteyen, yoruma yalnız yazarı ekler; dosyayı aynı kişi önceden yüklemiş olmalı; hedef başına en fazla 10;
+  - `revision_notifications`: yalnız `service_role`.
+- Durum yalnız `public.set_revision_status(p_request, p_status)` ile değişir: `in_progress` ve `done` yalnız `main_admin`; `done` → `open` (**Yeniden aç**) yetkisi olan herkes, aynı kayıt ve yazışmayla. Hatalar: `42501` yetki yok, `55000` durum bu arada değişmiş, `P0002` istek yok, `22023` bilinmeyen durum.
+- Ekran görüntüleri özel `revision-screenshots` bucket'ında: PNG, JPEG, WebP, en fazla 5 MiB (bucket'ın `allowed_mime_types` ve `file_size_limit` değerleri; sunucu reddeder), yol `<istek id>/<uuid>.<png|jpg|webp>`. Okuma `revisions.use` ister; yükleme ayrıca o isteği açmış ya da ona yorum yazmış olmayı. Güncelleme ve silme yok; satırı olmayan dosya kalırsa yalnız Dashboard'dan silinir. Panel dosyaları 10 dakikalık imzalı adresle gösterir. Yerelde `-x storage-api` ile de bucket ve politikalar kurulur; pgTAP `storage.objects`'e doğrudan yazar.
+- Bildirim: panel işlem kaydedildikten sonra `revision-notify` Edge Function'ını çağırır: `{ "event": "created" | "commented" | "done", "id": <istek, yorum ya da durum değişikliği id> }`. Fonksiyon çağıranın `revisions.use` yetkisini ve işlemi kendisinin yaptığını kontrol eder. Alıcılar `public.revision_recipients()`: etkin ve `revisions.use` sahibi personel (ana yönetici dahil), işlemi yapan hariç. Adres yalnız `staff_members.email`'den gelir.
+- Her alıcı için bir `revision_notifications` satırı: `pending`, sonra `sent` (SMTP kabul etti), `failed` (`error`'da adresi maskelenmiş neden) ya da `smtp_not_configured`. Aynı olay için ikinci çağrı yeni e-posta göndermez. E-postalar sırayla gider; kişi başına 10 dakikada en fazla 20 çağrı (`throttle_submission`, anahtar `revision-notify:<staff id>`), fazlası 429 alır ve e-posta gitmez. E-posta hatası işlemi geri almaz ve engellemez; panel yalnız bir bilgi satırı gösterir. Yeni gizli değer yok (12. bölüm: `ALLOWED_ORIGINS`, `PANEL_URL`, `MAIL_FROM`, `SMTP_*`).
+- Son bildirimler: `select event, status, error, created_at from public.revision_notifications order by created_at desc limit 20;`
 
 ## 17. Commit kuralları
 

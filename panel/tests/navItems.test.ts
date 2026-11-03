@@ -16,6 +16,7 @@ describe('visibleNav', () => {
       '/',
       '/beni-oku',
       '/sorular',
+      '/revizyonlar',
       '/talepler',
       '/icerik',
       '/medya',
@@ -46,6 +47,13 @@ describe('visibleNav', () => {
     expect(paths(forRole('accounting', ['forms.manage']))).toContain('/formlar')
     const onlyPublish: NavAccess = { role: 'content', can: (permission) => permission === 'content.publish' }
     expect(paths(onlyPublish)).toEqual(expect.arrayContaining(['/icerik', '/medya', '/yayin']))
+  })
+
+  it('shows Revizyonlar with revisions.use only: the main admin by role, anyone else through extra permissions', () => {
+    for (const role of ['reservations', 'accounting', 'content'] as const) {
+      expect(paths(forRole(role))).not.toContain('/revizyonlar')
+      expect(paths(forRole(role, ['revisions.use']))).toContain('/revizyonlar')
+    }
   })
 
   it('shows the developer guide to the main admin only, whatever the permissions', () => {

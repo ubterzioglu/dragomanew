@@ -10,6 +10,7 @@ export type NavIcon =
   | 'overview'
   | 'readme'
   | 'questions'
+  | 'revisions'
   | 'requests'
   | 'content'
   | 'media'
@@ -32,6 +33,7 @@ export const GUIDE_IDS = [
   'kullanicilar',
   'giris-ve-sifre',
   'musteri-sorulari',
+  'revizyonlar',
   'sss',
 ] as const
 
@@ -93,6 +95,14 @@ export const NAV_GROUPS: readonly NavGroup[] = [
         description: "Dragoman'dan beklenen bilgiler; yanıtı bilen yazıp kaydeder.",
         guide: 'musteri-sorulari',
         visible: always,
+      },
+      {
+        to: '/revizyonlar',
+        label: 'Revizyonlar',
+        icon: 'revisions',
+        description: 'Sitede ya da panelde istediğiniz değişiklikleri yazın ve takip edin.',
+        guide: 'revizyonlar',
+        visible: ({ can }) => can('revisions.use'),
       },
       {
         to: '/talepler',

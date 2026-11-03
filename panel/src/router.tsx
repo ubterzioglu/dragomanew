@@ -13,6 +13,8 @@ import { GuidePage } from './routes/help/GuidePage'
 import { StaffPage } from './routes/StaffPage'
 import { PasswordPage } from './routes/PasswordPage'
 import { QuestionsPage } from './routes/QuestionsPage'
+import { RevisionDetailPage } from './routes/revisions/RevisionDetailPage'
+import { RevisionsPage } from './routes/revisions/RevisionsPage'
 // Dalga 2 content (Lane F)
 import { ContentEditorPage } from './routes/content/ContentEditorPage'
 import { ContentListPage } from './routes/content/ContentListPage'
@@ -30,6 +32,8 @@ export const router = createBrowserRouter(
         { index: true, element: <OverviewPage /> },
         { path: 'talepler', element: <RequestsPage /> },
         { path: 'sorular', element: <QuestionsPage /> },
+        { path: 'revizyonlar', element: <RevisionsPage /> },
+        { path: 'revizyonlar/:id', element: <RevisionDetailPage /> },
         { path: 'giris', element: <LoginPage /> },
         { path: 'sifre', element: <PasswordPage /> },
         { path: 'kullanicilar', element: <StaffPage /> },

@@ -1,5 +1,6 @@
 import {
   BookOpen,
+  ClipboardPen,
   FileText,
   Image,
   Info,
@@ -20,6 +21,7 @@ export const NAV_ICONS: Readonly<Record<NavIcon, LucideIcon>> = {
   overview: LayoutDashboard,
   readme: Info,
   questions: MessageCircleQuestionMark,
+  revisions: ClipboardPen,
   requests: Inbox,
   content: FileText,
   media: Image,

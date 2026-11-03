@@ -446,6 +446,13 @@ verify_jwt = false
 import_map = "./functions/staff-account/deno.json"
 entrypoint = "./functions/staff-account/index.ts"
 
+# Revision mails after a new request, comment or Tamamlandı (revisions.use, checked in the handler).
+[functions.revision-notify]
+enabled = true
+verify_jwt = false
+import_map = "./functions/revision-notify/deno.json"
+entrypoint = "./functions/revision-notify/index.ts"
+
 [analytics]
 enabled = true
 port = 54327

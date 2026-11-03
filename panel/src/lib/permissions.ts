@@ -16,6 +16,8 @@ export const PERMISSIONS = [
   'content.publish',
   'forms.manage',
   'site.deploy',
+  // Revizyonlar: main_admin through the role, anyone else only through extra_permissions.
+  'revisions.use',
 ] as const
 
 export type Permission = (typeof PERMISSIONS)[number]
