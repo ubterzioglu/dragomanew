@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from 'react'
 import { updateStaff, type StaffPatch } from '../../data/staff'
 import { friendlyError } from '../../lib/errors'
 import { roleLabel } from '../../lib/labels'
+import { tempPasswordNote } from '../../lib/staffAccount'
 import { isStaffRole, STAFF_ROLES, type StaffAdminRow, type StaffRole } from '../../lib/types'
 import { Dialog } from '../Dialog'
 import { Button, Notice } from '../ui'
+import { IssuePasswordAction } from './IssuePasswordAction'
 
 interface StaffTableProps {
   rows: readonly StaffAdminRow[]
@@ -128,22 +130,29 @@ export function StaffTable({ rows, myId, onChanged }: StaffTableProps) {
                     </div>
                   </td>
                   <td className={cell}>{row.active ? 'Etkin' : 'Pasif'}</td>
-                  <td className={cell}>{row.linked ? 'Bağlı' : 'İlk giriş bekleniyor'}</td>
                   <td className={cell}>
-                    {!self &&
-                      (row.active ? (
-                        <Button variant="danger" disabled={busy} onClick={() => setConfirming(row)}>
-                          Pasifleştir<span className="sr-only">: {row.full_name}</span>
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="secondary"
-                          disabled={busy}
-                          onClick={() => void apply(row, { active: true }, `${row.full_name} yeniden etkinleştirildi.`)}
-                        >
-                          Etkinleştir<span className="sr-only">: {row.full_name}</span>
-                        </Button>
-                      ))}
+                    {row.linked ? 'Bağlı' : 'İlk giriş bekleniyor'}
+                    {tempPasswordNote(row) && <span className="block text-xs text-ink-muted">{tempPasswordNote(row)}</span>}
+                  </td>
+                  <td className={cell}>
+                    {!self && (
+                      <div className="flex flex-wrap items-start gap-2">
+                        {row.active && <IssuePasswordAction row={row} disabled={busy} onIssued={onChanged} />}
+                        {row.active ? (
+                          <Button variant="danger" disabled={busy} onClick={() => setConfirming(row)}>
+                            Pasifleştir<span className="sr-only">: {row.full_name}</span>
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="secondary"
+                            disabled={busy}
+                            onClick={() => void apply(row, { active: true }, `${row.full_name} yeniden etkinleştirildi.`)}
+                          >
+                            Etkinleştir<span className="sr-only">: {row.full_name}</span>
+                          </Button>
+                        )}
+                      </div>
+                    )}
                   </td>
                 </tr>
               )

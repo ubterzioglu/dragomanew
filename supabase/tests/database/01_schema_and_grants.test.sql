@@ -87,9 +87,9 @@ select results_eq(
      where n.nspname in ('public', 'private') and p.prosecdef order by 1 $$,
   array[
     'private.before_user_created', 'private.can', 'private.current_staff_id',
-    'public.claim_request', 'public.hand_over_request', 'public.link_staff_account',
-    'public.list_staff_members', 'public.my_permissions', 'public.reassign_request', 'public.request_site_deploy',
-    'public.throttle_submission'
+    'public.claim_request', 'public.finish_password_change', 'public.hand_over_request', 'public.link_staff_account',
+    'public.list_staff_members', 'public.my_password_change_required', 'public.my_permissions', 'public.reassign_request', 'public.request_site_deploy',
+    'public.staff_auth_user_id', 'public.throttle_submission'
   ],
   'security definer is used only for the RPCs and the private helpers that need it'
 );

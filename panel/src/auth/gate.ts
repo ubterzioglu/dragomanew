@@ -32,6 +32,15 @@ export function gateFor({ loading, signedIn, link, staff }: GateInput): Gate {
 
 export const SIGN_IN_PATH = '/giris'
 export const HOME_PATH = '/'
+export const PASSWORD_PATH = '/sifre'
+
+/**
+ * Someone who signed in with a temporary password sets their own first: every other screen sends
+ * them to Şifre. A guide, not a guard: the database still checks every query.
+ */
+export function passwordRedirect(mustChange: boolean, pathname: string): string | null {
+  return mustChange && pathname !== PASSWORD_PATH ? PASSWORD_PATH : null
+}
 
 export interface GateNotice {
   title: string

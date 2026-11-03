@@ -19,7 +19,7 @@ Proje sahibine ulaşılamıyorsa önce 18. bölümü okuyun.
 | `panel/src/docs/` | Kullanım kılavuzu (`kilavuz/*.md`), güncelleme notları (`guncellemeler.md`) ve bu rehberin kopyası. |
 | `supabase/migrations/` | Veritabanı şeması, yetkiler (RLS), RPC'ler, deploy kuyruğu. |
 | `supabase/tests/database/` | pgTAP testleri. |
-| `supabase/functions/` | Edge Function'lar: `submit-request`, `publish-content`, `translate-content`, `content-release`, `site-deploy`. Ortak kod `_shared/`. |
+| `supabase/functions/` | Edge Function'lar: `submit-request`, `publish-content`, `translate-content`, `content-release`, `site-deploy`, `staff-account`. Ortak kod `_shared/`. |
 | `supabase/config.toml` | Yerel yığın ayarı; fonksiyonların `entrypoint`, `import_map`, `verify_jwt` ayarları da burada. |
 | `Dockerfile` | Site + panel build'i ve nginx imajı (Coolify bunu kullanır). |
 | `tmp/docs/` | Proje notları: `DURUM.md` (durum, verilmiş kararlar, çalışma notları), `PLAN.md` (açık işler), `dalga1-sozlesme.md` ve `dalga2-sozlesme.md` (teknik sözleşmeler), `tools/` (yayın sonrası kontrol betikleri). Repoda tutulmaz; kopyasını proje sahibinden alın. |
@@ -337,7 +337,7 @@ Platformun kendisinin verdikleri (girilmez): `SUPABASE_URL`, `SUPABASE_PUBLISHAB
 - 2026-11-02'den beri aal1 oturum yeterli; TOTP istenmez (`20261102120000_staff_aal1.sql`). Her politika yine etkin personel satırı + yetki ister.
 - Personel dışı kayıtları `before_user_created` kancası reddeder; kayıt formu yoktur.
 - Yetkiler: rol + `extra_permissions`, veritabanında `public.my_permissions()`. Panelin `panel/src/lib/permissions.ts` dosyası bunun aynasıdır; düğmeyi gizlemek koruma değildir, karar veritabanınındır. Roller: `main_admin` (hepsi), `reservations` (`requests.read`, `requests.work`), `accounting` (`requests.read`), `content` (`content.edit`, `content.translate`). Yayın (`content.publish`) yalnız `main_admin`'de ya da kişiye özel `extra_permissions` ile.
-- Yalnız şifreyle girecek bir çalışan için personel satırına ek olarak Supabase Auth'ta e-postası doğrulanmış bir kullanıcı açılmalıdır.
+- Yalnız şifreyle girecek bir çalışanı ana yönetici panelden açar: **Kullanıcılar** → **Geçici şifre oluştur** ya da satırdaki **Geçici şifre ver**. `staff-account` fonksiyonu (staff.manage) Auth kullanıcısını e-postası doğrulanmış olarak açar ya da şifresini değiştirir, `password_change_required` bayrağını koyar ve şifreyi yalnız yanıtında bir kez döndürür. Panel bayraklı kişiyi kendi şifresini belirleyene kadar **Şifre** ekranında tutar; kayıttan sonra `finish_password_change()` bayrağı kaldırır. Bayrak bir yönlendirmedir, güvenlik sınırı değildir. Supabase Dashboard'dan elle kullanıcı açmak gerekmez.
 
 ## 17. Commit kuralları
 

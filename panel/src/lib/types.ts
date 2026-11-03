@@ -24,8 +24,11 @@ export interface StaffMember {
 export interface StaffAdminRow extends StaffMember {
   email: string
   extra_permissions: readonly string[]
-  /** The Google account is bound (first sign-in done). */
+  /** The sign-in account is bound (first sign-in done). */
   linked: boolean
+  /** A temporary password was issued and the person has not set their own yet. */
+  password_change_required: boolean
+  temp_password_issued_at: string | null
   created_at: string
   updated_at: string
 }
@@ -33,6 +36,8 @@ export interface StaffAdminRow extends StaffMember {
 /** The signed-in staff member; `extra_permissions` is only known when the row could be read. */
 export interface CurrentStaff extends StaffMember {
   extra_permissions?: readonly string[]
+  /** Signed in with a temporary password: the Şifre screen comes first. */
+  password_change_required?: boolean
 }
 
 export interface RequestRow {

@@ -7,7 +7,7 @@ import { bearerToken } from '../http/http.ts'
  * lives in supabase.ts.
  */
 
-export type Permission = 'content.edit' | 'content.translate' | 'content.publish' | 'forms.manage' | 'site.deploy'
+export type Permission = 'content.edit' | 'content.translate' | 'content.publish' | 'forms.manage' | 'site.deploy' | 'staff.manage'
 
 export interface VerifiedClaims {
   /** auth.users id. */

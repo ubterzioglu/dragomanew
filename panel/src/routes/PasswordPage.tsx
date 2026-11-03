@@ -1,7 +1,9 @@
 import { useId, useState, type FormEvent } from 'react'
+import { Link } from 'react-router'
 import { useAuth } from '../auth/AuthProvider'
 import { PageHeading } from '../components/PageHeading'
 import { Button, Card, fieldClass, labelClass, Notice } from '../components/ui'
+import { finishPasswordChange } from '../data/staff'
 import { friendlyError } from '../lib/errors'
 import { MIN_PASSWORD_LENGTH, validateNewPassword, type NewPasswordErrors } from '../lib/passwordForm'
 import { db } from '../lib/supabase'
@@ -9,9 +11,12 @@ import { db } from '../lib/supabase'
 /**
  * "Şifre belirle / değiştir" for the signed-in person, so someone who signed in with Google can
  * also sign in with e-mail + password. Only the person's own account is changed (updateUser).
+ * Someone who came in with a temporary password is kept here until they save their own; then the
+ * flag on their row is lifted and the rest of the panel opens.
  */
 export function PasswordPage() {
-  const { session } = useAuth()
+  const { session, staff, refreshStaff } = useAuth()
+  const mustChange = staff?.password_change_required === true
   const passwordId = useId()
   const confirmId = useId()
   const [password, setPassword] = useState('')
@@ -20,6 +25,27 @@ export function PasswordPage() {
   const [error, setError] = useState<string | null>(null)
   const [saved, setSaved] = useState(false)
   const [busy, setBusy] = useState(false)
+  /** The new password is stored but the flag could not be lifted yet: only that step is retried. */
+  const [finishPending, setFinishPending] = useState(false)
+
+  const finish = async () => {
+    await finishPasswordChange()
+    setFinishPending(false)
+    refreshStaff()
+  }
+
+  const retryFinish = async () => {
+    setError(null)
+    setBusy(true)
+    try {
+      await finish()
+      setSaved(true)
+    } catch (finishError) {
+      setError(`Şifreniz kaydedildi ama panel açılamadı: ${friendlyError(finishError)}`)
+    } finally {
+      setBusy(false)
+    }
+  }
 
   const submit = async (event: FormEvent) => {
     event.preventDefault()
@@ -37,6 +63,15 @@ export function PasswordPage() {
       if (updateError) throw updateError
       setPassword('')
       setConfirm('')
+      if (mustChange) {
+        setFinishPending(true)
+        try {
+          await finish()
+        } catch (finishError) {
+          setError(`Şifreniz kaydedildi ama panel açılamadı: ${friendlyError(finishError)}`)
+          return
+        }
+      }
       setSaved(true)
     } catch (updateError) {
       setError(friendlyError(updateError))
@@ -53,9 +88,24 @@ export function PasswordPage() {
           Bu şifreyle giriş sayfasında {session?.user.email ?? 'e-posta adresiniz'} ile de giriş yapabilirsiniz. En az{' '}
           {MIN_PASSWORD_LENGTH} karakter kullanın.
         </p>
+        {mustChange && !saved && (
+          <Notice tone="info">Geçici bir şifreyle girdiniz. Panele devam etmek için önce kendi şifrenizi belirleyin.</Notice>
+        )}
         {error && <Notice tone="error">{error}</Notice>}
-        {saved && <Notice tone="success">Şifreniz kaydedildi.</Notice>}
-        <form onSubmit={(event) => void submit(event)} className="space-y-3" noValidate>
+        {finishPending && (
+          <Button onClick={() => void retryFinish()} disabled={busy}>
+            {busy ? 'Deneniyor…' : 'Devam et'}
+          </Button>
+        )}
+        {saved && (
+          <Notice tone="success">
+            Şifreniz kaydedildi.{' '}
+            <Link to="/" className="font-semibold underline">
+              Genel bakışa geç
+            </Link>
+          </Notice>
+        )}
+        <form onSubmit={(event) => void submit(event)} className={finishPending ? 'hidden' : 'space-y-3'} noValidate>
           <div>
             <label htmlFor={passwordId} className={labelClass}>
               Yeni şifre

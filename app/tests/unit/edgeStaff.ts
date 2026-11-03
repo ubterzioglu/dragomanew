@@ -4,7 +4,7 @@ import type { StaffVerifier } from '../../../supabase/functions/_shared/auth/sta
 
 export const ORIGIN = 'http://127.0.0.1:5175'
 
-const ALL = ['content.edit', 'content.translate', 'content.publish', 'forms.manage', 'site.deploy']
+const ALL = ['content.edit', 'content.translate', 'content.publish', 'forms.manage', 'site.deploy', 'staff.manage']
 
 /**
  * token → user and permissions, as getClaims + my_permissions would answer. Every session is a

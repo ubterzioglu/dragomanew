@@ -2,6 +2,9 @@
 
 ## 2026-11-03
 
+- **Kullanıcılar**'da yeni çalışanı eklerken **Geçici şifre oluştur** işaretliyse panel giriş hesabını da açar ve geçici şifreyi bir kez gösterir. Google hesabı olmayan çalışanlar artık yalnız panelden eklenebiliyor.
+- Her kullanıcının satırında **Geçici şifre ver** düğmesi var. Şifresini unutan biri için yeni bir geçici şifre oluşturur.
+- Geçici şifreyle giren kişi önce **Şifre** ekranında kendi şifresini belirler, sonra panelin geri kalanı açılır.
 - Panelin sol üstünde artık Dragoman logosu var. Logoya tıklayınca **Genel bakış** açılır.
 - Bilgisayarda her ekranın üstünde yeni bir bar var: solda hangi ekranda olduğunuz (ör. **İçerik › Medya**), sağda sloganımız *Once a Dragoman, always a Dragoman.* ve **Siteyi aç** düğmesi. **Siteyi aç** sitenin ana sayfasını yeni sekmede açar.
 - Telefonda slogan ve **Siteyi aç** bağlantısı menü çekmecesinin altında.

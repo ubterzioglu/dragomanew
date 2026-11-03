@@ -439,6 +439,13 @@ verify_jwt = false
 import_map = "./functions/site-deploy/deno.json"
 entrypoint = "./functions/site-deploy/index.ts"
 
+# Temporary passwords from Kullanıcılar (staff.manage, checked in the handler).
+[functions.staff-account]
+enabled = true
+verify_jwt = false
+import_map = "./functions/staff-account/deno.json"
+entrypoint = "./functions/staff-account/index.ts"
+
 [analytics]
 enabled = true
 port = 54327

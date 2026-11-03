@@ -13,6 +13,15 @@ export async function linkStaffAccount(): Promise<string | null> {
 }
 
 /**
+ * The caller's "set your own password first" flag. Best effort: a failed read (a database without
+ * the function yet, a network blip) means no flag, so this guide can never close the gate.
+ */
+async function readPasswordFlag(): Promise<boolean> {
+  const { data, error } = await db().rpc('my_password_change_required')
+  return !error && data === true
+}
+
+/**
  * Reads the caller's own row. Clients may read only id, full_name, role and active, so
  * extra_permissions stay unknown here and the role alone decides which actions are offered.
  */
@@ -23,5 +32,6 @@ export async function loadStaffRow(staffId: string): Promise<CurrentStaff | null
     .eq('id', staffId)
     .maybeSingle<CurrentStaff>()
   if (error) throw error
-  return data && data.active ? data : null
+  if (!data || !data.active) return null
+  return { ...data, password_change_required: await readPasswordFlag() }
 }

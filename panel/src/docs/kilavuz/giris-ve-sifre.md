@@ -11,7 +11,8 @@ Panele Google hesabınızla ya da e-posta adresiniz ve şifrenizle girersiniz. T
    - **Yeni şifre** alanına en az 12 karakterli bir şifre yazın.
    - **Yeni şifre (tekrar)** alanına aynısını yazın.
    - **Şifreyi kaydet**'e basın. "Şifreniz kaydedildi." yazısı çıkar.
-5. İşiniz bitince sol menünün altındaki **Çıkış yap**'a basın.
+5. Size geçici bir şifre verildiyse ilk girişte **Şifre** ekranı açılır. Kendi şifrenizi belirleyip **Şifreyi kaydet**'e basmadan panelin diğer ekranları açılmaz. Kaydettikten sonra **Genel bakışa geç** ile devam edin.
+6. İşiniz bitince sol menünün altındaki **Çıkış yap**'a basın.
 
 ## Dikkat
 
@@ -25,4 +26,4 @@ Panele Google hesabınızla ya da e-posta adresiniz ve şifrenizle girersiniz. T
 
 ## Kimler kullanabilir
 
-**Kullanıcılar** listesinde etkin olan herkes. Google ile girmek için orada kayıtlı adres Google hesabınız olmalıdır. Yalnız şifreyle girecekseniz yöneticinin sizin için ayrıca bir giriş hesabı açması gerekir.
+**Kullanıcılar** listesinde etkin olan herkes. Google ile girmek için orada kayıtlı adres Google hesabınız olmalıdır. Google ile girmeyecekseniz ana yönetici size panelden geçici bir şifre verir; şifrenizi unutursanız yeni bir geçici şifre için ona başvurun.

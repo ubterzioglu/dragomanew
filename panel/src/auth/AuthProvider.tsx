@@ -17,6 +17,8 @@ interface AuthValue {
   /** Friendly Turkish message when linking or reading the staff row failed. */
   staffError: string | null
   reloadStaff: () => void
+  /** Reads the staff row again while the current one stays on screen (no loading flash). */
+  refreshStaff: () => void
   signOut: () => Promise<void>
 }
 
@@ -36,6 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [initialised, setInitialised] = useState(false)
   const [session, setSession] = useState<Session | null>(null)
   const [retry, setRetry] = useState(0)
+  const [nudge, setNudge] = useState(0)
   const recheck = useRecheck()
 
   useEffect(() => {
@@ -53,7 +56,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const link = useKeyedPromise(scope ? `${scope}#${retry}` : null, runLink)
   const staffId = link.status === 'ok' ? link.value : null
-  const lookup = staffLookup({ staffId, scope, retry, token, recheck })
+  // Both counters only grow, so their sum changes whenever either does.
+  const lookup = staffLookup({ staffId, scope, retry, token, recheck: recheck + nudge })
   const staffRow = useKeyedPromise(lookup?.key ?? null, runStaff, lookup?.revision)
 
   const gate = gateFor({
@@ -68,13 +72,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const staff = staffRow.status === 'ok' ? staffRow.value : null
 
   const reloadStaff = useCallback(() => setRetry((value) => value + 1), [])
+  const refreshStaff = useCallback(() => setNudge((value) => value + 1), [])
   const signOut = useCallback(async () => {
     await db().auth.signOut()
   }, [])
 
   const value = useMemo<AuthValue>(
-    () => ({ gate, session, staff, staffError, reloadStaff, signOut }),
-    [gate, session, staff, staffError, reloadStaff, signOut],
+    () => ({ gate, session, staff, staffError, reloadStaff, refreshStaff, signOut }),
+    [gate, session, staff, staffError, reloadStaff, refreshStaff, signOut],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

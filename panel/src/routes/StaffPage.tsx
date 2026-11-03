@@ -29,7 +29,8 @@ function StaffAdmin({ myId }: { myId: string }) {
     <div className="space-y-5">
       <PageHeading title="Kullanıcılar" description="Panel kullanıcılarını ekleyin, rollerini ve yetkilerini değiştirin." help="kullanicilar" />
       <p className="max-w-3xl text-sm text-ink-muted">
-        Panele yalnızca burada etkin olan Google adresleri girebilir. Pasifleştirilen kişinin erişimi hemen kapanır.
+        Panele yalnızca burada etkin olan kişiler girebilir: Google hesabıyla ya da e-posta ve şifreyle. Google ile girmeyecek
+        kişiye geçici şifre verin. Pasifleştirilen kişinin erişimi hemen kapanır.
       </p>
       {announcement && <Notice tone="success">{announcement}</Notice>}
       <AddStaffForm onAdded={changed} />

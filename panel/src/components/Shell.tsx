@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router'
 import { useAuth } from '../auth/AuthProvider'
 import { carryCallbackError } from '../auth/callbackError'
-import { gateNotice, redirectFor, SIGN_IN_PATH } from '../auth/gate'
+import { gateNotice, passwordRedirect, redirectFor, SIGN_IN_PATH } from '../auth/gate'
 import { deeplUsage } from '../data/content/entries'
 import { useKeyedPromise } from '../lib/useKeyedPromise'
 import { useRecheck } from '../lib/useRecheck'
@@ -81,6 +81,8 @@ export function Shell() {
   if (target) return <Navigate to={target} replace />
   const open = gate === 'sign_in' || gate === 'ready'
   const ready = gate === 'ready' && staff !== null
+  const mustChange = ready ? passwordRedirect(staff.password_change_required === true, pathname) : null
+  if (mustChange) return <Navigate to={mustChange} replace />
 
   return (
     <PermissionsProvider staff={ready ? staff : null}>
