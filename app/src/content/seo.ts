@@ -1,6 +1,6 @@
 import type { Locale } from '../i18n/locales'
 import { pick } from './localize'
-import type { SeoFields } from './schema'
+import type { Post, SeoFields } from './schema'
 
 export interface PageSeo {
   title: string
@@ -20,3 +20,7 @@ export function pageSeo(seo: SeoFields | undefined, locale: Locale, fallback: Pa
 
 /** Share image id: the record's `seo.ogImage` when set, otherwise the page's own photo. */
 export const shareImageId = <T extends string | undefined>(seo: SeoFields | undefined, fallback: T): string | T => seo?.ogImage ?? fallback
+
+/** A post's update date counts only when it is later than its publication date; otherwise the page shows none. */
+export const postUpdated = (post: Pick<Post, 'date' | 'updated'>): string | undefined =>
+  post.updated !== undefined && post.updated > post.date ? post.updated : undefined

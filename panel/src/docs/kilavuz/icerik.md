@@ -32,6 +32,7 @@ Sitedeki metinleri buradan düzenlersiniz: etkinlikler, alt gruplar, blog yazıl
 - "Bu kayıt başka biri tarafından değiştirildi, yeniden yükleyin" uyarısı, siz düzenlerken başka birinin aynı kaydı kaydettiği anlamına gelir. Sayfayı yenileyin; değişikliklerinizi yeniden girmeniz gerekebilir.
 - Yeni bir kaydın kısa adı (sitedeki adresi) Türkçe başlıktan oluşur. Önce Türkçe başlığı yazın.
 - Kaydedilmemiş değişiklik varken sayfadan çıkmaya çalışırsanız tarayıcı sizi uyarır.
+- Etkinlik ve blog yazılarında **Ayrıntılar** altındaki **Son güncelleme tarihi**, sayfada "Güncellendi: …" olarak görünür ve arama motorlarına da bildirilir. Yalnız metni gerçekten değiştirdiğinizde o günün tarihini girin; yazım düzeltmesi için değiştirmeyin. Blog yazısında yayın tarihinden önceki bir tarih gösterilmez.
 
 ## Kimler kullanabilir
 

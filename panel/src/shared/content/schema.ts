@@ -127,6 +127,8 @@ export const eventSchema = z.object({
   /** Health form for diving/outdoor; sea kayak has none (scope not extended). */
   healthForm: z.enum(['diving', 'outdoor']).nullable(),
   featured: z.boolean().default(false),
+  /** Last real content update, entered in the panel (shown on the page, WebPage dateModified); never the build date. */
+  updated: z.iso.date().optional(),
   status: statusSchema,
   ...seo,
   ...provenance,

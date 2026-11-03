@@ -199,3 +199,24 @@ export function visibleNav(access: NavAccess, groups: readonly NavGroup[] = NAV_
 
 /** Every item, flat (for the overview and the guide). */
 export const ALL_NAV_ITEMS: readonly NavItem[] = NAV_GROUPS.flatMap((group) => group.items)
+
+export interface NavTrail {
+  group: NavGroup
+  item: NavItem
+}
+
+/** A path is on an item when it is the item's path or a screen below it (`/icerik/event/1`). */
+function onItem(path: string, item: NavItem): boolean {
+  if (item.end || item.to === '/') return path === item.to
+  return path === item.to || path.startsWith(`${item.to}/`)
+}
+
+/** The menu group and item of the open screen, for the top bar; null outside the menu (`/sifre`). */
+export function navTrail(pathname: string, groups: readonly NavGroup[] = NAV_GROUPS): NavTrail | null {
+  const path = pathname.replace(/\/+$/, '') || '/'
+  for (const group of groups) {
+    const item = group.items.find((candidate) => onItem(path, candidate))
+    if (item) return { group, item }
+  }
+  return null
+}

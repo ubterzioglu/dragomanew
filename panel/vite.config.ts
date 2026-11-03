@@ -5,26 +5,38 @@ import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
-const SITE_MEDIA = fileURLToPath(new URL('../app/public/media/', import.meta.url))
-const MEDIA_TYPES: Readonly<Record<string, string>> = { '.webp': 'image/webp', '.avif': 'image/avif', '.jpg': 'image/jpeg' }
+/** Site folders the dev server lends the panel; in production nginx serves them beside /panel/. */
+const SITE_FOLDERS: Readonly<Record<string, string>> = {
+  '/media': fileURLToPath(new URL('../app/public/media/', import.meta.url)),
+  '/brand': fileURLToPath(new URL('../app/public/brand/', import.meta.url)),
+}
+const MEDIA_TYPES: Readonly<Record<string, string>> = {
+  '.webp': 'image/webp',
+  '.avif': 'image/avif',
+  '.jpg': 'image/jpeg',
+  '.png': 'image/png',
+}
 
 /**
- * In production nginx serves the site's /media next to /panel/. In dev the panel has no site
- * beside it, so repo thumbnails (`/media/{id}-480.webp`) are read from the site's public folder.
+ * In production nginx serves the site's /media and /brand next to /panel/. In dev the panel has no
+ * site beside it, so repo thumbnails (`/media/{id}-480.webp`) and the logo are read from the site's
+ * public folder.
  */
 function siteMediaInDev(): Plugin {
   return {
     name: 'site-media-in-dev',
     apply: 'serve',
     configureServer(server) {
-      server.middlewares.use('/media', (req, res, next) => {
-        const name = decodeURIComponent((req.url ?? '').split('?')[0] ?? '').replace(/^\/+/, '')
-        const type = MEDIA_TYPES[path.extname(name)]
-        const file = path.join(SITE_MEDIA, name)
-        if (!type || !/^[a-z0-9-]+\.[a-z]+$/.test(name) || !existsSync(file) || !statSync(file).isFile()) return next()
-        res.setHeader('content-type', type)
-        createReadStream(file).pipe(res)
-      })
+      for (const [prefix, folder] of Object.entries(SITE_FOLDERS)) {
+        server.middlewares.use(prefix, (req, res, next) => {
+          const name = decodeURIComponent((req.url ?? '').split('?')[0] ?? '').replace(/^\/+/, '')
+          const type = MEDIA_TYPES[path.extname(name)]
+          const file = path.join(folder, name)
+          if (!type || !/^[a-z0-9-]+\.[a-z]+$/.test(name) || !existsSync(file) || !statSync(file).isFile()) return next()
+          res.setHeader('content-type', type)
+          createReadStream(file).pipe(res)
+        })
+      }
     },
   }
 }

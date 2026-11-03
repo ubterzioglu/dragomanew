@@ -1,5 +1,9 @@
 # Son güncellemeler
 
+## 2026-11-03
+
+- Etkinliklere de **Son güncelleme tarihi** eklendi (İçerik → kayıt → **Ayrıntılar**). Etkinlik ve blog yazılarında girdiğiniz tarih sayfada "Güncellendi: …" olarak görünüyor.
+
 ## 2026-11-02
 
 - Yeni **Müşteri soruları** sayfası (Beni Oku!'nun altında): siteyi yayına hazırlamak için Dragoman'dan beklenen 27 soru konulara göre sıralı. Her sorunun altına yanıtı yazıp **Kaydet**'e basabilirsiniz; kimin ne zaman kaydettiği ve kaç sorunun yanıtlandığı görünür.

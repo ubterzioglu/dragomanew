@@ -35,6 +35,8 @@
     color: var(--color-ink);
     background: var(--color-canvas);
     -webkit-text-size-adjust: 100%;
+    /* The sticky mobile header and desktop top bar must not cover a #section the page jumps to. */
+    scroll-padding-top: 4.5rem;
   }
 
   body {

@@ -3,12 +3,13 @@ import { PageHead } from '../../components/seo/PageHead'
 import { TranslationNote } from '../../components/seo/TranslationNote'
 import { Breadcrumbs } from '../../components/ui/Breadcrumbs'
 import { ButtonLink } from '../../components/ui/Button'
+import { LastUpdated } from '../../components/ui/LastUpdated'
 import { PHONE_CONTENT_WIDTH, Picture } from '../../components/ui/Picture'
 import { RichText } from '../../components/ui/RichText'
 import { useContent } from '../../content/ContentContext'
 import { pick } from '../../content/localize'
 import type { Post } from '../../content/schema'
-import { pageSeo, shareImageId } from '../../content/seo'
+import { pageSeo, postUpdated, shareImageId } from '../../content/seo'
 import { eventPath, postAlternates, postPath } from '../../content/urls'
 import { useLocale, useUi } from '../../i18n/LocaleContext'
 import { localePath } from '../../i18n/pages'
@@ -34,9 +35,9 @@ export function PostPage({ post }: { post: Post }) {
     { label: ui.nav.blog, href: localePath(locale, 'blog') },
     { label: title },
   ]
-  // The page shows only the publication date, and markup may claim only what readers see (SEO-12);
-  // post.updated goes into dateModified once the post header shows it.
-  const dates = { published: post.date, modified: post.date }
+  // Markup may claim only what readers see (SEO-12): dateModified is the update date the header shows.
+  const updated = postUpdated(post)
+  const dates = { published: post.date, modified: updated ?? post.date }
   const article = blogPosting({ path, headline: title, description: seo.description, locale, image, ...dates })
   const jsonLd = pageNodes({ path, name: title, description: seo.description, locale, image, crumbs, mainEntity: article })
   const related = post.relatedEvents.flatMap((id) => {
@@ -62,6 +63,7 @@ export function PostPage({ post }: { post: Post }) {
           <time dateTime={post.date} className="mt-6 block text-ink-muted">
             {formatDate(post.date, locale)}
           </time>
+          {updated && <LastUpdated date={updated} className="mt-1 text-sm text-ink-muted" />}
           <h1 className="mt-2 text-4xl font-bold md:text-5xl">{title}</h1>
           <p className="mt-4 text-xl text-ink-muted">{excerpt}</p>
         </header>

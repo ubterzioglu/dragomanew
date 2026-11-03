@@ -31,7 +31,7 @@ export function GuidePage() {
         <Notice tone="info">Kılavuz henüz yazılmadı.</Notice>
       ) : (
         <div className="grid gap-6 lg:grid-cols-[14rem_minmax(0,1fr)]">
-          <nav aria-label="Kılavuz bölümleri" className="lg:sticky lg:top-6 lg:self-start">
+          <nav aria-label="Kılavuz bölümleri" className="lg:sticky lg:top-20 lg:self-start">
             <ul className="flex gap-1 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0">
               {GUIDE.map((section) => (
                 <li key={section.id} className="shrink-0">

@@ -1,9 +1,10 @@
 import { KeyRound, LogOut } from 'lucide-react'
 import { useId } from 'react'
-import { NavLink } from 'react-router'
+import { Link, NavLink } from 'react-router'
 import { useAuth } from '../../auth/AuthProvider'
 import { roleLabel } from '../../lib/labels'
 import { useCan } from '../permissionsContext'
+import { LOGO_SRC, LOGO_SRCSET } from './branding'
 import { NAV_ICONS } from './icons'
 import { visibleNav } from './navItems'
 
@@ -122,19 +123,31 @@ export function UserBox({ collapsed = false, onNavigate }: NavMenuProps) {
   )
 }
 
-export function Brand({ collapsed = false }: { collapsed?: boolean }) {
+/** The logo (or the "D" tile when the sidebar is collapsed); it leads back to the overview. */
+export function Brand({ collapsed = false, onNavigate }: NavMenuProps) {
   return (
-    <div className={`flex items-center gap-2.5 ${collapsed ? 'justify-center' : ''}`}>
-      <span
-        aria-hidden="true"
-        className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-brand-green text-base font-bold text-white shadow-soft"
-      >
-        D
-      </span>
-      <span className={collapsed ? 'sr-only' : 'leading-tight'}>
-        <span className="block text-[0.9375rem] font-bold text-brand-green-dark">Dragoman</span>
-        <span className="block text-xs font-medium text-brand-orange-ink">Panel</span>
-      </span>
-    </div>
+    <Link
+      to="/"
+      onClick={onNavigate}
+      aria-label="Dragoman Panel: Genel bakış"
+      title={collapsed ? 'Genel bakış' : undefined}
+      className={`flex items-center gap-2.5 rounded-lg ${collapsed ? 'justify-center' : ''}`}
+    >
+      {collapsed ? (
+        <span
+          aria-hidden="true"
+          className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-brand-green text-base font-bold text-white shadow-soft"
+        >
+          D
+        </span>
+      ) : (
+        <>
+          <img src={LOGO_SRC} srcSet={LOGO_SRCSET} sizes="83px" width={240} height={104} alt="" className="h-9 w-auto" />
+          <span className="rounded-md bg-brand-orange-soft px-1.5 py-0.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-brand-orange-ink">
+            Panel
+          </span>
+        </>
+      )}
+    </Link>
   )
 }

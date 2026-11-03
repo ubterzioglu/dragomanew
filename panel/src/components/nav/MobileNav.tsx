@@ -1,6 +1,7 @@
-import { Menu, X } from 'lucide-react'
+import { ExternalLink, Menu, X } from 'lucide-react'
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { useLocation } from 'react-router'
+import { SITE_HOME, Slogan } from './branding'
 import { Brand, NavLinks, UserBox } from './NavMenu'
 
 /**
@@ -66,7 +67,7 @@ export function MobileNav() {
         {open && (
           <div className="flex h-full flex-col bg-sidebar shadow-lift">
             <div className="flex items-center justify-between px-4 pb-2 pt-4">
-              <Brand />
+              <Brand onNavigate={close} />
               <button
                 type="button"
                 onClick={close}
@@ -77,6 +78,19 @@ export function MobileNav() {
               </button>
             </div>
             <NavLinks onNavigate={close} />
+            <div className="space-y-2 border-t border-line px-6 py-3">
+              <Slogan tone="light" className="text-sm" />
+              <a
+                href={SITE_HOME}
+                target="_blank"
+                rel="noopener"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-sea underline-offset-2 hover:underline"
+              >
+                Siteyi aç
+                <ExternalLink aria-hidden="true" className="size-3.5" />
+                <span className="sr-only">(yeni sekmede açılır)</span>
+              </a>
+            </div>
             <UserBox onNavigate={close} />
           </div>
         )}

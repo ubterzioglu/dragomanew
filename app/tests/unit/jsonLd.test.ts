@@ -87,6 +87,12 @@ describe('page generators', () => {
     expect(trip?.['@type']).toBe('TouristTrip')
   })
 
+  it('webPage carries dateModified only when the page shows an update date', () => {
+    const page = (dateModified?: string) => webPage({ path: '/tr/diving/deneme/', name: 'Deneme', description: 'd', locale: 'tr', dateModified })
+    expect(page('2026-11-02')).toMatchObject({ dateModified: '2026-11-02' })
+    expect(page()).not.toHaveProperty('dateModified')
+  })
+
   it('home page has no breadcrumb', () => {
     const nodes = pageNodes({ path: '/', name: 'Home', description: 'd', locale: 'en' })
     expect(nodes).toHaveLength(1)

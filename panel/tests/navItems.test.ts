@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { ALL_NAV_ITEMS, canSeeDeveloperGuide, NAV_GROUPS, visibleNav, type NavAccess } from '../src/components/nav/navItems'
+import { ALL_NAV_ITEMS, canSeeDeveloperGuide, NAV_GROUPS, navTrail, visibleNav, type NavAccess } from '../src/components/nav/navItems'
 import { can, type Permission } from '../src/lib/permissions'
 import type { StaffRole } from '../src/lib/types'
 
@@ -75,5 +75,41 @@ describe('NAV_GROUPS', () => {
 
   it('matches only the exact path for the overview, so it is not active on every page', () => {
     expect(ALL_NAV_ITEMS.find((item) => item.to === '/')?.end).toBe(true)
+  })
+})
+
+describe('navTrail', () => {
+  const trail = (pathname: string): string | null => {
+    const found = navTrail(pathname)
+    return found ? `${found.group.label} / ${found.item.label}` : null
+  }
+
+  it('names the group and the item of a menu screen', () => {
+    expect(trail('/talepler')).toBe('Genel / Talepler')
+    expect(trail('/medya')).toBe('İçerik / Medya')
+    expect(trail('/kullanicilar')).toBe('Ayarlar / Kullanıcılar')
+    expect(trail('/gelistirici')).toBe('Yardım / Geliştirici rehberi')
+  })
+
+  it('keeps the parent item on screens below it', () => {
+    expect(trail('/icerik/event/abc-123')).toBe('İçerik / İçerik')
+    expect(trail('/icerik/siralama')).toBe('İçerik / İçerik')
+    expect(trail('/formlar/event')).toBe('Ayarlar / Formlar')
+  })
+
+  it('matches the overview only on its exact path', () => {
+    expect(trail('/')).toBe('Genel / Genel bakış')
+    expect(trail('')).toBe('Genel / Genel bakış')
+  })
+
+  it('ignores a trailing slash and does not match a longer word', () => {
+    expect(trail('/medya/')).toBe('İçerik / Medya')
+    expect(trail('/medyalar')).toBeNull()
+  })
+
+  it('returns null for screens outside the menu', () => {
+    expect(trail('/sifre')).toBeNull()
+    expect(trail('/giris')).toBeNull()
+    expect(trail('/olmayan-sayfa')).toBeNull()
   })
 })

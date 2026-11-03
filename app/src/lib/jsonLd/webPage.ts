@@ -16,6 +16,8 @@ export interface WebPageInput {
   hasBreadcrumb?: boolean
   /** Id of the thing the page is about (a trip, a post, a book, the business). */
   mainEntityId?: string
+  /** ISO date of the last update the page itself shows; never the build date. */
+  dateModified?: string
 }
 
 export const webPageId = (path: string): string => `${absoluteUrl(path)}#webpage`
@@ -33,5 +35,6 @@ export function webPage(input: WebPageInput): JsonLdNode {
     ...(input.image ? { primaryImageOfPage: imageObject(input.image) } : {}),
     ...(input.hasBreadcrumb ? { breadcrumb: { '@id': `${url}#breadcrumb` } } : {}),
     ...(input.mainEntityId ? { mainEntity: { '@id': input.mainEntityId } } : {}),
+    ...(input.dateModified ? { dateModified: input.dateModified } : {}),
   }
 }

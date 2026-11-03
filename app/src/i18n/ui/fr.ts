@@ -116,6 +116,7 @@ export const fr = {
   },
   forms: {
     optional: 'facultatif',
+    updated: 'Mis à jour le',
     fullName: 'Nom et prénom',
     email: 'E-mail',
     phone: 'Téléphone',

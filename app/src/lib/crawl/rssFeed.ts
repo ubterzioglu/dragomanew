@@ -1,5 +1,6 @@
 import { pick } from '../../content/localize'
 import type { Post } from '../../content/schema'
+import { postUpdated } from '../../content/seo'
 import { postPath } from '../../content/urls'
 import type { Locale } from '../../i18n/locales'
 import { escapeXml } from './xml'
@@ -35,7 +36,7 @@ export function postFeedItems(posts: readonly Post[], locale: Locale, origin: st
     link: `${origin}${postPath(locale, post)}`,
     description: pick(post.excerpt, locale).value,
     published: post.date,
-    updated: post.updated ?? post.date,
+    updated: postUpdated(post) ?? post.date,
   }))
 }
 

@@ -117,6 +117,8 @@ export const tr = {
     optional: 'isteğe bağlı',
     fullName: 'Ad soyad',
     email: 'E-posta',
+    /** Precedes the date: "Güncellendi: 2 Kasım 2026". */
+    updated: 'Güncellendi:',
     phone: 'Telefon',
     message: 'Mesajınız',
     subject: 'Konu',

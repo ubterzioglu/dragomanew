@@ -97,6 +97,8 @@ const CURRENCY: FieldConfig = {
   ],
 }
 
+const UPDATED_HELP = 'Metni gerçekten değiştirdiğinizde bugünün tarihini girin; sayfada "Güncellendi" olarak görünür.'
+
 const SEO: FieldConfig = {
   key: 'seo',
   label: 'SEO',
@@ -205,6 +207,7 @@ const EVENT: readonly FieldConfig[] = [
   ITINERARY,
   FAQ,
   { key: 'featured', label: 'Ana sayfada öne çıkar', kind: 'boolean', group: 'details' },
+  { key: 'updated', label: 'Son güncelleme tarihi', kind: 'date', group: 'details', optional: true, help: UPDATED_HELP },
   SEO,
 ]
 
@@ -258,7 +261,7 @@ const POST: readonly FieldConfig[] = [
   { key: 'cover', label: 'Kapak fotoğrafı', kind: 'media', optional: true },
   { key: 'slug', label: 'Adres (kısa ad)', kind: 'slug', group: 'details' },
   { key: 'date', label: 'Yayın tarihi', kind: 'date', group: 'details' },
-  { key: 'updated', label: 'Son güncelleme tarihi', kind: 'date', group: 'details', optional: true },
+  { key: 'updated', label: 'Son güncelleme tarihi', kind: 'date', group: 'details', optional: true, help: `${UPDATED_HELP} Yayın tarihinden önceki bir tarih gösterilmez.` },
   { key: 'relatedEvents', label: 'İlgili etkinlikler', kind: 'references', group: 'details', referenceType: 'event' },
   SEO,
 ]

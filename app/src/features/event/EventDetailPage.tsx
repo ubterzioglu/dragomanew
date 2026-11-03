@@ -4,6 +4,7 @@ import { PageHead } from '../../components/seo/PageHead'
 import { TranslationNote } from '../../components/seo/TranslationNote'
 import { Breadcrumbs } from '../../components/ui/Breadcrumbs'
 import { FaqList } from '../../components/ui/FaqList'
+import { LastUpdated } from '../../components/ui/LastUpdated'
 import { RichText } from '../../components/ui/RichText'
 import { useContent } from '../../content/ContentContext'
 import { pick } from '../../content/localize'
@@ -71,7 +72,7 @@ export function EventDetailPage({ event }: { event: DragomanEvent }) {
     { label: title },
   ]
   const trip = touristTrip({ path, name: title, description: summary, image, itinerary })
-  const nodes = pageNodes({ path, name: title, description: seo.description, locale, image, crumbs, mainEntity: trip })
+  const nodes = pageNodes({ path, name: title, description: seo.description, locale, image, crumbs, mainEntity: trip, dateModified: event.updated })
   const jsonLd = faq.length > 0 ? [...nodes, faqPage(path, faq)] : nodes
 
   return (
@@ -83,6 +84,7 @@ export function EventDetailPage({ event }: { event: DragomanEvent }) {
           <TranslationNote untranslated={gaps} className="mt-4" />
           <h1 className="mt-4 text-4xl font-bold md:text-5xl">{title}</h1>
           <p className="mt-3 max-w-3xl text-lg text-ink-muted md:text-xl">{summary}</p>
+          {event.updated && <LastUpdated date={event.updated} className="mt-3 text-sm text-ink-muted" />}
         </div>
       </div>
 

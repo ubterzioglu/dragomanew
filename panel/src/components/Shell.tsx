@@ -10,6 +10,7 @@ import { DeeplBanner } from './content/DeeplBanner'
 import { MobileNav } from './nav/MobileNav'
 import { Brand } from './nav/NavMenu'
 import { Sidebar } from './nav/Sidebar'
+import { TopBar } from './nav/TopBar'
 import { PageHeading } from './PageHeading'
 import { PermissionsProvider, useCan } from './permissionsContext'
 import { Button, Loading, Notice } from './ui'
@@ -99,6 +100,7 @@ export function Shell() {
           <PlainHeader />
         )}
         <div className="min-w-0 flex-1">
+          {ready && <TopBar />}
           {ready && <QuotaBanner staffId={staff.id} />}
           <main id="main" tabIndex={-1} className="mx-auto max-w-7xl px-4 py-6 outline-none sm:px-6 lg:px-10 lg:py-10">
             {open ? <Outlet /> : <GateMessage />}
