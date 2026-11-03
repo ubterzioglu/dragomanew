@@ -13,6 +13,10 @@ ARG VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_FClV5BfaPresWIUTgfDdIg_2Iq0d5eT
 # Empty until the launch decision: Stage A pages, robots.txt and the X-Robots-Tag header keep search
 # engines out. "true" opens all three at once (deploy/KURULUM.md, release checklist).
 ARG VITE_PUBLIC_RELEASE=
+# GA4 measurement id (G-…). Empty = analytics off: no cookie banner, no Google host in the page policy,
+# nothing loaded from Google. Set, the banner appears and gtag.js loads only after a visitor accepts
+# analytics. A malformed id stops the build. Public by design (it ships in every page), not a secret.
+ARG VITE_GA4_ID=
 # Content source (dalga2-sozlesme §7, §10): "fixture" renders the typed sample data in app/src/content/data;
 # "release" fetches the published release from the content-release function of VITE_SUPABASE_URL and fails
 # the build (the running container stays) if it is missing or invalid. Release since the cut-over (2026-11-02).
@@ -27,6 +31,7 @@ ARG VITE_SITE_ORIGIN=https://notyetbro.club
 ARG VITE_SUPABASE_URL
 ARG VITE_SUPABASE_PUBLISHABLE_KEY
 ARG VITE_PUBLIC_RELEASE
+ARG VITE_GA4_ID
 ARG CONTENT_SOURCE
 ARG CONTENT_RELEASE_ID
 # The build writes the Supabase origin into each page's connect-src and switches the forms to it.
@@ -34,6 +39,7 @@ ENV VITE_SITE_ORIGIN=$VITE_SITE_ORIGIN \
     VITE_SUPABASE_URL=$VITE_SUPABASE_URL \
     VITE_SUPABASE_PUBLISHABLE_KEY=$VITE_SUPABASE_PUBLISHABLE_KEY \
     VITE_PUBLIC_RELEASE=$VITE_PUBLIC_RELEASE \
+    VITE_GA4_ID=$VITE_GA4_ID \
     CONTENT_SOURCE=$CONTENT_SOURCE \
     CONTENT_RELEASE_ID=$CONTENT_RELEASE_ID \
     MEDIA_CACHE_DIR=/cache/media

@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom'
 import { useLocale, useUi } from '../../i18n/LocaleContext'
 import { localePath, type PageKey } from '../../i18n/pages'
 import { pageTitle } from '../../i18n/pageTitles'
-import { buildYear } from '../../lib/env'
+import { consentStore } from '../../lib/consent/consentStore'
+import { buildYear, ga4Id } from '../../lib/env'
 import { mailHref, siteConfig, telHref } from '../../lib/siteConfig'
 
 const EXPLORE: readonly PageKey[] = ['diving', 'lifeguard', 'seaKayak', 'outdoor', 'transport', 'shop']
@@ -106,6 +107,14 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
+              {/* Reopens the cookie banner (CookieConsent); there is no banner while analytics is off. */}
+              {ga4Id && (
+                <li>
+                  <button type="button" data-consent-reopen="" className={`${linkClass} cursor-pointer text-left`} onClick={() => consentStore.reopen()}>
+                    {ui.consent.title}
+                  </button>
+                </li>
+              )}
             </ul>
           </nav>
 

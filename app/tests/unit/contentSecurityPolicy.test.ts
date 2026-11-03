@@ -6,6 +6,7 @@ import {
   addContentSecurityPolicy,
   addContentSecurityPolicyToPages,
   contentSecurityPolicy,
+  GA4_POLICY_SOURCES,
   inlineScriptHashes,
   supabaseConnectSources,
 } from '../../src/lib/contentSecurityPolicy'
@@ -58,6 +59,54 @@ describe('contentSecurityPolicy', () => {
     expect(policy.match(new RegExp(SUPABASE.replace(/[.]/g, '\\.'), 'g'))).toHaveLength(1)
     expect(policy).toContain("default-src 'self';")
     expect(policy).toContain("form-action 'self'")
+  })
+})
+
+describe('contentSecurityPolicy with GA4 (VITE_GA4_ID)', () => {
+  const directive = (policy: string, name: string) => policy.split('; ').find((part) => part.startsWith(`${name} `)) ?? ''
+
+  it('names no Google host while the id is not set', () => {
+    for (const policy of [contentSecurityPolicy([SPEC_HASH], [SUPABASE]), contentSecurityPolicy([SPEC_HASH], [SUPABASE], '')]) {
+      expect(policy).not.toMatch(/google/)
+      expect(directive(policy, 'img-src')).toBe("img-src 'self'")
+    }
+  })
+
+  it('allows only the GA4 hosts, each in its own directive, once an id is set', () => {
+    const policy = contentSecurityPolicy([SPEC_HASH], [SUPABASE], 'G-ABC123XYZ9')
+    expect(GA4_POLICY_SOURCES).toEqual({
+      script: ['https://www.googletagmanager.com'],
+      connect: ['https://www.googletagmanager.com', 'https://*.google-analytics.com', 'https://*.analytics.google.com'],
+      img: ['https://www.googletagmanager.com', 'https://*.google-analytics.com'],
+    })
+    expect(directive(policy, 'script-src')).toBe(`script-src 'self' https://www.googletagmanager.com ${SPEC_HASH}`)
+    expect(directive(policy, 'connect-src')).toBe(`connect-src 'self' ${SUPABASE} https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com`)
+    expect(directive(policy, 'img-src')).toBe("img-src 'self' https://www.googletagmanager.com https://*.google-analytics.com")
+    for (const name of ['default-src', 'style-src', 'font-src', 'object-src', 'base-uri', 'form-action']) {
+      expect(directive(policy, name), name).not.toMatch(/google/)
+    }
+  })
+
+  it('never allows unsafe-inline or unsafe-eval, with or without the id', () => {
+    for (const policy of [contentSecurityPolicy([SPEC_HASH]), contentSecurityPolicy([SPEC_HASH], [], 'G-ABC123XYZ9')]) {
+      expect(policy).not.toMatch(/unsafe-/)
+    }
+  })
+
+  it('passes the id on to every page of the build', async () => {
+    expect(addContentSecurityPolicy(page(''), [], 'G-ABC123XYZ9')).toContain("img-src 'self' https://www.googletagmanager.com")
+    const dir = await mkdtemp(path.join(tmpdir(), 'csp-'))
+    try {
+      await mkdir(path.join(dir, 'de'), { recursive: true })
+      await writeFile(path.join(dir, 'index.html'), page(''))
+      await writeFile(path.join(dir, 'de', 'index.html'), page(''))
+      expect(await addContentSecurityPolicyToPages(dir, [], 'G-ABC123XYZ9')).toBe(2)
+      for (const file of ['index.html', path.join('de', 'index.html')]) {
+        expect(await readFile(path.join(dir, file), 'utf8')).toContain("script-src 'self' https://www.googletagmanager.com")
+      }
+    } finally {
+      await rm(dir, { recursive: true, force: true })
+    }
   })
 })
 

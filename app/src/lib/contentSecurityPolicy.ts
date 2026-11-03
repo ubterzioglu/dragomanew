@@ -47,20 +47,36 @@ export function supabaseConnectSources(supabaseUrl: string | undefined): string[
 }
 
 /**
+ * Google's hosts for GA4 without ads features ("Use Tag Manager with a Content Security Policy",
+ * section Google Analytics, checked 2026-11-03), narrowed to what gtag.js needs here: the tag from
+ * www.googletagmanager.com, hits to *.google-analytics.com or *.analytics.google.com (instead of
+ * the guide's wider *.google.com). Allowed only while VITE_GA4_ID is set.
+ */
+export const GA4_POLICY_SOURCES = {
+  script: ['https://www.googletagmanager.com'],
+  connect: ['https://www.googletagmanager.com', 'https://*.google-analytics.com', 'https://*.analytics.google.com'],
+  img: ['https://www.googletagmanager.com', 'https://*.google-analytics.com'],
+} as const
+
+const NO_SOURCES = { script: [], connect: [], img: [] } as const
+
+/**
  * Everything the site loads is its own (check:dist enforces that), and each
  * page's inline scripts (hydration data, build hash, app loader) are allowed by
  * hash. Scripts may also connect to `connectSources` (the forms' Supabase origin).
- * frame-ancestors cannot be set from a meta tag: the host sends it as a header
- * (deploy/nginx/dragoman.conf).
+ * With a `ga4Id` (VITE_GA4_ID) the page may also load gtag.js and send to GA4; the
+ * consent banner decides whether it does. frame-ancestors cannot be set from a meta
+ * tag: the host sends it as a header (deploy/nginx/dragoman.conf).
  */
-export function contentSecurityPolicy(scriptHashes: readonly string[], connectSources: readonly string[] = []): string {
+export function contentSecurityPolicy(scriptHashes: readonly string[], connectSources: readonly string[] = [], ga4Id = ''): string {
+  const google = ga4Id ? GA4_POLICY_SOURCES : NO_SOURCES
   return [
     "default-src 'self'",
-    ["script-src 'self'", ...scriptHashes].join(' '),
+    ["script-src 'self'", ...google.script, ...scriptHashes].join(' '),
     "style-src 'self'",
-    "img-src 'self'",
+    ["img-src 'self'", ...google.img].join(' '),
     "font-src 'self'",
-    ["connect-src 'self'", ...connectSources].join(' '),
+    ["connect-src 'self'", ...connectSources, ...google.connect].join(' '),
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
@@ -70,12 +86,12 @@ export function contentSecurityPolicy(scriptHashes: readonly string[], connectSo
 const POLICY_META = /<meta http-equiv="Content-Security-Policy" content="[^"]*">/g
 
 /** Puts the page's policy right after <meta charset>, ahead of every script it governs; replaces an earlier one. */
-export function addContentSecurityPolicy(page: string, connectSources: readonly string[] = []): string {
+export function addContentSecurityPolicy(page: string, connectSources: readonly string[] = [], ga4Id = ''): string {
   const html = page.replace(POLICY_META, '')
   const at = html.indexOf(CHARSET)
   if (at < 0) throw new Error(`addContentSecurityPolicy: no ${CHARSET} to place the policy after`)
   const end = at + CHARSET.length
-  const meta = `<meta http-equiv="Content-Security-Policy" content="${contentSecurityPolicy(inlineScriptHashes(html), connectSources)}">`
+  const meta = `<meta http-equiv="Content-Security-Policy" content="${contentSecurityPolicy(inlineScriptHashes(html), connectSources, ga4Id)}">`
   return html.slice(0, end) + meta + html.slice(end)
 }
 
@@ -84,12 +100,12 @@ export function addContentSecurityPolicy(page: string, connectSources: readonly 
  * is written: vite-react-ssg fills in one inline script (the build hash) only
  * after onPageRendered, so hashing any earlier would block that script.
  */
-export async function addContentSecurityPolicyToPages(dir: string, connectSources: readonly string[] = []): Promise<number> {
+export async function addContentSecurityPolicyToPages(dir: string, connectSources: readonly string[] = [], ga4Id = ''): Promise<number> {
   const root = path.resolve(dir)
   const pages = (await readdir(root, { recursive: true })).filter((file) => file.endsWith('.html'))
   for (const page of pages) {
     const file = path.join(root, page)
-    await writeFile(file, addContentSecurityPolicy(await readFile(file, 'utf8'), connectSources), 'utf8')
+    await writeFile(file, addContentSecurityPolicy(await readFile(file, 'utf8'), connectSources, ga4Id), 'utf8')
   }
   return pages.length
 }

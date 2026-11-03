@@ -1,5 +1,6 @@
 import { useEffect, useEffectEvent, useRef, useState, useSyncExternalStore } from 'react'
 import { useLocale } from '../../i18n/LocaleContext'
+import { siteAnalytics } from '../../lib/analytics/ga4'
 import type { RequestKind, SiteLocale, SubmitEnvelope, SubmitErrorCode } from '../../shared/requests/payload'
 
 // The result and fieldset components moved to FormParts; HealthFormPage still imports them from here.
@@ -296,6 +297,9 @@ export function useFormSubmission(kind: FormKind, { eventId, formVersion, submit
       next = attempt.result.kind === 'sent' ? 'sent' : 'idle'
       setResult(attempt.result)
       setSubmissions((n) => n + 1)
+      // Only once a real server has stored the request (the sample submitter stores nothing), and only
+      // the form kind and language; a no-op without consent, after the visitor's result is shown.
+      if (next === 'sent' && submitter !== demoSubmitter) siteAnalytics?.formSent(kind, locale)
     } finally {
       enter(next)
     }

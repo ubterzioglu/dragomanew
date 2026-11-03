@@ -242,6 +242,7 @@ Ayrıntılar:
   | `VITE_SUPABASE_PUBLISHABLE_KEY` | Yalnız `sb_publishable_…` anahtarı. Dockerfile `sb_secret_…` ve eski JWT anahtarlarını reddeder; bu değer tarayıcıya gider. |
   | `VITE_SITE_ORIGIN` | canonical ve hreflang kökü. Alan adı değişince güncellenir. |
   | `VITE_PUBLIC_RELEASE` | Boş = arama motorlarına kapalı (robots, noindex, `X-Robots-Tag`). `true` üçünü birlikte açar. |
+  | `VITE_GA4_ID` | Boş = analitik kapalı (varsayılan). `G-…` verilince çerez bandı ve GA4 açılır; ayrıntı 13. bölüm. |
   | `CONTENT_SOURCE` | Varsayılan `release` (2026-11-02'den beri). |
   | `CONTENT_RELEASE_ID` | Boş = en son yayın. Bir sayı = o yayına sabitle (acil geri dönüş). |
 
@@ -295,6 +296,23 @@ Platformun kendisinin verdikleri (girilmez): `SUPABASE_URL`, `SUPABASE_PUBLISHAB
 - **Panel:** CSP nginx başlığında (`app/deploy/nginx/dragoman.conf`, `/panel/` için `default-src 'self'; script-src 'self'; style-src 'self'; …`). Satır içi stil ve script yoktur: `style={...}` kullanmayın, yalnız Tailwind sınıfları; HTML enjeksiyonu (`dangerouslySetInnerHTML`) yok. Markdown React elemanlarına çevrilerek gösterilir.
 - `connect-src` ve panelin `img-src`'i Supabase kökünü içerir; Dockerfile `__SUPABASE_ORIGIN__` yer tutucusunu `VITE_SUPABASE_URL`'den doldurur.
 - Yeni bir dış kaynak (font, CDN, API) eklemek CSP değişikliği demektir; önce kendi sunucunuzdan sunmayı düşünün.
+
+### Çerez bandı ve GA4 (`VITE_GA4_ID`)
+
+- **Kapalıyken (boş, bugünkü durum):** band yok, altbilgide "Çerez tercihleri" yok, CSP'de Google adresi yok, Google'dan hiçbir şey yüklenmez. `npm run build:demo` (E2E build'i) değeri her zaman boş bırakır.
+- **Açmak:** Coolify build değişkeni `VITE_GA4_ID=G-XXXXXXXXXX`, sonra Redeploy. Biçim `G-` + büyük harf/rakam; yanlış biçim build'i durdurur (`app/src/lib/analytics/ga4Id.ts`).
+- **Açıkken:** band yalnız tarayıcıda, hydration'dan sonra görünür (statik HTML'de yok, SEO-01). Düğmeler Kabul Et / Reddet / Tercihleri Yönet; kategoriler Gerekli (hep açık), Analitik, Pazarlama (henüz etiketi yok; kaydedilir, okuyan yok). Altbilgideki "Çerez tercihleri" bandı yeniden açar. Seçim `localStorage`'da `dragoman.consent` anahtarında durur; sunucuya gitmez.
+- **gtag.js** yalnız Analitik onayından sonra yüklenir. Google'ın satır içi snippet'i paketli koddadır (`app/src/lib/analytics/ga4.ts`); CSP'ye `'unsafe-inline'` girmez. Reklam ve Google Signals kapalı.
+- **CSP'ye eklenen adresler** (yalnız id varken, `GA4_POLICY_SOURCES`): `script-src https://www.googletagmanager.com`; `connect-src https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com`; `img-src https://www.googletagmanager.com https://*.google-analytics.com`. Kaynak: Google'ın "Use Tag Manager with a Content Security Policy" sayfası, reklamsız Google Analytics (2026-11-03'te bakıldı); oradaki geniş `*.google.com` yerine `*.analytics.google.com`. Tag Assistant engellenen adres gösterirse buraya ekleyin. nginx'in site başlığında script/connect/img kuralı yok, değişmedi.
+- **Onay geri alınınca:** `window['ga-disable-<ID>'] = true`, `consent update` ile `analytics_storage: 'denied'`, `_ga` ve `_ga_*` çerezleri sitenin adında ve üst alan adında silinir; script yeniden onaya kadar yüklenmez.
+- **`CONSENT_VERSION`** (`app/src/lib/consent/consentStore.ts`): band metni ya da kategoriler değişince bir artırın; herkese yeniden sorulur.
+- **Gönderilen olaylar** (adres hep sorgusuz `origin + path`; ad, e-posta, telefon, form değeri, talep numarası yok):
+  - `page_view` her sayfa geçişinde: `page_location`, `page_title` (`send_page_view: false`, kendimiz göndeririz);
+  - `generate_lead` sunucu talebi kaydettikten sonra: `form_kind` (`contact`, `event-request`, `transport`, `lodging`), `locale`. Sağlık formu göndermez;
+  - `whatsapp_click` bir `wa.me` bağlantısına tıklanınca: `locale`.
+- GA4 mülkünde (Admin → Data streams → web akışı) **Enhanced measurement'ı ana düğmesinden tamamen kapatın.** Açık kalırsa gtag.js kendi olaylarını tam adresle gönderir (geçmiş değişikliğinde sayfa görüntüleme, form etkileşimleri, dış bağlantı ve dosya indirme tıklamaları, site araması): sorgu parametreleri, sağlık formu ve katılımcı formu adresleri koddaki temizliği atlayarak Google'a gider. Gereken olayları kod zaten kendisi gönderir.
+- Yayından önce bir test mülküyle elle kontrol: tarayıcının ağ sekmesinde "google" süzgeciyle seçimden önce ve **Reddet**'ten sonra hiç istek olmamalı; **Kabul Et** → **Reddet** sonrası (sekme arka plana alınınca da) `/g/collect` gitmemeli, `_ga` çerezleri silinmiş olmalı. `form_kind` ve `locale` raporlarda görünsün diye etkinlik kapsamlı özel boyut (custom dimension) olarak tanımlanmalı.
+- Testler: `ga4Id`, `consent`, `ga4`, `cookieConsent`, `formAnalytics`, `contentSecurityPolicy` (`app/tests/unit/`).
 
 ## 14. `security.txt` yıllık yenileme
 

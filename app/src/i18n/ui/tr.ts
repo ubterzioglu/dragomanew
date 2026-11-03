@@ -69,6 +69,23 @@ export const tr = {
     map: 'Haritada aç',
     rights: 'Tüm hakları saklıdır.',
   },
+  /** Cookie banner (V6 decision 13/25), shown only while VITE_GA4_ID is set. Draft text: the lawyer approves it. */
+  consent: {
+    /** Banner heading and the footer link that reopens it. */
+    title: 'Çerez tercihleri',
+    body: 'Site yalnızca çalışması için gerekli depolamayı kullanır. İzin verirseniz ziyaretleri Google Analytics ile ölçeriz; pazarlama amaçlı bir araç şu an kullanılmıyor. Seçiminizi sayfanın altındaki “Çerez tercihleri” bağlantısından değiştirebilirsiniz.',
+    accept: 'Kabul Et',
+    reject: 'Reddet',
+    manage: 'Tercihleri Yönet',
+    save: 'Seçimi Kaydet',
+    categories: 'Çerez türleri',
+    necessary: 'Gerekli',
+    necessaryText: 'Sitenin çalışması ve bu seçimin saklanması için. Her zaman açık.',
+    analytics: 'Analitik',
+    analyticsText: 'Hangi sayfaların ziyaret edildiğini Google Analytics ile ölçer. Ad, e-posta veya form içeriği gönderilmez.',
+    marketing: 'Pazarlama',
+    marketingText: 'Şu an kullanılmıyor.',
+  },
   price: {
     from: 'Başlangıç: {price}',
     onRequest: 'Fiyat talep üzerine',
@@ -100,6 +117,8 @@ export const tr = {
     healthFormNote: 'Etkinlik ve tarih teyit edildikten sonra her katılımcıya kendi sağlık formu bağlantısı gönderilir.',
     relatedEvents: 'İlgili etkinlikler',
     backToBlog: 'Bloga dön',
+    /** Precedes the date: "Güncellendi: 2 Kasım 2026". */
+    updated: 'Güncellendi:',
     edition: 'Baskı',
     stock: 'Stok',
     delivery: 'Teslimat',
@@ -117,8 +136,6 @@ export const tr = {
     optional: 'isteğe bağlı',
     fullName: 'Ad soyad',
     email: 'E-posta',
-    /** Precedes the date: "Güncellendi: 2 Kasım 2026". */
-    updated: 'Güncellendi:',
     phone: 'Telefon',
     message: 'Mesajınız',
     subject: 'Konu',

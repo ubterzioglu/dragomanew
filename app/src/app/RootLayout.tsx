@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { Outlet, ScrollRestoration, useMatches, type UIMatch } from 'react-router-dom'
 import { AscendButton } from '../components/layout/AscendButton'
+import { CookieConsent } from '../components/layout/CookieConsent'
 import { DepthGauge } from '../components/layout/DepthGauge'
 import { DepthScale } from '../components/layout/DepthScale'
 import { DiveBackground } from '../components/layout/DiveBackground'
@@ -14,7 +15,8 @@ import { ContentProvider } from '../content/ContentContext'
 import { createStaticRepository, EMPTY_CONTENT, isContentData, type ContentData } from '../content/staticRepository'
 import { LocaleProvider } from '../i18n/LocaleContext'
 import { pageAlternates } from '../i18n/pages'
-import { isPublicRelease } from '../lib/env'
+import { siteAnalytics } from '../lib/analytics/ga4'
+import { ga4Id, isPublicRelease } from '../lib/env'
 import { findRouteHandle } from './routeHandle'
 
 /** The page's content slice: its route's loader data (per-page JSON in the browser, see routes.tsx). */
@@ -47,6 +49,9 @@ export function RootLayout() {
           <div className="flex min-h-dvh flex-col">
             <DiveBackground />
             <SkipLink />
+            {/* Early in the page, so keyboard users reach it right after the skip link; drawn fixed at the bottom.
+                ga4Id first: a build constant, so without an id the banner's code is left out of the bundle. */}
+            {ga4Id && siteAnalytics && <CookieConsent analytics={siteAnalytics} />}
             {!isPublicRelease && <SampleBanner />}
             <Header alternates={alternates} />
             <main id="main" tabIndex={-1} className="flex-1 outline-none">
