@@ -2,6 +2,7 @@
 
 ## 2026-11-03
 
+- Sitenin en altında, logo ve sloganın hemen altında artık Instagram, Facebook, YouTube ve LinkedIn ikonları var. Her ikon Dragoman'ın o hesabını yeni sekmede açar.
 - **Kullanıcılar**'da yeni çalışanı eklerken **Geçici şifre oluştur** işaretliyse panel giriş hesabını da açar ve geçici şifreyi bir kez gösterir. Google hesabı olmayan çalışanlar artık yalnız panelden eklenebiliyor.
 - Her kullanıcının satırında **Geçici şifre ver** düğmesi var. Şifresini unutan biri için yeni bir geçici şifre oluşturur.
 - Geçici şifreyle giren kişi önce **Şifre** ekranında kendi şifresini belirler, sonra panelin geri kalanı açılır.

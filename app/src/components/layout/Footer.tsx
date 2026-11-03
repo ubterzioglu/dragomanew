@@ -5,15 +5,16 @@ import { pageTitle } from '../../i18n/pageTitles'
 import { consentStore } from '../../lib/consent/consentStore'
 import { buildYear, ga4Id } from '../../lib/env'
 import { mailHref, siteConfig, telHref } from '../../lib/siteConfig'
+import { FacebookIcon, InstagramIcon, LinkedInIcon, YouTubeIcon } from './SocialIcons'
 
 const EXPLORE: readonly PageKey[] = ['diving', 'lifeguard', 'seaKayak', 'outdoor', 'transport', 'shop']
 const COMPANY: readonly PageKey[] = ['about', 'blog', 'contact', 'diveSites', 'privacy', 'terms']
 
 const SOCIAL = [
-  { label: 'Instagram', href: siteConfig.social.instagram },
-  { label: 'Facebook', href: siteConfig.social.facebook },
-  { label: 'YouTube', href: siteConfig.social.youtube },
-  { label: 'LinkedIn', href: siteConfig.social.linkedin },
+  { label: 'Instagram', href: siteConfig.social.instagram, Icon: InstagramIcon },
+  { label: 'Facebook', href: siteConfig.social.facebook, Icon: FacebookIcon },
+  { label: 'YouTube', href: siteConfig.social.youtube, Icon: YouTubeIcon },
+  { label: 'LinkedIn', href: siteConfig.social.linkedin, Icon: LinkedInIcon },
 ] as const
 
 const headingClass = 'font-display text-lg font-semibold uppercase tracking-wide text-white'
@@ -45,6 +46,24 @@ export function Footer() {
             className="h-auto w-1/2 max-w-72"
           />
           <p className="font-display text-lg font-semibold tracking-wide text-brand-orange-ink md:text-2xl">{ui.brand.slogan}</p>
+          {/* Social accounts as icons under the slogan (UBT, 03.11.2026); the brand name is the link's
+              accessible name. */}
+          <ul aria-label={ui.footer.followHeading} className="mt-1 flex gap-3">
+            {SOCIAL.map(({ label, href, Icon }) => (
+              <li key={label}>
+                <a
+                  className="flex size-11 items-center justify-center rounded-full bg-white text-brand-green-dark ring-1 ring-brand-green-dark/15 transition-colors hover:bg-brand-green-dark hover:text-white"
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  title={label}
+                >
+                  <Icon aria-hidden="true" className="size-5" />
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 
