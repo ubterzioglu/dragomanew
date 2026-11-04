@@ -1,44 +1,51 @@
 import { useCallback, useMemo, useState } from 'react'
+import { useStaff } from '../auth/AuthProvider'
 import { PageHeading } from '../components/PageHeading'
 import { QuestionCard } from '../components/questions/QuestionCard'
 import { Button, Loading, Notice } from '../components/ui'
-import { listAnswers, type ClientAnswer } from '../data/questions'
+import { listEntries, type AnswerEntry } from '../data/questions'
 import { listStaffDirectory } from '../data/staff'
 import { ALL_QUESTIONS, answeredCount, QUESTION_GROUPS } from '../lib/questions/catalog'
+import { mergeEntries } from '../lib/questions/entries'
 import { useAsyncData } from '../lib/useAsyncData'
 
 interface Loaded {
-  answers: ClientAnswer[]
+  entries: AnswerEntry[]
   names: Map<string, string>
 }
+
+const NO_ENTRIES: readonly AnswerEntry[] = []
 
 /** Questions are numbered straight through the groups. */
 const QUESTION_NUMBERS = new Map(ALL_QUESTIONS.map((question, index) => [question.id, index + 1]))
 
 async function loadAll(): Promise<Loaded> {
-  // Names only decorate "Son kayıt"; without them the answers must still show.
-  const [answers, staff] = await Promise.all([listAnswers(), listStaffDirectory().catch(() => [])])
-  return { answers, names: new Map(staff.map((person) => [person.id, person.full_name])) }
+  // Names only decorate the answers; without them the answers must still show.
+  const [entries, staff] = await Promise.all([listEntries(), listStaffDirectory().catch(() => [])])
+  return { entries, names: new Map(staff.map((person) => [person.id, person.full_name])) }
 }
 
-/** /sorular: the open questions for Dragoman, each with an answer box any staff member can save. */
+/** /sorular: the open questions for Dragoman; any staff member adds answers under each. */
 export function QuestionsPage() {
-  const { state, reload } = useAsyncData('client-answers', loadAll)
-  // Rows saved on this screen win over the loaded ones, so the card and the counter update at once.
-  const [savedHere, setSavedHere] = useState<ReadonlyMap<string, ClientAnswer>>(new Map())
+  const me = useStaff()
+  const { state, reload } = useAsyncData('client-answer-entries', loadAll)
+  // Entries saved on this screen, by id, so the card and the counter update at once.
+  const [savedHere, setSavedHere] = useState<ReadonlyMap<string, AnswerEntry>>(new Map())
 
-  const rows = useMemo(() => {
-    const merged = new Map((state.value?.answers ?? []).map((row) => [row.question_id, row]))
-    for (const [id, row] of savedHere) merged.set(id, row)
-    return merged
-  }, [state.value, savedHere])
-
-  const texts = useMemo(() => new Map([...rows].map(([id, row]) => [id, row.answer])), [rows])
-  const onSaved = useCallback((row: ClientAnswer) => {
-    setSavedHere((current) => new Map(current).set(row.question_id, row))
+  const byQuestion = useMemo(() => mergeEntries(state.value?.entries ?? [], savedHere), [state.value, savedHere])
+  const texts = useMemo(
+    () => new Map([...byQuestion].map(([id, entries]) => [id, entries.map((entry) => entry.body).join('\n')])),
+    [byQuestion],
+  )
+  const onSaved = useCallback((entry: AnswerEntry) => {
+    setSavedHere((current) => new Map(current).set(entry.id, entry))
   }, [])
 
   const names = state.value?.names
+  const authorName = useCallback(
+    (staffId: string | null) => (staffId ? (names?.get(staffId) ?? null) : null),
+    [names],
+  )
 
   return (
     <div className="space-y-6">
@@ -73,19 +80,17 @@ export function QuestionsPage() {
                 </h2>
                 <p className="text-sm text-ink-muted">{group.note}</p>
               </div>
-              {group.questions.map((question) => {
-                const saved = rows.get(question.id)
-                return (
-                  <QuestionCard
-                    key={question.id}
-                    number={QUESTION_NUMBERS.get(question.id) ?? 0}
-                    question={question}
-                    saved={saved}
-                    savedByName={saved?.updated_by ? (names?.get(saved.updated_by) ?? null) : null}
-                    onSaved={onSaved}
-                  />
-                )
-              })}
+              {group.questions.map((question) => (
+                <QuestionCard
+                  key={question.id}
+                  number={QUESTION_NUMBERS.get(question.id) ?? 0}
+                  question={question}
+                  entries={byQuestion.get(question.id) ?? NO_ENTRIES}
+                  authorName={authorName}
+                  myId={me.id}
+                  onSaved={onSaved}
+                />
+              ))}
             </section>
           ))}
         </>

@@ -1,8 +1,8 @@
 /**
  * The open questions for Dragoman, gathered from claudeguides/arsiv/Dragoman_Musteriye_Acik_Sorular.md and
- * tmp/docs/arsiv/Alan_Adi_Oncesi_Acik_Isler.md (§2–3). Answers live in public.client_answers under each
- * question's id, so an id never changes once shipped; retire a question by removing it (its saved
- * answer stays in the table). Technical set-up done by UBT is not asked here.
+ * tmp/docs/arsiv/Alan_Adi_Oncesi_Acik_Isler.md (§2–3). Answers live in public.client_answer_entries under
+ * each question's id, so an id never changes once shipped; retire a question by removing it (its
+ * saved answers stay in the table). Technical set-up done by UBT is not asked here.
  */
 
 export interface Question {

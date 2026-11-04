@@ -1,9 +1,10 @@
--- Answers to the open questions (20261102160000_client_answers.sql): every active staff member reads
--- and writes through save_client_answer, which refuses stale saves (DRG01); outsiders, former staff and anon get nothing.
+-- Answers to the open questions (20261104120000_client_answer_entries.sql): every active staff member
+-- reads all entries and adds new ones, only the author changes an entry's text, nobody deletes;
+-- outsiders, former staff and anon get nothing.
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(20);
+select plan(22);
 
 create schema tests;
 create table tests.people (name text primary key, user_id uuid not null, email text not null);
@@ -41,100 +42,116 @@ insert into public.staff_members (id, email, full_name, role, active, user_id) v
   ('20000000-0000-4000-8000-000000000003', 'acct@dragoman.test',   'Muhasebe',     'accounting', true,  '10000000-0000-4000-8000-000000000003'),
   ('20000000-0000-4000-8000-000000000007', 'former@dragoman.test', 'Eski',         'content',    false, '10000000-0000-4000-8000-000000000007');
 
--- Staff write and read ------------------------------------------------------------------------------
+create table tests.ids (name text primary key, id uuid not null);
+grant select, insert on tests.ids to authenticated;
 
-create table tests.seen (stamp timestamptz);
-grant select, insert, delete on tests.seen to authenticated;
+-- Staff add and read ---------------------------------------------------------------------------------
 
 select tests.sign_in('acct');
+with added as (
+  insert into public.client_answer_entries (question_id, body) values ('fiyatlar', 'Dalış 60 EUR') returning id
+)
+insert into tests.ids select 'acct-first', id from added;
 select is(
-  (select answer from public.save_client_answer('fiyatlar', 'Dalış 60 EUR')),
-  'Dalış 60 EUR',
-  'any active staff member (accounting) saves a new answer'
-);
-select is(
-  (select updated_by from public.client_answers where question_id = 'fiyatlar'),
+  (select author_id from public.client_answer_entries where id = (select id from tests.ids where name = 'acct-first')),
   '20000000-0000-4000-8000-000000000003'::uuid,
-  'the saver is stamped from the session'
-);
-insert into tests.seen select updated_at from public.client_answers where question_id = 'fiyatlar';
-
-select throws_ok(
-  $$ select public.save_client_answer('fiyatlar', 'ikinci ilk yanıt') $$,
-  'DRG01', null, 'a "no answer yet" save does not overwrite an existing answer'
+  'any active staff member (accounting) adds an entry, stamped with their staff id'
 );
 
 select tests.sign_in('admin');
+insert into public.client_answer_entries (question_id, body) values ('fiyatlar', 'Çocuklara %50 indirim');
 select is(
-  (select answer from public.save_client_answer('fiyatlar', 'Dalış 65 EUR', (select stamp from tests.seen))),
-  'Dalış 65 EUR',
-  'saving with the loaded stamp replaces the answer'
+  (select count(*)::int from public.client_answer_entries where question_id = 'fiyatlar'),
+  2,
+  'a second save adds a second entry instead of replacing the first'
 );
 select is(
-  (select updated_by from public.client_answers where question_id = 'fiyatlar'),
-  '20000000-0000-4000-8000-000000000001'::uuid,
-  'the stamp follows the last saver'
+  array(select body from public.client_answer_entries where question_id = 'fiyatlar' order by created_at),
+  array['Dalış 60 EUR', 'Çocuklara %50 indirim'],
+  'entries keep the order they were saved in'
+);
+select is(
+  (select edited_at from public.client_answer_entries where id = (select id from tests.ids where name = 'acct-first')),
+  null,
+  'a new entry is not marked as edited'
 );
 
+-- Only the author changes the text ---------------------------------------------------------------
+
+update public.client_answer_entries set body = 'admin yazdı' where id = (select id from tests.ids where name = 'acct-first');
 select tests.sign_in('acct');
-select throws_ok(
-  $$ select public.save_client_answer('fiyatlar', 'eski sayfadan', (select stamp from tests.seen)) $$,
-  'DRG01', null, 'a save from a stale page is refused'
-);
 select is(
-  (select answer from public.client_answers where question_id = 'fiyatlar'),
-  'Dalış 65 EUR',
-  'the refused save left the newer answer alone'
+  (select body from public.client_answer_entries where id = (select id from tests.ids where name = 'acct-first')),
+  'Dalış 60 EUR',
+  'another staff member cannot change someone else''s entry'
 );
-select is((select count(*)::int from public.client_answers where question_id = 'fiyatlar'), 1, 'one row per question');
 
-select tests.sign_in('admin');
+update public.client_answer_entries set body = 'Dalış 65 EUR' where id = (select id from tests.ids where name = 'acct-first');
+select is(
+  (select body from public.client_answer_entries where id = (select id from tests.ids where name = 'acct-first')),
+  'Dalış 65 EUR',
+  'the author changes their own entry'
+);
+select isnt(
+  (select edited_at from public.client_answer_entries where id = (select id from tests.ids where name = 'acct-first')),
+  null,
+  'a changed entry is stamped as edited'
+);
+
 select throws_ok(
-  $$ update public.client_answers set updated_by = null $$,
-  '42501', null, 'staff cannot write the stamp columns directly'
+  format($$ update public.client_answer_entries set body = '  ' where id = %L $$, (select id from tests.ids where name = 'acct-first')),
+  '23514', null, 'an entry cannot be emptied'
 );
 select throws_ok(
-  $$ insert into public.client_answers (question_id, answer, updated_by) values ('x', 'y', null) $$,
-  '42501', null, 'staff cannot choose the stamp on insert'
+  $$ update public.client_answer_entries set author_id = null $$,
+  '42501', null, 'staff cannot write the author'
 );
 select throws_ok(
-  $$ update public.client_answers set question_id = 'baska' $$,
-  '42501', null, 'staff cannot move an answer to another question'
+  $$ update public.client_answer_entries set question_id = 'baska' $$,
+  '42501', null, 'staff cannot move an entry to another question'
 );
 select throws_ok(
-  $$ delete from public.client_answers $$,
-  '42501', null, 'answers are not deleted, only cleared'
+  $$ insert into public.client_answer_entries (question_id, body, author_id) values ('x', 'y', null) $$,
+  '42501', null, 'staff cannot choose the author on insert'
 );
 select throws_ok(
-  $$ select public.save_client_answer('Bad Id!', 'x') $$,
+  $$ insert into public.client_answer_entries (question_id, body, created_at) values ('x', 'y', '2020-01-01') $$,
+  '42501', null, 'staff cannot back-date an entry'
+);
+select throws_ok(
+  $$ delete from public.client_answer_entries $$,
+  '42501', null, 'entries are not deleted'
+);
+select throws_ok(
+  $$ insert into public.client_answer_entries (question_id, body) values ('Bad Id!', 'x') $$,
   '23514', null, 'question ids must be short kebab-case'
 );
 select throws_ok(
-  format($$ select public.save_client_answer('uzun', %L) $$, repeat('a', 20001)),
-  '23514', null, 'answers have a size limit'
+  $$ insert into public.client_answer_entries (question_id, body) values ('bos', E' \n ') $$,
+  '23514', null, 'an empty entry is refused'
+);
+select throws_ok(
+  format($$ insert into public.client_answer_entries (question_id, body) values ('uzun', %L) $$, repeat('a', 20001)),
+  '23514', null, 'entries have a size limit'
 );
 
 -- Everyone else ------------------------------------------------------------------------------------
 
 select tests.sign_in('former');
-select is((select count(*)::int from public.client_answers), 0, 'former staff see no answers');
+select is((select count(*)::int from public.client_answer_entries), 0, 'former staff see no entries');
 select throws_ok(
-  $$ select public.save_client_answer('yeni-soru', 'x') $$,
-  '42501', null, 'former staff cannot save'
+  $$ insert into public.client_answer_entries (question_id, body) values ('yeni-soru', 'x') $$,
+  '42501', null, 'former staff cannot add an entry'
 );
 
 select tests.sign_in('stranger');
-select is((select count(*)::int from public.client_answers), 0, 'a non-staff account sees no answers');
+select is((select count(*)::int from public.client_answer_entries), 0, 'a non-staff account sees no entries');
 
 reset role;
 reset request.jwt.claims;
-select is(
-  (select updated_at from public.client_answers where question_id = 'fiyatlar') <> (select stamp from tests.seen),
-  true,
-  'sanity: the stored stamp moved past the first save'
-);
-select ok(not has_function_privilege('anon', 'public.save_client_answer(text, text, timestamptz)', 'execute'), 'anon may not call save_client_answer');
-select ok(not has_table_privilege('anon', 'public.client_answers', 'select'), 'anon may not read answers');
+select ok(not has_table_privilege('anon', 'public.client_answer_entries', 'select'), 'anon may not read entries');
+select ok(not has_table_privilege('anon', 'public.client_answer_entries', 'insert'), 'anon may not add entries');
+select hasnt_table('public', 'client_answers', 'the single-answer table is gone');
 
 select * from finish();
 rollback;

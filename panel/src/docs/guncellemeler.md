@@ -2,6 +2,8 @@
 
 ## 2026-11-04
 
+- **Dragoman soruları**'nda bir soruya artık birden çok yanıt yazabilirsiniz. **Kaydet**'e basınca yanıt **Yanıtınız** başlığının altında listelenir ve kutu boşalır; aynı soruya istediğiniz kadar yeni yanıt ekleyebilirsiniz. Önceden kaydedilen yanıtlar listede ilk yanıt olarak duruyor.
+- Kendi yazdığınız yanıtı **Düzenle** ile düzeltebilirsiniz. Her yanıtın altında tarihi ve yazan kişi görünür.
 - Sitede ve panelde yeni Dragoman logosu var: altında "diving & outdoors" yazısı da bulunuyor. Sitenin üstünde, en altında, panelin sol üstünde ve site bir sosyal medyada paylaşıldığında çıkan görselde artık bu logo görünüyor.
 
 ## 2026-11-03

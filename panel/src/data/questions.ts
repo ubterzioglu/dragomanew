@@ -1,45 +1,51 @@
 import { db } from '../lib/supabase'
 
-/** One saved answer (public.client_answers); the stamp columns are written by the database. */
-export interface ClientAnswer {
+/** One saved answer (public.client_answer_entries); author and times are written by the database. */
+export interface AnswerEntry {
+  id: string
   question_id: string
-  answer: string
-  updated_at: string
-  updated_by: string | null
+  body: string
+  /** Null when the author's staff row was deleted. */
+  author_id: string | null
+  created_at: string
+  edited_at: string | null
 }
 
-const COLUMNS = 'question_id, answer, updated_at, updated_by'
+const COLUMNS = 'id, question_id, body, author_id, created_at, edited_at'
 
-/** SQLSTATE of save_client_answer when someone else saved the question since it was loaded. */
-export const ANSWER_CHANGED = 'DRG01'
+/** Same limit as the table's check. */
+export const ANSWER_MAX = 20000
 
-export async function listAnswers(): Promise<ClientAnswer[]> {
-  const { data, error } = await db().from('client_answers').select(COLUMNS)
+/** Every entry, oldest first. */
+export async function listEntries(): Promise<AnswerEntry[]> {
+  const { data, error } = await db()
+    .from('client_answer_entries')
+    .select(COLUMNS)
+    .order('created_at', { ascending: true })
+    .order('id', { ascending: true })
   if (error) throw error
-  return (data ?? []) as ClientAnswer[]
+  return (data ?? []) as AnswerEntry[]
 }
 
-/** The current row for one question, or null when nobody has answered it yet. */
-export async function getAnswer(questionId: string): Promise<ClientAnswer | null> {
-  const { data, error } = await db().from('client_answers').select(COLUMNS).eq('question_id', questionId).maybeSingle()
+/** Adds one answer under a question and returns the stored row. */
+export async function addEntry(questionId: string, body: string): Promise<AnswerEntry> {
+  const { data, error } = await db()
+    .from('client_answer_entries')
+    .insert({ question_id: questionId, body })
+    .select(COLUMNS)
+    .single()
   if (error) throw error
-  return (data ?? null) as ClientAnswer | null
+  return data as AnswerEntry
 }
 
-/**
- * Save through `save_client_answer` and return the stored row. `expectedUpdatedAt` is the stamp of
- * the row the user started from (null: no answer yet); a newer save by someone else raises DRG01.
- */
-export async function saveAnswer(
-  questionId: string,
-  answer: string,
-  expectedUpdatedAt: string | null,
-): Promise<ClientAnswer> {
-  const { data, error } = await db().rpc('save_client_answer', {
-    p_question_id: questionId,
-    p_answer: answer,
-    p_expected_updated_at: expectedUpdatedAt,
-  })
+/** Changes the text of one of the caller's own entries; the database refuses anyone else's. */
+export async function editEntry(id: string, body: string): Promise<AnswerEntry> {
+  const { data, error } = await db()
+    .from('client_answer_entries')
+    .update({ body })
+    .eq('id', id)
+    .select(COLUMNS)
+    .single()
   if (error) throw error
-  return data as ClientAnswer
+  return data as AnswerEntry
 }

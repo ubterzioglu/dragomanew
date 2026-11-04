@@ -1,70 +1,56 @@
 import { useId, useState } from 'react'
-import { ANSWER_CHANGED, getAnswer, saveAnswer, type ClientAnswer } from '../../data/questions'
+import { addEntry, ANSWER_MAX, type AnswerEntry } from '../../data/questions'
 import { friendlyError } from '../../lib/errors'
-import { formatDateTime } from '../../lib/format'
-import { isAnswered, type Question } from '../../lib/questions/catalog'
+import type { Question } from '../../lib/questions/catalog'
 import { Button, Card, fieldClass, Notice } from '../ui'
+import { AnswerEntryItem } from './AnswerEntryItem'
 
 interface QuestionCardProps {
   number: number
   question: Question
-  saved: ClientAnswer | undefined
-  /** Name of the person who saved last, when known. */
-  savedByName: string | null
-  onSaved: (row: ClientAnswer) => void
+  /** This question's saved answers, oldest first. */
+  entries: readonly AnswerEntry[]
+  authorName: (staffId: string | null) => string | null
+  myId: string
+  /** A new or changed entry, as stored. */
+  onSaved: (entry: AnswerEntry) => void
 }
 
-type SaveState =
-  | { status: 'idle' }
-  | { status: 'saving' }
-  | { status: 'done' }
-  | { status: 'conflict'; theirs: string }
-  | { status: 'error'; message: string }
-
-const isCode = (error: unknown, code: string): boolean =>
-  typeof error === 'object' && error !== null && (error as { code?: unknown }).code === code
+type SaveState = { status: 'idle' } | { status: 'saving' } | { status: 'done' } | { status: 'error'; message: string }
 
 /**
- * One question with its answer box. The draft stays local until "Kaydet" and the box is read-only
- * while saving. When someone else saved in between, the newer answer is shown and the draft kept,
- * so nothing is overwritten without the user seeing it first.
+ * One question with its saved answers and a box for a new one. "Kaydet" adds the text as a new
+ * answer under "Yanıtınız" and empties the box, so anyone can add to a question again and again.
  */
-export function QuestionCard({ number, question, saved, savedByName, onSaved }: QuestionCardProps) {
+export function QuestionCard({ number, question, entries, authorName, myId, onSaved }: QuestionCardProps) {
   const baseId = useId()
   const titleId = `${baseId}-baslik`
-  const fieldId = `${baseId}-yanit`
-  const storedAnswer = saved?.answer ?? ''
-  const [draft, setDraft] = useState(storedAnswer)
+  const headingId = `${baseId}-yanitlar`
+  const fieldId = `${baseId}-yeni`
+  const addLabelId = `${baseId}-yeni-etiket`
+  const [draft, setDraft] = useState('')
   const [save, setSave] = useState<SaveState>({ status: 'idle' })
-  const dirty = draft !== storedAnswer
   const saving = save.status === 'saving'
+  const hasDraft = draft.trim() !== ''
+  const answered = entries.length > 0
 
   const submit = async () => {
     setSave({ status: 'saving' })
     try {
-      onSaved(await saveAnswer(question.id, draft, saved?.updated_at ?? null))
+      onSaved(await addEntry(question.id, draft.trim()))
+      setDraft('')
       setSave({ status: 'done' })
     } catch (error: unknown) {
-      if (!isCode(error, ANSWER_CHANGED)) {
-        setSave({ status: 'error', message: friendlyError(error) })
-        return
-      }
-      try {
-        const current = await getAnswer(question.id)
-        if (current) onSaved(current)
-        setSave({ status: 'conflict', theirs: current?.answer ?? '' })
-      } catch (reloadError: unknown) {
-        setSave({ status: 'error', message: friendlyError(reloadError) })
-      }
+      setSave({ status: 'error', message: friendlyError(error) })
     }
   }
 
   const statusText = saving
     ? 'Kaydediliyor…'
-    : save.status === 'done' && !dirty
-      ? 'Kaydedildi.'
-      : dirty
-        ? 'Kaydedilmemiş değişiklik var.'
+    : hasDraft
+      ? 'Kaydedilmemiş yanıt var.'
+      : save.status === 'done'
+        ? 'Kaydedildi.'
         : ''
 
   return (
@@ -75,10 +61,10 @@ export function QuestionCard({ number, question, saved, savedByName, onSaved }: 
         </h3>
         <span
           className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-            isAnswered(storedAnswer) ? 'bg-brand-green-soft text-brand-green-dark' : 'bg-amber-50 text-amber-900'
+            answered ? 'bg-brand-green-soft text-brand-green-dark' : 'bg-amber-50 text-amber-900'
           }`}
         >
-          {isAnswered(storedAnswer) ? 'Yanıtlandı' : 'Yanıt bekliyor'}
+          {answered ? 'Yanıtlandı' : 'Yanıt bekliyor'}
         </span>
       </div>
       <p className="mt-2 text-sm text-ink">{question.text}</p>
@@ -89,45 +75,48 @@ export function QuestionCard({ number, question, saved, savedByName, onSaved }: 
           ))}
         </ul>
       )}
-      <label id={`${fieldId}-etiket`} htmlFor={fieldId} className="mt-4 block text-sm font-medium text-ink">
+      <p id={headingId} className="mt-4 text-sm font-medium text-ink">
         Yanıtınız
-      </label>
+      </p>
+      {answered && (
+        <ol aria-labelledby={`${headingId} ${titleId}`} className="mt-2 space-y-2">
+          {entries.map((entry) => (
+            <AnswerEntryItem
+              key={entry.id}
+              entry={entry}
+              author={authorName(entry.author_id)}
+              mine={entry.author_id === myId}
+              onEdited={onSaved}
+            />
+          ))}
+        </ol>
+      )}
+      {answered && (
+        <label id={addLabelId} htmlFor={fieldId} className="mt-3 block text-sm text-ink-muted">
+          Yeni yanıt ekle
+        </label>
+      )}
       <textarea
         id={fieldId}
-        aria-labelledby={`${fieldId}-etiket ${titleId}`}
+        aria-labelledby={`${answered ? addLabelId : headingId} ${titleId}`}
         rows={4}
-        maxLength={20000}
+        maxLength={ANSWER_MAX}
         value={draft}
         readOnly={saving}
         onChange={(event) => {
           setDraft(event.target.value)
-          if (save.status === 'done') setSave({ status: 'idle' })
+          if (save.status !== 'idle' && !saving) setSave({ status: 'idle' })
         }}
         className={`${fieldClass} min-h-24 read-only:bg-canvas`}
       />
       <div className="mt-3 flex flex-wrap items-center gap-3">
-        <Button onClick={submit} disabled={!dirty || saving} aria-label={`Kaydet: ${question.title}`}>
+        <Button onClick={() => void submit()} disabled={!hasDraft || saving} aria-label={`Kaydet: ${question.title}`}>
           {saving ? 'Kaydediliyor…' : 'Kaydet'}
         </Button>
-        <span role="status" className={`text-sm ${dirty && !saving ? 'text-amber-900' : 'text-brand-green-dark'}`}>
+        <span role="status" className={`text-sm ${hasDraft && !saving ? 'text-amber-900' : 'text-brand-green-dark'}`}>
           {statusText}
         </span>
-        {saved && (
-          <span className="text-xs text-ink-muted">
-            Son kayıt: {formatDateTime(saved.updated_at)}
-            {savedByName ? ` · ${savedByName}` : ''}
-          </span>
-        )}
       </div>
-      {save.status === 'conflict' && (
-        <div className="mt-3">
-          <Notice tone="error">
-            <p>Bu soruyu siz yazarken başka biri yanıt kaydetti. Kayıtlı yanıt şu an:</p>
-            <p className="mt-1 whitespace-pre-wrap italic">{save.theirs.trim() || '(boş)'}</p>
-            <p className="mt-1">Sizin metniniz kutuda duruyor. İkisini karşılaştırıp kutudaki son hali kaydedin.</p>
-          </Notice>
-        </div>
-      )}
       {save.status === 'error' && (
         <div className="mt-3">
           <Notice tone="error">{save.message}</Notice>
