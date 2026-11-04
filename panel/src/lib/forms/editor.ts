@@ -55,18 +55,6 @@ export const CUSTOM_TYPE_LABELS: Readonly<Record<CustomFieldType, string>> = {
   date: 'Tarih',
 }
 
-interface StaffLike {
-  role: string
-  active?: boolean
-  extra_permissions?: readonly string[]
-}
-
-/** forms.manage: main_admin, or anyone given it as an extra permission. The database decides regardless. */
-export function canManageForms(staff: StaffLike | null | undefined): boolean {
-  if (!staff || staff.active === false) return false
-  return staff.role === 'main_admin' || (staff.extra_permissions ?? []).includes('forms.manage')
-}
-
 /** The Turkish label a field shows: its own, else the site's built-in one. */
 export function fieldTitle(field: FormField): string {
   return field.label?.tr ?? (field.kind === 'core' ? CORE_LABELS_TR[field.key] : field.key)

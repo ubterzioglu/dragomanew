@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { useStaff } from '../../auth/AuthProvider'
 import { PageHeading } from '../../components/PageHeading'
-import { useCan } from '../../components/permissionsContext'
+import { AccessDenied, useCan } from '../../components/permissionsContext'
 import { StatusBadge, UrgencyBadge } from '../../components/revisions/badges'
 import { CommentForm } from '../../components/revisions/CommentForm'
 import { RevisionThread } from '../../components/revisions/RevisionThread'
@@ -32,7 +32,13 @@ const NO_ATTACHMENTS: readonly RevisionAttachment[] = []
 export function RevisionDetailPage() {
   const allowed = useCan()
   const { id = '' } = useParams()
-  if (!allowed('revisions.use')) return <RevisionsNoAccess />
+  if (!allowed('revisions.use')) {
+    return (
+      <AccessDenied>
+        <RevisionsNoAccess />
+      </AccessDenied>
+    )
+  }
   return <RevisionView key={id} id={id} />
 }
 

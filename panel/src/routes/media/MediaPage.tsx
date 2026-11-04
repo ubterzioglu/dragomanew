@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { MediaCard } from '../../components/media/MediaCard'
 import { UploadForm } from '../../components/media/UploadForm'
 import { PageHeading } from '../../components/PageHeading'
-import { useCan } from '../../components/Shell'
+import { AccessDenied, useCan } from '../../components/Shell'
 import { Button, fieldClass, labelClass, Loading, Notice } from '../../components/ui'
 import { listDrafts } from '../../data/content/entries'
 import { listMedia, repoThumbnail, signedUrls } from '../../data/media/media'
@@ -24,13 +24,16 @@ export function MediaPage() {
   const allowed = useCan()
   if (!allowed('content.edit') && !allowed('content.publish')) {
     return (
-      <div className="space-y-4">
-        <PageHeading title="Medya" description="Görselleri yükleyin, açıklamalarını yazın ve nerede kullanıldığını görün." help="medya" />
-        <Notice tone="info">Rolünüz medya kitaplığını kapsamıyor.</Notice>
-      </div>
+      <AccessDenied>
+        <div className="space-y-4">
+          <PageHeading title="Medya" description="Görselleri yükleyin, açıklamalarını yazın ve nerede kullanıldığını görün." help="medya" />
+          <Notice tone="info">Rolünüz medya kitaplığını kapsamıyor.</Notice>
+        </div>
+      </AccessDenied>
     )
   }
-  return <Library canEdit={allowed('content.edit')} canTranslate={allowed('content.translate')} />
+  // translate-content wants content.edit as well: it writes the alt texts.
+  return <Library canEdit={allowed('content.edit')} canTranslate={allowed('content.translate') && allowed('content.edit')} />
 }
 
 function Library({ canEdit, canTranslate }: { canEdit: boolean; canTranslate: boolean }) {

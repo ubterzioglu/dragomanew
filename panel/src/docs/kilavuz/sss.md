@@ -10,7 +10,15 @@ Panel kullanırken en çok sorulan soruların kısa yanıtları burada. Aradığ
 
 ### Yayınla düğmesini neden göremiyorum?
 
-Yayınlama yetkisi yalnız ana yöneticidedir. İçerik çalışanı olarak değişikliğinizi kaydedin ve ana yöneticiye haber verin.
+Yayınlama yetkisi ana yöneticide ve ana yöneticinin **Kullanıcılar** ekranında **Yayınlama** ek yetkisi verdiği kişilerdedir. Bu yetkiniz yoksa değişikliğinizi kaydedin ve ana yöneticiye haber verin.
+
+### Bana yeni bir yetki verildi ama menüde göremiyorum. Neden?
+
+Yeni yetki sayfayı yenileyince ya da en geç beş dakika içinde görünür.
+
+### Ekranda "Yetkileriniz okunamadı" yazıyor. Ne yapmalıyım?
+
+Panel yetkilerinizi o an okuyamadı; bu genelde bağlantı kısa bir süre koptuğunda olur. **Tekrar dene**'ye basın ya da sayfayı yenileyin. Sürerse ana yöneticiye haber verin.
 
 ### DeepL çevirisi doğrudan siteye mi gider?
 

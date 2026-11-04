@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { PageHeading } from '../../components/PageHeading'
-import { useCan } from '../../components/Shell'
+import { AccessDenied, useCan } from '../../components/Shell'
 import { Button, Card, Loading, Notice } from '../../components/ui'
 import { deeplUsage } from '../../data/content/entries'
 import { fetchLiveRelease, listDeploys, listReleases, requestSiteDeploy } from '../../data/publish/publish'
@@ -40,16 +40,31 @@ export function PublishPage() {
   const allowed = useCan()
   if (!allowed('content.edit') && !allowed('content.publish') && !allowed('site.deploy')) {
     return (
-      <div className="space-y-4">
-        <PageHeading title="Yayın" description="Yayın geçmişi, sitenin kurulum durumu ve DeepL kullanımı." help="yayin" />
-        <Notice tone="info">Rolünüz yayın durumunu görmeyi kapsamıyor.</Notice>
-      </div>
+      <AccessDenied>
+        <div className="space-y-4">
+          <PageHeading title="Yayın" description="Yayın geçmişi, sitenin kurulum durumu ve DeepL kullanımı." help="yayin" />
+          <Notice tone="info">Rolünüz yayın durumunu görmeyi kapsamıyor.</Notice>
+        </div>
+      </AccessDenied>
     )
   }
-  return <Publish canDeploy={allowed('site.deploy')} canTranslate={allowed('content.translate')} />
+  return (
+    <Publish
+      canDeploy={allowed('site.deploy')}
+      canTranslate={allowed('content.translate')}
+      // content_releases is readable with content.edit or content.publish only; site.deploy alone sees none.
+      canSeeReleases={allowed('content.edit') || allowed('content.publish')}
+    />
+  )
 }
 
-function Publish({ canDeploy, canTranslate }: { canDeploy: boolean; canTranslate: boolean }) {
+interface PublishProps {
+  canDeploy: boolean
+  canTranslate: boolean
+  canSeeReleases: boolean
+}
+
+function Publish({ canDeploy, canTranslate, canSeeReleases }: PublishProps) {
   const { state, reload } = useAsyncData('publish', loadPublish, contentErrorMessage)
   const [releases, deploys, live, people] = state.value ?? [[], [], null, []]
   const name = useMemo(() => staffNamer(people), [people])
@@ -130,7 +145,9 @@ function Publish({ canDeploy, canTranslate }: { canDeploy: boolean; canTranslate
 
           <Card className="space-y-3">
             <h2 className="text-lg font-semibold">Son yayınlar</h2>
-            {releases.length === 0 ? (
+            {!canSeeReleases ? (
+              <p className="text-sm text-ink-muted">Yayın geçmişini içerik düzenleme ya da yayınlama yetkisi olanlar görür.</p>
+            ) : releases.length === 0 ? (
               <p className="text-sm text-ink-muted">Henüz yayın yok.</p>
             ) : (
               <div className="overflow-x-auto">

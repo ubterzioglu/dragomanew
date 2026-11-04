@@ -5,13 +5,15 @@ interface DialogProps {
   title: string
   onClose: () => void
   children: ReactNode
+  /** Id of the text that explains the dialog, read out when it opens. */
+  describedBy?: string
 }
 
 /**
  * A modal on the native <dialog>: showModal() traps focus and Escape closes it. Focus goes back to
  * whatever opened it, so keyboard users continue where they were.
  */
-export function Dialog({ open, title, onClose, children }: DialogProps) {
+export function Dialog({ open, title, onClose, children, describedBy }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null)
   const opener = useRef<Element | null>(null)
   const titleId = useId()
@@ -37,6 +39,7 @@ export function Dialog({ open, title, onClose, children }: DialogProps) {
     <dialog
       ref={ref}
       aria-labelledby={titleId}
+      aria-describedby={describedBy}
       onClose={handleClose}
       className="m-auto w-[min(32rem,calc(100vw-2rem))] rounded-card border border-line bg-white p-0 text-ink shadow-xl"
     >

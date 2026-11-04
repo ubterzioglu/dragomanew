@@ -19,4 +19,4 @@ Etkinliklerin, alt grupların, kitapların, ekibin ve ulaşım-konaklama kayıtl
 
 ## Kimler kullanabilir
 
-Yalnız yayın yetkisi olanlar, yani **Ana yönetici** (ve ayrıca yayın yetkisi verilmiş kişiler). Diğerleri ekranda "Sıralamayı yayın yetkisi olan kişiler değiştirir." yazısını görür.
+Yalnız yayın yetkisi olanlar: **Ana yönetici** ve **Kullanıcılar** ekranında **Ek yetkiler** ile **Yayınlama** yetkisi verilen kişiler. Diğerleri ekranda "Sıralamayı yayın yetkisi olan kişiler değiştirir." yazısını görür.

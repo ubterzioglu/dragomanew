@@ -14,7 +14,7 @@ Yayınladığınız değişikliklerin siteye ulaşıp ulaşmadığını bu ekran
    - **Atlandı (kurulum ayarlı değil):** otomatik güncelleme henüz kurulmamış. Bu durumda yönetici siteyi elle yeniden yayınlar.
 4. **Son yayınlar** tablosunda her yayının numarası, işlemi (**Yayınlandı**, **Arşivlendi**, **Yayından kaldırıldı**, **Sıra değişti**, **Form yayınlandı**), kaç kayıt içerdiği, kimin ne zaman yaptığı yazar.
 5. Güncel durumu görmek için **Yenile**'ye basın.
-6. Ana yönetici, gerekirse **Siteyi şimdi yeniden kur** ile kurulumu hemen başlatabilir. "Yeniden kurulum sıraya alındı." yazısı çıkar.
+6. Ana yönetici ya da **Siteyi yeniden kurma** ek yetkisi olan kişi, gerekirse **Siteyi şimdi yeniden kur** ile kurulumu hemen başlatabilir. "Yeniden kurulum sıraya alındı." yazısı çıkar.
 7. Çeviri yetkiniz varsa en altta **DeepL kullanımı** kutusu bu dönem kullanılan karakteri gösterir.
 
 ## Dikkat
@@ -28,4 +28,5 @@ Yayınladığınız değişikliklerin siteye ulaşıp ulaşmadığını bu ekran
 
 - **Ana yönetici:** her şeyi görür ve **Siteyi şimdi yeniden kur** düğmesini kullanır.
 - **İçerik:** yayın durumunu ve DeepL kullanımını görür.
-- **Rezervasyon** ve **Muhasebe** bu ekranı kullanamaz; menüde görünmez.
+- **Siteyi yeniden kurma** ek yetkisi verilen kişi de **Siteyi şimdi yeniden kur** düğmesini kullanır. **Son yayınlar** tablosunu görmek için **İçerik düzenleme** ya da **Yayınlama** da gerekir.
+- **Rezervasyon** ve **Muhasebe** bu ekranı yalnız **İçerik düzenleme**, **Yayınlama** ya da **Siteyi yeniden kurma** ek yetkisiyle görür; yoksa menüde görünmez.

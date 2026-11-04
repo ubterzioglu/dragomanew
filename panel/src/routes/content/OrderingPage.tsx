@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
 import { PageHeading } from '../../components/PageHeading'
-import { useCan } from '../../components/Shell'
+import { AccessDenied, useCan } from '../../components/Shell'
 import { Button, Card, Loading, Notice } from '../../components/ui'
 import { listDrafts, reorderEntries } from '../../data/content/entries'
 import { contentErrorMessage } from '../../lib/content/messages'
@@ -39,10 +39,12 @@ export function OrderingPage() {
   const allowed = useCan()
   if (!allowed('content.publish')) {
     return (
-      <div className="space-y-4">
-        <PageHeading title="Sıralama" description="Kayıtların sitede hangi sırayla görüneceğini belirleyin." help="siralama" />
-        <Notice tone="info">Sıralamayı yayın yetkisi olan kişiler değiştirir.</Notice>
-      </div>
+      <AccessDenied>
+        <div className="space-y-4">
+          <PageHeading title="Sıralama" description="Kayıtların sitede hangi sırayla görüneceğini belirleyin." help="siralama" />
+          <Notice tone="info">Sıralamayı yayın yetkisi olan kişiler değiştirir.</Notice>
+        </div>
+      </AccessDenied>
     )
   }
   return <Ordering />

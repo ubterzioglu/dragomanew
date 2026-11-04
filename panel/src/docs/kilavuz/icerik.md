@@ -37,5 +37,5 @@ Sitedeki metinleri buradan düzenlersiniz: etkinlikler, alt gruplar, blog yazıl
 ## Kimler kullanabilir
 
 - **İçerik:** düzenler, kaydeder ve DeepL ile çevirir. **Yayınla** düğmesini görmez.
-- **Ana yönetici:** her şeyi yapar; **Yayınla**, **Arşivle** ve **Yayından kaldır** yalnız ondadır. Ana yönetici gerekirse bir içerik çalışanına ayrıca yayın yetkisi verdirebilir.
-- **Rezervasyon** ve **Muhasebe** bu ekranı kullanamaz; menüde görünmez.
+- **Ana yönetici:** her şeyi yapar. **Yayınla**, **Arşivle** ve **Yayından kaldır** ana yöneticide ve **Yayınlama** ek yetkisi verilen kişilerdedir; bu yetkiyi ana yönetici **Kullanıcılar** ekranında **Ek yetkiler** ile verir.
+- **Rezervasyon** ve **Muhasebe** bu ekranı yalnız **İçerik düzenleme** ya da **Yayınlama** ek yetkisiyle kullanır; yoksa menüde görünmez. DeepL ile çevirmek için **İçerik düzenleme** ve **Çeviri** birlikte gerekir.

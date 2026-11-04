@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router'
-import { useCan } from '../../components/Shell'
+import { AccessDenied, useCan } from '../../components/Shell'
 import { PageHeading } from '../../components/PageHeading'
 import { Button, fieldClass, labelClass, Loading, Notice } from '../../components/ui'
 import { listDrafts, listEntries } from '../../data/content/entries'
@@ -33,10 +33,12 @@ export function ContentListPage() {
   const allowed = useCan()
   if (!allowed('content.edit') && !allowed('content.publish')) {
     return (
-      <div className="space-y-4">
-        <PageHeading title="İçerik" description="Sitedeki sayfa ve kayıtları düzenleyin, çevirin ve yayınlayın." help="icerik" />
-        <Notice tone="info">Rolünüz içerik düzenlemeyi kapsamıyor.</Notice>
-      </div>
+      <AccessDenied>
+        <div className="space-y-4">
+          <PageHeading title="İçerik" description="Sitedeki sayfa ve kayıtları düzenleyin, çevirin ve yayınlayın." help="icerik" />
+          <Notice tone="info">Rolünüz içerik düzenlemeyi kapsamıyor.</Notice>
+        </div>
+      </AccessDenied>
     )
   }
   return <ContentList canEdit={allowed('content.edit')} canOrder={allowed('content.publish')} />

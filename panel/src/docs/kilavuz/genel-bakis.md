@@ -25,4 +25,4 @@ Panele girince ilk açılan ekrandır. Bekleyen talepleri, yayınlanmamış tasl
 
 ## Kimler kullanabilir
 
-Panele giren herkes bu ekranı ve **Son güncellemeler** kartını görür. Diğer kartlar rolünüze göre değişir: **Talepler** kartını talepleri görebilenler (ana yönetici, rezervasyon, muhasebe), içerik ve yayın kartlarını içerikle çalışanlar (ana yönetici, içerik), **DeepL kotası** kartını çeviri yetkisi olanlar görür.
+Panele giren herkes bu ekranı ve **Son güncellemeler** kartını görür. Diğer kartlar rolünüze ve ek yetkilerinize göre değişir: **Talepler** kartını talepleri görebilenler (ana yönetici, rezervasyon, muhasebe), içerik ve yayın kartlarını içerikle çalışanlar (ana yönetici, içerik), **DeepL kotası** kartını çeviri yetkisi olanlar görür.

@@ -15,6 +15,20 @@ const ROLE: Readonly<Record<string, string>> = {
   content: 'İçerik',
 }
 
+const PERMISSION: Readonly<Record<string, string>> = {
+  'requests.read': 'Talepleri görme',
+  'requests.work': 'Talepler üzerinde çalışma',
+  'requests.reassign': 'Talep sorumlusunu değiştirme',
+  'staff.manage': 'Kullanıcı yönetimi',
+  'settings.manage': 'Ayarlar',
+  'content.edit': 'İçerik düzenleme',
+  'content.translate': 'Çeviri',
+  'content.publish': 'Yayınlama',
+  'forms.manage': 'Formlar',
+  'site.deploy': 'Siteyi yeniden kurma',
+  'revisions.use': 'Revizyonlar',
+}
+
 const KIND: Readonly<Record<string, string>> = {
   event: 'Etkinlik',
   transport: 'Transfer',
@@ -43,6 +57,7 @@ const lookup =
 
 export const statusLabel = lookup(STATUS)
 export const roleLabel = lookup(ROLE)
+export const permissionLabel = lookup(PERMISSION)
 export const kindLabel = lookup(KIND)
 export const actionLabel = lookup(ACTION)
 export const localeLabel = lookup(LOCALE)

@@ -4,7 +4,7 @@ import { FieldEditor, type EditorContext } from '../../components/content/FieldE
 import { PublishActions } from '../../components/content/PublishActions'
 import { TranslateControls } from '../../components/content/TranslateControls'
 import { PageHeading } from '../../components/PageHeading'
-import { useCan } from '../../components/Shell'
+import { AccessDenied, useCan } from '../../components/Shell'
 import { Button, Card, Loading, Notice } from '../../components/ui'
 import { createEntry, getEntry, listDrafts, saveDraft } from '../../data/content/entries'
 import { listMedia } from '../../data/media/media'
@@ -74,8 +74,20 @@ export function ContentEditorPage() {
 
   if (!isEditableType(typeParam)) return <Missing text="Bu içerik türü panelde düzenlenmiyor." />
   const type = typeParam
-  if (!allowed('content.edit') && !allowed('content.publish')) return <Missing text="Rolünüz içerik düzenlemeyi kapsamıyor." />
-  if (id === NEW && (!TYPE_CONFIG[type].creatable || !allowed('content.edit'))) return <Missing text="Bu türde yeni kayıt eklenemiyor." />
+  if (!allowed('content.edit') && !allowed('content.publish')) {
+    return (
+      <AccessDenied>
+        <Missing text="Rolünüz içerik düzenlemeyi kapsamıyor." />
+      </AccessDenied>
+    )
+  }
+  if (id === NEW && (!TYPE_CONFIG[type].creatable || !allowed('content.edit'))) {
+    return (
+      <AccessDenied>
+        <Missing text="Bu türde yeni kayıt eklenemiyor." />
+      </AccessDenied>
+    )
+  }
 
   if (state.status === 'error') {
     return (
@@ -338,7 +350,8 @@ function Editor({ type, entry, context, notice, onRemoteDone }: EditorProps) {
                     </li>
                   ))}
                 </ul>
-                {allowed('content.translate') ? (
+                {/* translate-content wants content.edit as well: it writes the draft. */}
+                {allowed('content.translate') && allowed('content.edit') ? (
                   <TranslateControls
                     doc={saved.draft}
                     meta={saved.meta}

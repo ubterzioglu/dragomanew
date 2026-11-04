@@ -15,6 +15,8 @@
 - Sitede çerez bandı hazır: Google Analytics kimliği girilip site yeniden yayınlanınca ziyaretçiler **Kabul Et**, **Reddet** ya da **Tercihleri Yönet** ile seçim yapacak ve ziyaretler yalnız izin verenler için ölçülecek. Kimlik girilene kadar sitede bir değişiklik görünmüyor.
 - **Müşteri soruları** sayfasının adı artık **Dragoman soruları**.
 - Yeni **Revizyonlar** ekranı: sitede ya da panelde değişmesini istediğiniz şeyi aciliyetiyle yazıp ekran görüntüsü ekleyebilir, yorumlarla takip edebilir, tamamlanan bir isteği **Yeniden aç** ile tekrar açabilirsiniz; ekranı ana yönetici ve revizyon yetkisi verilen kişiler görür.
+- **Kullanıcılar**'da her kişinin satırında **Ek yetkiler** düğmesi var. Rolüne ek olarak Revizyonlar, İçerik düzenleme, Çeviri, Yayınlama, Siteyi yeniden kurma ve Formlar yetkilerini kutu işaretleyerek verebilirsiniz. Verilen ek yetkiler **Rol** sütununda görünür.
+- **Formlar** ekranı artık form yetkisi verilen kişilere de açılıyor; önceden yalnız ana yöneticiye açılıyordu.
 
 ## 2026-11-02
 

@@ -26,4 +26,4 @@ Sitede ya da panelde değişmesini istediğiniz şeyleri buraya yazarsınız. He
 
 ## Kimler kullanabilir
 
-Ana yönetici ve ana yöneticinin revizyon yetkisi verdiği kişiler. Yetkisi olan herkes bütün istekleri görür, yorum yazar ve ekran görüntüsü ekler; yalnız kendi isteğine ve kendi yorumuna ekran görüntüsü ekleyebilir. Yetkisi olmayanlar menüde **Revizyonlar**'ı görmez.
+Ana yönetici ve ana yöneticinin **Kullanıcılar** ekranında **Ek yetkiler** ile **Revizyonlar** yetkisi verdiği kişiler. Yetkisi olan herkes bütün istekleri görür, yorum yazar ve ekran görüntüsü ekler; yalnız kendi isteğine ve kendi yorumuna ekran görüntüsü ekleyebilir. Yetkisi olmayanlar menüde **Revizyonlar**'ı görmez.

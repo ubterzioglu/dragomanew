@@ -29,4 +29,4 @@ Sitede kullanılan bütün fotoğrafların kitaplığıdır. Yeni fotoğraf yük
 ## Kimler kullanabilir
 
 - **İçerik** ve **Ana yönetici:** fotoğraf yükler, bilgilerini düzenler ve DeepL ile çevirir.
-- **Rezervasyon** ve **Muhasebe** bu ekranı kullanamaz; menüde görünmez.
+- **Rezervasyon** ve **Muhasebe** bu ekranı **İçerik düzenleme** ya da **Yayınlama** ek yetkisiyle görür; yoksa menüde görünmez. Fotoğraf yüklemek ve düzenlemek için **İçerik düzenleme**, DeepL ile çevirmek için ayrıca **Çeviri** gerekir.

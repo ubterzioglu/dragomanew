@@ -22,6 +22,8 @@ const BY_CODE: Readonly<Record<string, string>> = {
     'Talep bu kişiye verilemiyor: kişi etkin olmalı, talepler üzerinde çalışabilmeli ve talep zaten onda olmamalı.',
   // save_client_answer (supabase/migrations/*_client_answers_conflict.sql)
   DRG01: 'Bu soruyu siz yazarken başka biri yanıt kaydetti.',
+  // updateStaff with the row version the screen showed (panel/src/data/staff.ts)
+  DRG02: 'Bu kişinin bilgileri siz bakarken değişti. Liste yenilendi; ek yetkileri yeniden açıp kaydedin.',
   PGRST116: 'Kayıt bulunamadı ya da görme yetkiniz yok.',
   PGRST301: 'Oturumunuzun süresi doldu. Lütfen yeniden giriş yapın.',
   PGRST303: 'Oturumunuzun süresi doldu. Lütfen yeniden giriş yapın.',

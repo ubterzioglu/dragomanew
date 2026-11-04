@@ -29,4 +29,4 @@ Sitedeki dört talep formunu buradan düzenlersiniz: etkinlik, transfer, konakla
 
 ## Kimler kullanabilir
 
-Yalnız **Ana yönetici** (ve ana yöneticinin ayrıca form yetkisi verdirdiği kişiler). Diğer roller bu menüyü görmez.
+**Ana yönetici** ve ana yöneticinin **Kullanıcılar** ekranında **Ek yetkiler** ile **Formlar** yetkisi verdiği kişiler. Diğerleri bu menüyü görmez. **Çevir** düğmesi için ayrıca **Çeviri** yetkisi gerekir; yoksa onun yerine "Çeviri yetkiniz yok." yazar.

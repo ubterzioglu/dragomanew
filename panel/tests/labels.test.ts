@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { actionLabel, kindLabel, localeLabel, roleLabel, statusLabel } from '../src/lib/labels'
+import { actionLabel, kindLabel, localeLabel, permissionLabel, roleLabel, statusLabel } from '../src/lib/labels'
+import { PERMISSIONS } from '../src/lib/permissions'
 
 describe('labels', () => {
   it('names both request statuses in Turkish', () => {
@@ -24,6 +25,12 @@ describe('labels', () => {
     expect(actionLabel('handed_over')).toBe('Devredildi')
     expect(actionLabel('reassigned')).toBe('Sorumlu değiştirildi')
     expect(localeLabel('de')).toBe('Almanca')
+  })
+
+  it('names every permission', () => {
+    for (const permission of PERMISSIONS) expect(permissionLabel(permission)).not.toBe(permission)
+    expect(permissionLabel('revisions.use')).toBe('Revizyonlar')
+    expect(permissionLabel('content.publish')).toBe('Yayınlama')
   })
 
   it('shows an unknown value as it is instead of hiding it', () => {

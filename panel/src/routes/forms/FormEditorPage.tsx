@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router'
-import { useStaff } from '../../auth/AuthProvider'
 import { PageHeading } from '../../components/PageHeading'
+import { AccessDenied, useCan } from '../../components/Shell'
 import { FieldRow } from '../../components/forms/FieldRow'
 import { NewFieldForm } from '../../components/forms/NewFieldForm'
 import { Button, Card, Loading, Notice, fieldClass, labelClass } from '../../components/ui'
@@ -9,7 +9,6 @@ import { getForm, publishForm, saveFormDraft, translateForm, type FormDetail, ty
 import { formatDateTime } from '../../lib/format'
 import {
   addCustomField,
-  canManageForms,
   customCount,
   FORM_KINDS,
   hasUnpublishedChanges,
@@ -32,9 +31,15 @@ const isKind = (value: string | undefined): value is RequestKind => FORM_KINDS.i
 
 /** /panel/formlar/:kind (forms.manage). */
 export function FormEditorPage() {
-  const me = useStaff()
+  const allowed = useCan()
   const { kind } = useParams()
-  if (!canManageForms(me)) return <Navigate to="/" replace />
+  if (!allowed('forms.manage')) {
+    return (
+      <AccessDenied>
+        <Navigate to="/" replace />
+      </AccessDenied>
+    )
+  }
   if (!isKind(kind)) return <Navigate to="/formlar" replace />
   return <FormEditorLoader kind={kind} />
 }
@@ -79,6 +84,8 @@ interface FormEditorProps {
 }
 
 function FormEditor({ kind, detail, message, setMessage, onReload }: FormEditorProps) {
+  // translate-content wants content.translate on top of forms.manage.
+  const canTranslate = useCan()('content.translate')
   const saved = detail.definition
   const latest = detail.versions[0] ?? null
   const [draft, setDraft] = useState<FormDefinition>(saved.draft)
@@ -151,21 +158,25 @@ function FormEditor({ kind, detail, message, setMessage, onReload }: FormEditorP
           <Button variant="secondary" onClick={() => setDraft(saved.draft)} disabled={busy || !dirty}>
             Değişiklikleri geri al
           </Button>
-          <div>
-            <label htmlFor="translate-mode" className={labelClass}>
-              DeepL ile çevir
-            </label>
-            <div className="flex gap-2">
-              <select id="translate-mode" className={fieldClass} value={mode} onChange={(event) => setMode(event.target.value as TranslateMode)}>
-                <option value="missing">Eksik olanlar</option>
-                <option value="stale">Güncellenmesi gerekenler</option>
-                <option value="all">Tümü (elle düzeltilenler hariç)</option>
-              </select>
-              <Button variant="secondary" onClick={translate} disabled={busy || dirty}>
-                Çevir
-              </Button>
+          {canTranslate ? (
+            <div>
+              <label htmlFor="translate-mode" className={labelClass}>
+                DeepL ile çevir
+              </label>
+              <div className="flex gap-2">
+                <select id="translate-mode" className={fieldClass} value={mode} onChange={(event) => setMode(event.target.value as TranslateMode)}>
+                  <option value="missing">Eksik olanlar</option>
+                  <option value="stale">Güncellenmesi gerekenler</option>
+                  <option value="all">Tümü (elle düzeltilenler hariç)</option>
+                </select>
+                <Button variant="secondary" onClick={translate} disabled={busy || dirty}>
+                  Çevir
+                </Button>
+              </div>
             </div>
-          </div>
+          ) : (
+            <p className="text-sm text-ink-muted">Çeviri yetkiniz yok.</p>
+          )}
           <Button onClick={publish} disabled={busy || dirty || issues.length > 0 || !unpublished}>
             Yayınla
           </Button>

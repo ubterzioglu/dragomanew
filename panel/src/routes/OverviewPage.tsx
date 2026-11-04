@@ -47,7 +47,7 @@ function Overview() {
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         {allowed('requests.read') && <RequestsCard staffId={me.id} />}
         {content && <DraftsCard />}
-        {(content || allowed('site.deploy')) && <PublishCard />}
+        {(content || allowed('site.deploy')) && <PublishCard showReleases={content} />}
         {allowed('content.translate') && <DeeplCard />}
       </div>
       <ChangelogCard />
@@ -177,7 +177,8 @@ function DraftsCard() {
 const loadPublish = () =>
   Promise.all([fetchLiveRelease(), listReleases(1), listDeploys(1)]).then((parts) => [...parts, Date.now()] as const)
 
-function PublishCard() {
+/** `showReleases`: content_releases is readable with content.edit or content.publish only. */
+function PublishCard({ showReleases }: { showReleases: boolean }) {
   const { state } = useAsyncData('overview-publish', loadPublish, contentErrorMessage)
   return (
     <OverviewCard title="Canlı yayın" icon={Rocket} to="/yayin" linkLabel="Yayına git">
@@ -192,18 +193,20 @@ function PublishCard() {
                 <dt className="text-ink-muted">Sitedeki yayın</dt>
                 <dd className="text-right font-semibold">{live ? `#${live.releaseId}` : 'Bilinmiyor'}</dd>
               </div>
-              <div className="flex justify-between gap-3">
-                <dt className="text-ink-muted">Son yayın</dt>
-                <dd className="text-right">
-                  {release ? (
-                    <>
-                      <span className="font-semibold">#{release.id}</span> · {formatDateTime(release.created_at)}
-                    </>
-                  ) : (
-                    'Henüz yok'
-                  )}
-                </dd>
-              </div>
+              {showReleases && (
+                <div className="flex justify-between gap-3">
+                  <dt className="text-ink-muted">Son yayın</dt>
+                  <dd className="text-right">
+                    {release ? (
+                      <>
+                        <span className="font-semibold">#{release.id}</span> · {formatDateTime(release.created_at)}
+                      </>
+                    ) : (
+                      'Henüz yok'
+                    )}
+                  </dd>
+                </div>
+              )}
               <div className="flex justify-between gap-3">
                 <dt className="text-ink-muted">Son kurulum</dt>
                 <dd className={`text-right ${view?.tone === 'failed' || view?.delayed ? 'font-semibold text-red-800' : ''}`}>

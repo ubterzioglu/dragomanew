@@ -65,6 +65,14 @@ describe('content permissions (dalga2-sozlesme §5)', () => {
     expect(can({ role: 'content', extra_permissions: ['content.publish'] }, 'content.publish')).toBe(true)
   })
 
+  it('opens the forms to main_admin and to an extra forms.manage, which the Formlar screens read via my_permissions()', () => {
+    expect(can(staff('a', 'main_admin'), 'forms.manage')).toBe(true)
+    expect(can(staff('c', 'content'), 'forms.manage')).toBe(false)
+    expect(can({ role: 'content', extra_permissions: ['forms.manage'] }, 'forms.manage')).toBe(true)
+    expect(can({ role: 'content', permissions: ['content.edit', 'forms.manage'] }, 'forms.manage')).toBe(true)
+    expect(can({ role: 'main_admin', active: false }, 'forms.manage')).toBe(false)
+  })
+
   it('lets my_permissions() decide once it has answered', () => {
     expect(can({ role: 'content', permissions: ['content.edit', 'content.publish'] }, 'content.publish')).toBe(true)
     expect(can({ role: 'main_admin', permissions: [] }, 'staff.manage')).toBe(false)

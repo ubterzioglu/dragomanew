@@ -16,7 +16,7 @@ import { PermissionsProvider, useCan } from './permissionsContext'
 import { Button, Loading, Notice } from './ui'
 
 // Screens import useCan from here; it lives in permissionsContext so the menu can use it too.
-export { useCan } from './permissionsContext'
+export { AccessDenied, useCan } from './permissionsContext'
 
 /** After a route change, focus the new page's heading so screen readers announce the page. */
 function useFocusOnRouteChange(pathname: string): void {

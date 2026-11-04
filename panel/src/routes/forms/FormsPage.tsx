@@ -1,18 +1,24 @@
 import { Link, Navigate } from 'react-router'
-import { useStaff } from '../../auth/AuthProvider'
 import { PageHeading } from '../../components/PageHeading'
+import { AccessDenied, useCan } from '../../components/Shell'
 import { Card, Loading, Notice } from '../../components/ui'
 import { listForms } from '../../data/forms/forms'
 import { formatDateTime } from '../../lib/format'
-import { canManageForms, hasUnpublishedChanges } from '../../lib/forms/editor'
+import { hasUnpublishedChanges } from '../../lib/forms/editor'
 import { functionErrorMessage } from '../../lib/forms/messages'
 import { kindLabel } from '../../lib/labels'
 import { useAsyncData } from '../../lib/useAsyncData'
 
 /** /panel/formlar: the four request forms, each with its version and an unpublished-changes badge. */
 export function FormsPage() {
-  const me = useStaff()
-  if (!canManageForms(me)) return <Navigate to="/" replace />
+  const allowed = useCan()
+  if (!allowed('forms.manage')) {
+    return (
+      <AccessDenied>
+        <Navigate to="/" replace />
+      </AccessDenied>
+    )
+  }
   return <FormList />
 }
 

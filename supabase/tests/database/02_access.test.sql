@@ -3,7 +3,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(75);
+select plan(79);
 
 -- Fixtures (rolled back) ----------------------------------------------------------------------
 
@@ -165,6 +165,7 @@ select throws_ok(
   '42501', null, 'without staff.manage nobody can add staff'
 );
 update public.staff_members set role = 'main_admin' where id = '20000000-0000-4000-8000-000000000003';
+update public.staff_members set extra_permissions = array['staff.manage'] where id = '20000000-0000-4000-8000-000000000003';
 
 reset role;
 select is(
@@ -174,6 +175,10 @@ select is(
 select is(
   (select role from public.staff_members where id = '20000000-0000-4000-8000-000000000003'), 'accounting'::public.staff_role,
   'without staff.manage nobody can promote themselves'
+);
+select is(
+  (select extra_permissions from public.staff_members where id = '20000000-0000-4000-8000-000000000003'), '{}'::text[],
+  'without staff.manage nobody can give themselves extra permissions'
 );
 
 -- content: events yes, requests no ---------------------------------------------------------------------
@@ -220,6 +225,16 @@ select throws_ok(
   $$ delete from public.staff_members where id = '20000000-0000-4000-8000-000000000002' $$,
   '42501', null, 'staff rows are deactivated, never deleted from the panel'
 );
+select lives_ok(
+  $$ update public.staff_members set extra_permissions = array['revisions.use', 'content.publish']
+     where id = '20000000-0000-4000-8000-000000000003' $$,
+  'main_admin gives extra permissions (Kullanıcılar, Ek yetkiler)'
+);
+select throws_ok(
+  $$ update public.staff_members set extra_permissions = array['content.everything']
+     where id = '20000000-0000-4000-8000-000000000003' $$,
+  '23514', null, 'an unknown extra permission is refused on update as well'
+);
 
 reset role;
 select results_eq(
@@ -234,6 +249,13 @@ select results_eq(
   $$ values ('reservations'::public.staff_role, true), ('accounting'::public.staff_role, false) $$,
   'staff changes by main_admin are stored'
 );
+
+select tests.sign_in('acct');
+select is(
+  public.my_permissions(), array['content.publish', 'requests.read', 'revisions.use'],
+  'extra permissions given by main_admin reach my_permissions() at once'
+);
+reset role;
 
 -- First sign-in: e-mail fallback until link_staff_account binds the account -------------------------------
 

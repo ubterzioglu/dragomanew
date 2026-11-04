@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router'
 import { PageHeading } from '../../components/PageHeading'
-import { useCan } from '../../components/permissionsContext'
+import { AccessDenied, useCan } from '../../components/permissionsContext'
 import { NewRevisionForm } from '../../components/revisions/NewRevisionForm'
 import { RevisionCard } from '../../components/revisions/RevisionCard'
 import { Button, Loading, Notice } from '../../components/ui'
@@ -20,7 +20,7 @@ export function RevisionsNoAccess() {
   return (
     <div className="space-y-4">
       <PageHeading title="Revizyonlar" description={REVISIONS_DESCRIPTION} help="revizyonlar" />
-      <Notice tone="info">Revizyonlar için revizyon yetkisi gerekir. Yetkiyi ana yönetici verir.</Notice>
+      <Notice tone="info">Revizyonlar için revizyon yetkisi gerekir. Yetkiyi ana yönetici Kullanıcılar ekranından verir.</Notice>
     </div>
   )
 }
@@ -28,7 +28,13 @@ export function RevisionsNoAccess() {
 /** /revizyonlar: active requests by urgency (filter in ?durum=), the finished ones below, "Yeni istek". */
 export function RevisionsPage() {
   const allowed = useCan()
-  if (!allowed('revisions.use')) return <RevisionsNoAccess />
+  if (!allowed('revisions.use')) {
+    return (
+      <AccessDenied>
+        <RevisionsNoAccess />
+      </AccessDenied>
+    )
+  }
   return <RevisionBoard />
 }
 

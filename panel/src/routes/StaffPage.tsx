@@ -36,7 +36,7 @@ function StaffAdmin({ myId }: { myId: string }) {
       <AddStaffForm onAdded={changed} />
       {state.status === 'error' && <Notice tone="error">{state.message}</Notice>}
       {state.value ? (
-        <StaffTable rows={state.value} myId={myId} onChanged={changed} />
+        <StaffTable rows={state.value} myId={myId} onChanged={changed} onStale={reload} />
       ) : (
         state.status === 'loading' && <Loading label="Kullanıcılar yükleniyor…" />
       )}

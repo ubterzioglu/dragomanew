@@ -3,7 +3,6 @@ import { FunctionError } from '../src/data/forms/forms'
 import {
   addCustomField,
   canHide,
-  canManageForms,
   canRequire,
   customAnswers,
   customKeyFor,
@@ -27,16 +26,6 @@ const field = (definition: FormDefinition, key: string): FormField => {
   if (!found) throw new Error(`no ${key}`)
   return found
 }
-
-describe('form editor: who may edit', () => {
-  it('lets main_admin and an extra forms.manage permission in', () => {
-    expect(canManageForms({ role: 'main_admin' })).toBe(true)
-    expect(canManageForms({ role: 'content' })).toBe(false)
-    expect(canManageForms({ role: 'content', extra_permissions: ['forms.manage'] })).toBe(true)
-    expect(canManageForms({ role: 'main_admin', active: false })).toBe(false)
-    expect(canManageForms(null)).toBe(false)
-  })
-})
 
 describe('form editor: fields', () => {
   it('moves fields up and down and stops at the edges', () => {
