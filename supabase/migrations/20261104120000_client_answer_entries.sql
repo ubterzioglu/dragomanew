@@ -25,13 +25,15 @@ comment on table public.client_answer_entries is
 
 create index client_answer_entries_question_id_created_at_idx on public.client_answer_entries (question_id, created_at);
 
--- Before the stamp trigger exists, so the moved answers keep their saver and time. The lock waits for
--- saves already under way and holds off new ones until the old table is dropped, so none is lost.
-lock table public.client_answers in exclusive mode;
+-- The rename takes the old table's strongest lock: it waits for saves already under way and holds off
+-- new ones until the table is dropped, so none is lost. (LOCK TABLE is refused here: db push runs a
+-- migration as one implicit transaction, not as a transaction block.)
+alter table public.client_answers rename to client_answers_moving;
 
+-- Before the stamp trigger exists, so the moved answers keep their saver and time.
 insert into public.client_answer_entries (question_id, body, author_id, created_at)
 select question_id, regexp_replace(answer, '^\s+|\s+$', '', 'g'), updated_by, updated_at
-from public.client_answers
+from public.client_answers_moving
 where answer ~ '\S';
 
 /** The author is the signed-in staff member; an edit of the text is stamped. */
@@ -84,5 +86,5 @@ create policy client_answer_entries_update_author on public.client_answer_entrie
 -- The single-answer table and its save function are gone; the function returns the table's row type,
 -- so it goes first.
 drop function public.save_client_answer(text, text, timestamptz);
-drop table public.client_answers;
+drop table public.client_answers_moving;
 drop function private.stamp_client_answer();
