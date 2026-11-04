@@ -10,7 +10,7 @@ export const siteConfig = {
   /** Title suffix and og:site_name. */
   siteName: 'Dragoman',
   brand: {
-    logo: { path: '/brand/dragoman-logo-480.png', width: 480, height: 208 },
+    logo: { path: '/brand/dragoman-logo-480.png', width: 480, height: 295 },
     // Share image for pages without a photo of their own (scripts/brand-assets.mjs).
     shareImage: { path: '/brand/dragoman-og-1200x630.png', width: 1200, height: 630 },
   },

@@ -142,7 +142,7 @@ export function Brand({ collapsed = false, onNavigate }: NavMenuProps) {
         </span>
       ) : (
         <>
-          <img src={LOGO_SRC} srcSet={LOGO_SRCSET} sizes="83px" width={240} height={104} alt="" className="h-9 w-auto" />
+          <img src={LOGO_SRC} srcSet={LOGO_SRCSET} sizes="72px" width={240} height={147} alt="" className="h-11 w-auto" />
           <span className="rounded-md bg-brand-orange-soft px-1.5 py-0.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-brand-orange-ink">
             Panel
           </span>

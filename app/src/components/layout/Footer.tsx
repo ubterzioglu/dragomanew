@@ -39,7 +39,7 @@ export function Footer() {
             srcSet="/brand/dragoman-logo-480.webp 480w, /brand/dragoman-logo-960.webp 960w"
             sizes="(min-width: 48rem) 18rem, 50vw"
             width={960}
-            height={416}
+            height={590}
             alt="Dragoman"
             loading="lazy"
             decoding="async"
