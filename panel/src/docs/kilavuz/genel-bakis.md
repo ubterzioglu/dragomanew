@@ -10,7 +10,7 @@ Panele girince ilk açılan ekrandır. Bekleyen talepleri, yayınlanmamış tasl
    - **Yayınlanmamış değişiklikler:** kaydedilmiş ama siteye henüz gitmemiş içerik değişiklikleri.
    - **Canlı yayın:** sitede şu an hangi yayının durduğu ve son kurulumun durumu.
    - **DeepL kotası:** bu dönem çeviri için ne kadar karakter kullanıldığı.
-   - **Son güncellemeler:** panele eklenen en yeni üç not. Hepsi için **Tümünü gör**'e basın.
+   - **Son güncellemeler:** son üç günün notları, en yenisi üstte olacak şekilde alt alta. Hepsi için **Tümünü gör**'e basın.
 3. Ayrıntı için kartın altındaki bağlantıya basın: **Taleplere git**, **İçeriğe git**, **Yayına git** ya da **Ayrıntılar**.
 4. Sol menüyü daraltmak için menünün üstündeki **Menüyü daralt** düğmesine basın. Menü yalnız simgelerle kalır; **Menüyü genişlet** ile geri açılır. Tercihiniz bu tarayıcıda hatırlanır.
 5. Telefonda menü, üst çubuktaki **Menüyü aç** düğmesiyle soldan açılır. Kapatmak için **Menüyü kapat**'a basın, menünün dışına dokunun ya da Esc tuşuna basın.

@@ -44,7 +44,8 @@ function Overview() {
         description={`Merhaba ${firstName}. Bekleyen işler ve son durum burada.`}
         help="genel-bakis"
       />
-      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+      {/* Two columns at every width from md up: four cards make a 2×2 block, none sits alone in a row of three. */}
+      <div className="grid gap-5 md:grid-cols-2">
         {allowed('requests.read') && <RequestsCard staffId={me.id} />}
         {content && <DraftsCard />}
         {(content || allowed('site.deploy')) && <PublishCard showReleases={content} />}
@@ -283,7 +284,7 @@ function ChangelogCard() {
       {entries.length === 0 ? (
         <p className="mt-4 text-sm text-ink-muted">Henüz güncelleme notu yok.</p>
       ) : (
-        <ol className="mt-4 grid gap-4 md:grid-cols-3">
+        <ol className="mt-4 space-y-3">
           {entries.map((entry) => (
             <li key={entry.date} className="rounded-lg bg-canvas p-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-brand-orange-ink">

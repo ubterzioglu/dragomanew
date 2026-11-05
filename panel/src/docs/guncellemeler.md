@@ -1,10 +1,16 @@
 # Son güncellemeler
 
+## 2026-11-05
+
+- **Genel bakış**'ta kartlar artık iki sütunda, 2×2 diziliyor. **Son güncellemeler** kartında günler yan yana değil, alt alta ve en yenisi üstte.
+
 ## 2026-11-04
 
 - **Dragoman soruları**'nda bir soruya artık birden çok yanıt yazabilirsiniz. **Kaydet**'e basınca yanıt **Yanıtınız** başlığının altında listelenir ve kutu boşalır; aynı soruya istediğiniz kadar yeni yanıt ekleyebilirsiniz. Önceden kaydedilen yanıtlar listede ilk yanıt olarak duruyor.
 - Kendi yazdığınız yanıtı **Düzenle** ile düzeltebilirsiniz. Her yanıtın altında tarihi ve yazan kişi görünür.
 - Sitede ve panelde yeni Dragoman logosu var: altında "diving & outdoors" yazısı da bulunuyor. Sitenin üstünde, en altında, panelin sol üstünde ve site bir sosyal medyada paylaşıldığında çıkan görselde artık bu logo görünüyor.
+- **Kullanıcılar**'da her kişinin satırında **Ek yetkiler** düğmesi var. Rolüne ek olarak Revizyonlar, İçerik düzenleme, Çeviri, Yayınlama, Siteyi yeniden kurma ve Formlar yetkilerini kutu işaretleyerek verebilirsiniz. Verilen ek yetkiler **Rol** sütununda görünür.
+- **Formlar** ekranı artık form yetkisi verilen kişilere de açılıyor; önceden yalnız ana yöneticiye açılıyordu.
 
 ## 2026-11-03
 
@@ -21,8 +27,6 @@
 - Sitede çerez bandı hazır: Google Analytics kimliği girilip site yeniden yayınlanınca ziyaretçiler **Kabul Et**, **Reddet** ya da **Tercihleri Yönet** ile seçim yapacak ve ziyaretler yalnız izin verenler için ölçülecek. Kimlik girilene kadar sitede bir değişiklik görünmüyor.
 - **Müşteri soruları** sayfasının adı artık **Dragoman soruları**.
 - Yeni **Revizyonlar** ekranı: sitede ya da panelde değişmesini istediğiniz şeyi aciliyetiyle yazıp ekran görüntüsü ekleyebilir, yorumlarla takip edebilir, tamamlanan bir isteği **Yeniden aç** ile tekrar açabilirsiniz; ekranı ana yönetici ve revizyon yetkisi verilen kişiler görür.
-- **Kullanıcılar**'da her kişinin satırında **Ek yetkiler** düğmesi var. Rolüne ek olarak Revizyonlar, İçerik düzenleme, Çeviri, Yayınlama, Siteyi yeniden kurma ve Formlar yetkilerini kutu işaretleyerek verebilirsiniz. Verilen ek yetkiler **Rol** sütununda görünür.
-- **Formlar** ekranı artık form yetkisi verilen kişilere de açılıyor; önceden yalnız ana yöneticiye açılıyordu.
 
 ## 2026-11-02
 
